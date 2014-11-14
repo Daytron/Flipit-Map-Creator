@@ -1,8 +1,14 @@
 package com.github.daytron.flipit.map.creator;
 
+import com.google.gson.Gson;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -17,6 +23,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -24,6 +32,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 
 public class ViewController implements Initializable {
 
@@ -49,6 +58,17 @@ public class ViewController implements Initializable {
     private Button neutral_btn;
     @FXML
     private TextArea logArea;
+    @FXML
+    private MenuBar menubar;
+    @FXML
+    private MenuItem menuFileNew;
+    @FXML
+    private MenuItem menuFileOpen;
+    @FXML
+    private MenuItem menuFileSave;
+
+    // MainAPp object
+    private MainApp app;
 
     private boolean isEditMapOn;
     private String tileToEdit;
@@ -83,6 +103,12 @@ public class ViewController implements Initializable {
     // Tile
     private int tileEdgeEffect;
     private List<Integer[]> listOfBoulders;
+
+    // User OS
+    private String userOS = GlobalSettings.USER_OS;
+
+    // Flag to differentiate from open and new map
+    private boolean isOpeningAMap = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -186,8 +212,11 @@ public class ViewController implements Initializable {
         this.logArea.appendText("");
     }
 
-    @FXML
-    private void generateBtnOnClick(ActionEvent event) {
+    public void generateMap() {
+        this.generateMap("");
+    }
+
+    public void generateMap(String path) {
         // ################## INIT #################//
         this.isEditMapOn = false;
 
@@ -197,11 +226,12 @@ public class ViewController implements Initializable {
 
         this.logArea.setText("");
 
-        // Resets list of boulders
-        this.listOfBoulders = new ArrayList<>();
-
-        this.map = new Map();
-
+        if (!this.isOpeningAMap) {
+            // Resets list of boulders and new map
+            // only if it is a new map
+            this.listOfBoulders = new ArrayList<>();
+            this.map = new Map();
+        }
         // Resets new columnCell and rowCell
         this.rowCell = new ArrayList<>();
         this.columnCell = new ArrayList<>();
@@ -245,20 +275,103 @@ public class ViewController implements Initializable {
             this.columnCell.add(xi);
         }
 
-        // Fill grid tiles with neutral color
-        for (int count_row = 0; count_row < this.numberOfRows; count_row++) {
-            for (int count_column = 0; count_column < this.numberOfColumns; count_column++) {
+        String msg = "";
 
-                this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
-                        GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
-                        GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
-                        count_column, count_row);
+        if (!this.isOpeningAMap) {
+            // Fill grid tiles with neutral color
+            for (int count_row = 0; count_row < this.numberOfRows; count_row++) {
+                for (int count_column = 0; count_column < this.numberOfColumns; count_column++) {
 
+                    this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
+                            GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
+                            GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
+                            count_column, count_row);
+
+                }
+            }
+
+            msg = GlobalSettings.LOG_NEW_MAP + "\n" + this.numberOfColumns
+                    + " columns & " + this.numberOfRows + " rows";
+        } else {
+            // Fill grid tiles with neutral color
+            for (int count_row = 0; count_row < this.numberOfRows; count_row++) {
+                for (int count_column = 0; count_column < this.numberOfColumns; count_column++) {
+
+                    this.paintTile(this.extractPositionColor(count_column, count_row, 1),
+                            this.extractPositionColor(count_column, count_row, 2),
+                            this.extractPositionColor(count_column, count_row, 3),
+                            count_column, count_row);
+
+                }
+            }
+
+            msg = GlobalSettings.LOG_OPEN_MAP + "\n" + this.numberOfColumns
+                    + " columns & " + this.numberOfRows + " rows"
+                    + "\n Map file opened: " + path;
+        }
+        this.addNewLogMessage(msg);
+    }
+
+    // type 1: light edges color
+    // type 2: main color
+    // type 3: shadow color
+    private String extractPositionColor(int column, int row, int type) {
+        String tile_color = "";
+        String tile_type = "neutral";
+
+        for (Integer[] pos : this.map.getListOfBoulders()) {
+            if (pos[0] == column + 1 && pos[1] == row + 1) {
+                tile_type = "boulder";
             }
         }
-        String msg = GlobalSettings.LOG_NEW_MAP + "\n" + this.numberOfColumns + " columns & " + this.numberOfRows + " rows";
-        this.addNewLogMessage(msg);
 
+        /*
+         if (this.map.getListOfPlayer1StartPosition()[0] == column + 1
+         && this.map.getListOfPlayer1StartPosition()[1] == row + 1) {
+         tile_type = "player_1";
+         }
+
+         if (this.map.getListOfPlayer2StartPosition()[0] == column + 1
+         && this.map.getListOfPlayer2StartPosition()[1] == row + 1) {
+         tile_type = "player_2";
+         } */
+        switch (tile_type) {
+            case "boulder":
+                switch (type) {
+                    case 1:
+                        tile_color = GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR;
+                        break;
+                    case 2:
+                        tile_color = GlobalSettings.TILE_BOULDER_MAIN_COLOR;
+                        break;
+                    case 3:
+                        tile_color = GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR;
+                        break;
+                }
+                break;
+
+            case "neutral":
+                switch (type) {
+                    case 1:
+                        tile_color = GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR;
+                        break;
+                    case 2:
+                        tile_color = GlobalSettings.TILE_NEUTRAL_MAIN_COLOR;
+                        break;
+                    case 3:
+                        tile_color = GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR;
+                        break;
+                }
+                break;
+        }
+
+        return tile_color;
+    }
+
+    @FXML
+    private void generateBtnOnClick(ActionEvent event) {
+        this.isOpeningAMap = false;
+        this.generateMap();
     }
 
     public void paintTile(String light_edge_color, String main_color, String shadow_edge_color,
@@ -579,6 +692,9 @@ public class ViewController implements Initializable {
                             + "Title field is empty!";
                     this.addNewLogMessage(warningMsg1);
                 } else {
+                    // Only accepts letters, numbers and spaces
+                    // No leading space allowed
+                    // All trailing spaces are automatically trim
                     if (title.matches("^[a-zA-Z0-9][a-zA-Z0-9\\s]*$")) {
                         title = this.titleFormatter(title);
 
@@ -588,8 +704,8 @@ public class ViewController implements Initializable {
                         String successMsg = GlobalSettings.LOG_TITLE_SET
                                 + "/n" + "Title: " + title + " is set.";
                         this.addNewLogMessage(successMsg);
-                    } else  {
-                        String invalidMsg = GlobalSettings.LOG_ERROR + "/n" 
+                    } else {
+                        String invalidMsg = GlobalSettings.LOG_ERROR + "/n"
                                 + "Invalid title! Only use alphanumeric and space characters. No leading space.";
                         this.addNewLogMessage(invalidMsg);
                     }
@@ -607,33 +723,110 @@ public class ViewController implements Initializable {
     public String titleFormatter(String title) {
         // Removes any unnecessary leading and trailing space
         title = title.trim();
-        
+
         // Shifts all letters to lowercase
         title = title.toLowerCase();
-        
+
         // Convert the first letter to uppercase
         String firstLetterCapitalTitle = title.substring(0, 1).toUpperCase() + title.substring(1);
-        
+
         // Converts all first letter of word separated by space to uppercase
-        for(int i = 0; i < title.length(); i++) {
+        for (int i = 0; i < title.length(); i++) {
             if (title.charAt(i) == ' ') {
-                firstLetterCapitalTitle = firstLetterCapitalTitle.substring(0,i+1) +
-                        firstLetterCapitalTitle.substring(i + 1, i + 2).toUpperCase() +
-                        firstLetterCapitalTitle.substring(i + 2);
+                firstLetterCapitalTitle = firstLetterCapitalTitle.substring(0, i + 1)
+                        + firstLetterCapitalTitle.substring(i + 1, i + 2).toUpperCase()
+                        + firstLetterCapitalTitle.substring(i + 2);
             }
         }
-        
+
         // Get back the output string reference
         title = firstLetterCapitalTitle;
-        
 
         // Update title field
         this.title_field.setText(title);
-        
+
         // append row and column
         title += " " + this.numberOfColumns + "x" + this.numberOfRows;
 
         return title;
+    }
+
+    @FXML
+    private void menuFileOpenOnClick(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Map File (.json)");
+        File file = fileChooser.showOpenDialog(this.app.getStage());
+
+        if (file != null) {
+            String ext = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
+
+            String filename = "";
+            if (this.userOS.startsWith(GlobalSettings.OS_LINUX)
+                    || this.userOS.startsWith(GlobalSettings.OS_MAC)) {
+                filename = file.getPath().substring(file.getPath().lastIndexOf("/") + 1);
+            } else if (this.userOS.startsWith(GlobalSettings.OS_WINDOWS)) {
+                filename = file.getPath().substring(file.getPath().lastIndexOf("\\") + 1);
+            } else {
+                String noOSsupportMsg = GlobalSettings.LOG_ERROR + "/n"
+                        + GlobalSettings.LOG_OS_NOT_SUPPORTED;
+                this.addNewLogMessage(noOSsupportMsg);
+                return;
+            }
+            String firstWord = filename.substring(0, 3);
+
+            if (file.isFile() && "json".equals(ext) && firstWord.equalsIgnoreCase("Map")) {
+                this.openMapFile(file);
+            }
+
+        }
+    }
+
+    public void openMapFile(File file) {
+        Gson gson = new Gson();
+
+        try {
+            BufferedReader br = new BufferedReader(
+                    new FileReader(file));
+
+            //convert the json string back to object
+            this.map = gson.fromJson(br, Map.class);
+
+            // Toggle flag
+            this.isOpeningAMap = true;
+
+            // Extract columns and rows
+            this.numberOfColumns = this.map.getSize()[0];
+            this.numberOfRows = this.map.getSize()[1];
+
+            // Set comboboxes
+            this.column_combo.setValue(this.numberOfColumns);
+            this.row_combo.setValue(this.numberOfRows);
+
+            // Set title
+            String rawTitle = this.map.getName();
+            String title = rawTitle.substring(0, rawTitle.lastIndexOf(" "));
+            this.title_field.setText(title);
+            
+            // Set list of boulders
+            this.listOfBoulders = this.map.getListOfBoulders();
+
+            this.generateMap(file.getPath());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void menuFileSaveOnClick(ActionEvent event) {
+    }
+
+    @FXML
+    private void menuFileNewOnClick(ActionEvent event) {
+    }
+
+    public void setApp(MainApp app) {
+        this.app = app;
     }
 
 }

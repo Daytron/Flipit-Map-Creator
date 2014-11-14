@@ -36,11 +36,20 @@ public class GlobalSettings {
     public final static String LOG_TILE_OVERWRITTEN = "[TILE OVERWRITTEN] ";
     public final static String LOG_TILE_SET = "[TILE SET] ";
     public final static String LOG_NEW_MAP = "[NEW MAP CREATED] ";
+    public final static String LOG_OPEN_MAP = "[FILE MAP OPENED] ";
     public final static String LOG_TITLE_SET = "[TITLE SET] ";
     public final static String LOG_BOULDER_OVERWRITTEN = "Boulder tile is overwritten!";
+    public final static String LOG_OS_NOT_SUPPORTED = "Your Operating System is not yet supported.";
+    
     
     public final static String LOG_BOULDER_ON = "[BOULDER TILE SELECTED]";
     public final static String LOG_NEUTRAL_ON = "[NEUTRAL TILE SELECTED]";
     public final static String LOG_PLAYER1_ON = "[PLAYER 1 START SELECTED]";
     public final static String LOG_PLAYER2_ON = "[PLAYER 2 START SELECTED]";
+    
+    // OS
+    public static final String USER_OS = System.getProperty("os.name").toLowerCase();
+    public static final String OS_WINDOWS = "win";
+    public static final String OS_LINUX = "linux";
+    public static final String OS_MAC = "mac";
 }
