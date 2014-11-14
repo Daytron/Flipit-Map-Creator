@@ -11,3 +11,8 @@
      -fx-border-width: 2px;
     -fx-border-color:black;
 }
+
+#pane_canvas {
+    -fx-background-color: #aeb5ba, linear-gradient(to bottom, #ecf4fa 0%, #ced4d9 100%);
+    
+}
