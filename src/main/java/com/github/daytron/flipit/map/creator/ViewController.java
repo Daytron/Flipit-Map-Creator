@@ -19,9 +19,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 public class ViewController implements Initializable {
 
@@ -89,6 +93,15 @@ public class ViewController implements Initializable {
         // Extract GraphicsContext from canvas
         this.gc = this.canvas.getGraphicsContext2D();
 
+        this.df = new SimpleDateFormat("hh:mm:ss");
+        // Init logArea
+        this.logMessage = new StringBuilder();
+        this.preventNewLineAtFirst = true;
+
+        this.logArea.setText("");
+        this.logArea.setEditable(false);
+        this.logArea.setWrapText(true);
+
         this.tileEdgeEffect = 2;
         this.isEditMapOn = false;
 
@@ -101,9 +114,6 @@ public class ViewController implements Initializable {
                 //use Double.MIN_VALUE to scroll to the top 
             }
         });
-
-        // Init time
-        this.df = new SimpleDateFormat("hh:mm:ss");
 
         // ################## MAP SIZE COMBO BOXES #################//
         // Define column list items
@@ -188,8 +198,6 @@ public class ViewController implements Initializable {
         this.preventNewLineAtFirst = true;
 
         this.logArea.setText("");
-        this.logArea.setEditable(false);
-        this.logArea.setWrapText(true);
 
         // Resets list of boulders
         this.listOfBoulders = new ArrayList<>();
@@ -333,15 +341,14 @@ public class ViewController implements Initializable {
                                     GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR,
                                     tilePos[0] - 1,
                                     tilePos[1] - 1);
-                            
-                            String msg8 = GlobalSettings.LOG_TILE_SET + "\n" 
-                                    + "boulder tile is set to " 
+
+                            String msg8 = GlobalSettings.LOG_TILE_SET + "\n"
+                                    + "boulder tile is set to "
                                     + "[" + tilePos[0] + "," + tilePos[1] + "]";
                             this.addNewLogMessage(msg8);
-                            
 
-                        } else  {
-                            String msg7 = GlobalSettings.LOG_WARNING + "\n" 
+                        } else {
+                            String msg7 = GlobalSettings.LOG_WARNING + "\n"
                                     + "It's already a boulder tile.";
                             this.addNewLogMessage(msg7);
                         }
@@ -359,13 +366,13 @@ public class ViewController implements Initializable {
                                     GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
                                     tilePos[0] - 1,
                                     tilePos[1] - 1);
-                            
-                            String msg6 = GlobalSettings.LOG_WARNING + "\n" 
+
+                            String msg6 = GlobalSettings.LOG_WARNING + "\n"
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN;
                             this.addNewLogMessage(msg6);
-                            
-                            String msg9 = GlobalSettings.LOG_TILE_SET + "\n" 
-                                    + "neutral tile is set to " 
+
+                            String msg9 = GlobalSettings.LOG_TILE_SET + "\n"
+                                    + "neutral tile is set to "
                                     + "[" + tilePos[0] + "," + tilePos[1] + "]";
                             this.addNewLogMessage(msg9);
 
@@ -385,7 +392,7 @@ public class ViewController implements Initializable {
                                     tilePos[1] - 1);
 
                             // Log message
-                            String msg4 = GlobalSettings.LOG_WARNING + "\n" 
+                            String msg4 = GlobalSettings.LOG_WARNING + "\n"
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN;
                             this.addNewLogMessage(msg4);
                         }
@@ -436,9 +443,9 @@ public class ViewController implements Initializable {
                                     GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
                                     tilePos[0] - 1,
                                     tilePos[1] - 1);
-                            
+
                             // Log message
-                            String msg5 = GlobalSettings.LOG_WARNING + "\n" 
+                            String msg5 = GlobalSettings.LOG_WARNING + "\n"
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN;
                             this.addNewLogMessage(msg5);
                         }
@@ -561,6 +568,52 @@ public class ViewController implements Initializable {
          System.out.println("mid: " + midX);
          */
         return new int[]{tile_x, tile_y};
+    }
+
+    @FXML
+    private void titleFieldOnKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            if (this.map != null) {
+                String title = this.title_field.getText();
+
+                if (title.isEmpty()) {
+                    String warningMsg1 = GlobalSettings.LOG_WARNING + "/n"
+                            + "Title field is empty!";
+                    this.addNewLogMessage(warningMsg1);
+                } else {
+                    if (title.matches("^[a-zA-Z0-9][a-zA-Z0-9\\s]*$")) {
+                        title = this.titleFormatter(title);
+
+                        // Set title to the map
+                        this.map.setName(title);
+
+                        String successMsg = GlobalSettings.LOG_TITLE_SET
+                                + "/n" + "Title: " + title + " is set.";
+                        this.addNewLogMessage(successMsg);
+                    }
+                }
+            } else {
+                String noMapMsg = GlobalSettings.LOG_WARNING + "\n"
+                        + "Generate a map first!";
+                this.addNewLogMessage(noMapMsg);
+            }
+
+        }
+
+    }
+
+    public String titleFormatter(String title) {
+        title = title.toLowerCase();
+
+        title = WordUtils.capitalize(title);
+
+        // Update title field
+        this.title_field.setText(title);
+        
+        // append row and column
+        title += " " + this.numberOfColumns + "x" + this.numberOfRows;
+
+        return title;
     }
 
 }

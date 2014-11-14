@@ -36,6 +36,7 @@ public class GlobalSettings {
     public final static String LOG_TILE_OVERWRITTEN = "[TILE OVERWRITTEN] ";
     public final static String LOG_TILE_SET = "[TILE SET] ";
     public final static String LOG_NEW_MAP = "[NEW MAP CREATED] ";
+    public final static String LOG_TITLE_SET = "[TITLE SET] ";
     public final static String LOG_BOULDER_OVERWRITTEN = "Boulder tile is overwritten!";
     
     public final static String LOG_BOULDER_ON = "[BOULDER TILE SELECTED]";

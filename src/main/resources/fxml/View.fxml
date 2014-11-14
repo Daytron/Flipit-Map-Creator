@@ -116,7 +116,7 @@
                               <Insets left="10.0" top="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextField fx:id="title_field" GridPane.columnSpan="2" GridPane.rowIndex="7">
+                        <TextField fx:id="title_field" onKeyPressed="#titleFieldOnKeyPressed" GridPane.columnSpan="2" GridPane.rowIndex="7">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
