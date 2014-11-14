@@ -754,7 +754,21 @@ public class ViewController implements Initializable {
     @FXML
     private void menuFileOpenOnClick(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
+        
+        // Set filechooser title
         fileChooser.setTitle("Open Map File (.json)");
+        
+        // Set filechooser initial directory to "home" depending on user OS
+        fileChooser.setInitialDirectory(
+            new File(System.getProperty("user.home"))
+        );
+        
+        // Add json extension filter
+        FileChooser.ExtensionFilter extFilter = 
+                        new FileChooser.ExtensionFilter("JSON Map files (*.json)", "*.json"); 
+                fileChooser.getExtensionFilters().add(extFilter);
+        
+        // Launch filechooser and get open file
         File file = fileChooser.showOpenDialog(this.app.getStage());
 
         if (file != null) {
@@ -827,6 +841,8 @@ public class ViewController implements Initializable {
 
     @FXML
     private void menuFileNewOnClick(ActionEvent event) {
+        this.isOpeningAMap = false;
+        this.generateMap();
     }
 
     public void setApp(MainApp app) {
