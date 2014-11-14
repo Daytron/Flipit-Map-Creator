@@ -813,6 +813,10 @@ public class ViewController implements Initializable {
             this.generateMap(file.getPath());
 
         } catch (IOException e) {
+            String errorMsg = GlobalSettings.LOG_ERROR + "/n" +
+                    "Error loading map (invalid json map file). "
+                    + "Please refer to the console for further inspection";
+            this.addNewLogMessage(errorMsg);
             e.printStackTrace();
         }
     }
