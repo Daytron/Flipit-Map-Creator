@@ -590,6 +590,10 @@ public class ViewController implements Initializable {
                         String successMsg = GlobalSettings.LOG_TITLE_SET
                                 + "/n" + "Title: " + title + " is set.";
                         this.addNewLogMessage(successMsg);
+                    } else  {
+                        String invalidMsg = GlobalSettings.LOG_ERROR + "/n" 
+                                + "Invalid title! Only use alphanumeric and space characters. No leading space.";
+                        this.addNewLogMessage(invalidMsg);
                     }
                 }
             } else {
