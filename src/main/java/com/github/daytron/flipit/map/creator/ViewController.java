@@ -25,8 +25,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
-import org.apache.commons.lang3.text.WordUtils;
-
 public class ViewController implements Initializable {
 
     @FXML
@@ -607,9 +605,27 @@ public class ViewController implements Initializable {
     }
 
     public String titleFormatter(String title) {
+        // Removes any unnecessary leading and trailing space
+        title = title.trim();
+        
+        // Shifts all letters to lowercase
         title = title.toLowerCase();
-
-        title = WordUtils.capitalize(title);
+        
+        // Convert the first letter to uppercase
+        String firstLetterCapitalTitle = title.substring(0, 1).toUpperCase() + title.substring(1);
+        
+        // Converts all first letter of word separated by space to uppercase
+        for(int i = 0; i < title.length(); i++) {
+            if (title.charAt(i) == ' ') {
+                firstLetterCapitalTitle = firstLetterCapitalTitle.substring(0,i+1) +
+                        firstLetterCapitalTitle.substring(i + 1, i + 2).toUpperCase() +
+                        firstLetterCapitalTitle.substring(i + 2);
+            }
+        }
+        
+        // Get back the output string reference
+        title = firstLetterCapitalTitle;
+        
 
         // Update title field
         this.title_field.setText(title);
