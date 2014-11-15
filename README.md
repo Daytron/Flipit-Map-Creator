@@ -44,7 +44,7 @@ Add the following dependencies to your POM file
 
 Want to contribute? Please do open up an issue. I don't accept pull requests at the moment.
 
-### Todos
+### Roadmap to version 1.0 release
 
  - Write Tests (Junit and find a great UI Testing library like Robotium for Android)
  - Add Coveralls badge
