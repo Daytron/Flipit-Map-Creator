@@ -878,9 +878,11 @@ public class ViewController implements Initializable {
 
         } catch (IOException e) {
             String errorMsg = GlobalSettings.LOG_ERROR
-                    + "IOEXCEPTION! Error loading map (invalid json map file). "
-                    + "Please refer to the console for further inspection";
+                    + "IOEXCEPTION! Error loading map (invalid json map file). ";
             this.addNewLogMessage(errorMsg);
+            
+            this.showExceptionDialog(e);
+            
             e.printStackTrace();
         }
     }
@@ -1018,8 +1020,10 @@ public class ViewController implements Initializable {
 
         } catch (IOException e) {
             String errorMsg = GlobalSettings.LOG_ERROR
-                    + "IOEXCEPTION! Unable to save file. Please check console for more info.";
+                    + "IOEXCEPTION! Unable to save file.";
             this.addNewLogMessage(errorMsg);
+            
+            this.showExceptionDialog(e);
 
             e.printStackTrace();
         }
@@ -1105,6 +1109,15 @@ public class ViewController implements Initializable {
                 .message(msgBody)
                 .showWarning();
     }
+    
+    private void showExceptionDialog(Exception e) {
+        Dialogs.create()
+        .owner(this.app.getStage())
+        .title("Exception Dialog")
+        .masthead(e.toString())
+        .message(e.getMessage())
+        .showException(e);
+    } 
 
     private Action showConfirmDialog(String msgHead, String msgBody) {
         Action response = Dialogs.create()
