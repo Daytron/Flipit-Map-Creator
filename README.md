@@ -14,7 +14,7 @@ Flipit Map Creator is a companion JavaFX application for the upcoming game calle
 
 ### Dependencies
 Flipit Map Creator uses a number of open source projects to work properly:
-- [ControlsFX 8.20.8] Use for all dialog windows, Requires Java 8. Note: This library has a new fork that will soon merge with the next JavaFX update in March 2015. For now, the deprecated Dialogs are still in use.
+- [ControlsFX 8.20.8] Use for all dialog windows, Requires Java 8. Note: This library has a new fork that will soon merge with the JDK version 8u40 update in March 2015. For now, the deprecated Dialogs are still in use. See announcement ![here](http://fxexperience.com/2014/09/announcing-controlsfx-8-20-7/).
 - [Gson 2.3]
 
 ### Requirements
