@@ -284,7 +284,6 @@ public class ViewController implements Initializable {
             // Fill grid tiles with neutral color
             for (int count_row = 0; count_row < this.numberOfRows; count_row++) {
                 for (int count_column = 0; count_column < this.numberOfColumns; count_column++) {
-
                     this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
                             GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
                             GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
@@ -293,13 +292,13 @@ public class ViewController implements Initializable {
                 }
             }
 
+            // Prepare log message
             msg = GlobalSettings.LOG_NEW_MAP + this.numberOfColumns
                     + " columns & " + this.numberOfRows + " rows";
         } else {
-            // Fill grid tiles with neutral color
+            // Fill grid tiles from the save map data file
             for (int count_row = 0; count_row < this.numberOfRows; count_row++) {
                 for (int count_column = 0; count_column < this.numberOfColumns; count_column++) {
-
                     this.paintTile(this.extractPositionColor(count_column, count_row, 1),
                             this.extractPositionColor(count_column, count_row, 2),
                             this.extractPositionColor(count_column, count_row, 3),
@@ -308,10 +307,13 @@ public class ViewController implements Initializable {
                 }
             }
 
+            // Prepare log message
             msg = GlobalSettings.LOG_OPEN_MAP + this.numberOfColumns
                     + " columns & " + this.numberOfRows + " rows"
                     + "\n Map file opened: " + path;
         }
+        
+        // Notify user in log area
         this.addNewLogMessage(msg);
     }
 
@@ -373,7 +375,8 @@ public class ViewController implements Initializable {
 
     @FXML
     private void generateBtnOnClick(ActionEvent event) {
-        // Confirmation dialog
+        // Confirmation dialog before proceeding
+        // Checks for any unsave previous map
         if (!isCurrentMapSave) {
             if (showConfirmDialog(
                     GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
@@ -395,16 +398,16 @@ public class ViewController implements Initializable {
 
     private void paintTile(String light_edge_color, String main_color, String shadow_edge_color,
             int count_column, int count_row) {
-        // coloring the light top and left edges respectively
+        // Coloring the light top and left edges respectively
         this.gc.setFill(Color.web(light_edge_color));
         this.gc.fillRect(this.columnCell.get(count_column), this.rowCell.get(count_row), this.gridXSpace, this.tileEdgeEffect);
         this.gc.fillRect(this.columnCell.get(count_column), this.rowCell.get(count_row), this.tileEdgeEffect, this.gridYSpace);
 
-        // coloring main tile body
+        // Coloring main tile body
         this.gc.setFill(Color.web(main_color));
         this.gc.fillRect(this.columnCell.get(count_column) + this.tileEdgeEffect, this.rowCell.get(count_row) + this.tileEdgeEffect, this.gridXSpace - this.tileEdgeEffect, this.gridYSpace - this.tileEdgeEffect);
 
-        // coloring tile's shadow for bottom and right edges respectively
+        // Coloring tile's shadow for bottom and right edges respectively
         this.gc.setFill(Color.web(shadow_edge_color));
         this.gc.fillRect(this.columnCell.get(count_column) + this.tileEdgeEffect, this.rowCell.get(count_row) + this.gridYSpace - this.tileEdgeEffect, this.gridXSpace - this.tileEdgeEffect, this.tileEdgeEffect);
         this.gc.fillRect(this.columnCell.get(count_column) + this.gridXSpace - this.tileEdgeEffect, this.rowCell.get(count_row) + this.tileEdgeEffect, this.tileEdgeEffect, this.gridYSpace - this.tileEdgeEffect);
@@ -444,12 +447,17 @@ public class ViewController implements Initializable {
 
     @FXML
     private void canvasOnClick(MouseEvent event) {
+        // Check first if the mouseclick event is inside the grip map
         if (this.isInsideTheGrid(event.getX(), event.getY())) {
+            // Check if any tile button (boulder/neutral/player) is activated
             if (this.isEditMapOn) {
+                // Extract tile position from mouseclick coordinates
                 int[] tilePos = this.getTilePosition(event.getX(), event.getY());
+                
                 boolean isAlreadyBoulder = false;
                 Integer[] boulderReference = null;
 
+                // Chec current selected tile if a boulder tile
                 for (Integer[] boulder : this.listOfBoulders) {
                     if (tilePos[0] == boulder[0] && tilePos[1] == boulder[1]) {
                         isAlreadyBoulder = true;
@@ -457,6 +465,7 @@ public class ViewController implements Initializable {
                     }
                 }
 
+                // Apply necessary action to the tile selected
                 switch (this.tileToEdit) {
                     case GlobalSettings.TILE_BOULDER:
 
@@ -635,6 +644,13 @@ public class ViewController implements Initializable {
                 && (y_pos >= this.halfPaddingHeight && y_pos <= (this.canvas.getWidth() - this.halfPaddingHeight));
     }
 
+    /**
+     * Method for extracting grid position from mouseclick coordinates
+     * Uses a simple binary search
+     * @param x_pos Mouseclick x coordinate
+     * @param y_pos Mouseclick y coordinate
+     * @return An integer array as tile position [column,row]
+     */
     private int[] getTilePosition(double x_pos, double y_pos) {
         int tile_x, tile_y;
 
@@ -702,7 +718,10 @@ public class ViewController implements Initializable {
 
     @FXML
     private void titleFieldOnKeyPressed(KeyEvent event) {
+        // Detect if key pressed is Enter key
         if (event.getCode() == KeyCode.ENTER) {
+            // If a map is generated either by opening a file or new map,
+            // save map title to current map object
             if (this.map != null) {
                 String title = this.title_field.getText();
 
@@ -809,6 +828,8 @@ public class ViewController implements Initializable {
         // Launch filechooser and get open file
         File file = fileChooser.showOpenDialog(this.app.getStage());
 
+        // Possible action if user press cancel button on open file dialog
+        // Skip all remaining lines
         if (file == null) {
             return;
         }
@@ -882,7 +903,7 @@ public class ViewController implements Initializable {
 
     @FXML
     private void menuFileSaveOnClick(ActionEvent event) {
-        // Detect first if all requirements met
+        // Detect first if all requirements are met
         if (this.map == null) {
             String emptyMapMsg = GlobalSettings.LOG_ERROR
                     + "No map opened or generated.";
@@ -950,6 +971,8 @@ public class ViewController implements Initializable {
         // Launch filechooser and get open file
         File file = fileChooser.showSaveDialog(this.app.getStage());
 
+        // Possible action if user press cancel button on save file dialog
+        // Skip all remaining lines
         if (file == null) {
             return;
         }
@@ -977,10 +1000,18 @@ public class ViewController implements Initializable {
             return;
         }
 
+        // Prevents user from using a space character on Title
         if (firstWord.contains(" ")) {
+            // Add new log
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + "Filename shouldn't contain space character";
             this.addNewLogMessage(wrongFormatNameMsg);
+            
+            // Show a warning dialog
+            this.showWarningDialog(
+                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_HEAD_MSG, 
+                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_BODY_MSG);
+            
             return;
         }
 
@@ -995,9 +1026,15 @@ public class ViewController implements Initializable {
 
             this.saveFile(file);
         } else {
+            // Update log
             String invalidExtMsg = GlobalSettings.LOG_ERROR
                     + "Invalid extension file!";
             this.addNewLogMessage(invalidExtMsg);
+            
+            // Show error dialog
+            this.showErrorDialog(
+                    GlobalSettings.DIALOG_INVALID_EXTENSION_HEAD_MSG, 
+                    GlobalSettings.DIALOG_INVALID_EXTENSION_BODY_MSG);
         }
 
     }
@@ -1019,6 +1056,7 @@ public class ViewController implements Initializable {
             writer.write(json);
             writer.close();
 
+            // Add new log
             String successSaveMsg = GlobalSettings.LOG_SAVE_MAP
                     + "File is successfully saved at " + file.getPath();
             this.addNewLogMessage(successSaveMsg);
@@ -1027,10 +1065,12 @@ public class ViewController implements Initializable {
             this.isCurrentMapSave = true;
 
         } catch (IOException e) {
+            // Add new log
             String errorMsg = GlobalSettings.LOG_ERROR
                     + "IOEXCEPTION! Unable to save file.";
             this.addNewLogMessage(errorMsg);
 
+            // Show exception dialog
             this.showExceptionDialog(e);
 
             e.printStackTrace();
@@ -1083,6 +1123,11 @@ public class ViewController implements Initializable {
                 if (showConfirmDialog(msgHead,
                         msgBody) == Dialog.ACTION_CANCEL) {
                     // event consume halts any further action (shutting down)
+                    // WARNING: Do not mess with else condition with
+                    // event.consume() or user won't be able to close the app!!
+                    // If somehow you toyed with this idea and can't close
+                    // it via window close button, you can alternatively use
+                    // File quit menu item and don't forget to remove your stuff.
                     event.consume();
                 }
 
@@ -1104,6 +1149,8 @@ public class ViewController implements Initializable {
 
         if (this.showConfirmDialog(msgHead,
                 msgBody) == Dialog.ACTION_OK) {
+            // This is a preferred exit solution for any JavaFX application
+            // instead of System.exit(0)
             Platform.exit();
         }
 
@@ -1117,11 +1164,20 @@ public class ViewController implements Initializable {
                 .message(msgBody)
                 .showWarning();
     }
+    
+    private void showErrorDialog(String msgHead, String msgBody) {
+        Dialogs.create()
+        .owner(this.app.getStage())
+        .title("Error")
+        .masthead(msgHead)
+        .message(msgBody)
+        .showError();
+    }
 
     private void showExceptionDialog(Exception e) {
         Dialogs.create()
                 .owner(this.app.getStage())
-                .title("Exception Dialog")
+                .title("Exception")
                 .masthead(e.toString())
                 .message(e.getMessage())
                 .showException(e);
@@ -1130,7 +1186,7 @@ public class ViewController implements Initializable {
     private Action showConfirmDialog(String msgHead, String msgBody) {
         Action response = Dialogs.create()
                 .owner(this.app.getStage())
-                .title("Confirm Dialog")
+                .title("Confirmation")
                 .masthead(msgHead)
                 .message(msgBody)
                 .actions(Dialog.ACTION_OK, Dialog.ACTION_CANCEL)
