@@ -21,6 +21,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -41,6 +43,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
+import javax.imageio.ImageIO;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
@@ -306,15 +309,15 @@ public class ViewController implements Initializable {
 
                 }
             }
-            
+
             // Paint tile for player 1 start position
-            this.paintPlayerStart(1, 
-                    this.map.getListOfPlayer1StartPosition()[0], 
+            this.paintPlayerStart(1,
+                    this.map.getListOfPlayer1StartPosition()[0],
                     this.map.getListOfPlayer1StartPosition()[1]);
-            
+
             // Paint tile for player 2 start position
-            this.paintPlayerStart(2, 
-                    this.map.getListOfPlayer2StartPosition()[0], 
+            this.paintPlayerStart(2,
+                    this.map.getListOfPlayer2StartPosition()[0],
                     this.map.getListOfPlayer2StartPosition()[1]);
 
             // Prepare log message
@@ -448,27 +451,27 @@ public class ViewController implements Initializable {
                 heightRing);
 
         // For text draw
-        int smallestSidePos = Math.min(this.numberOfColumns, 
+        int smallestSidePos = Math.min(this.numberOfColumns,
                 this.numberOfRows);
-        
+
         // this is based on these definitions
         // with smallest side (row or column) 5 font size is 40
         // with 6 size is 38
         // with 7 size is 36
         // until 20 size is 10
         int fontSize = 45 - smallestSidePos - (smallestSidePos - 5);
-        
+
         // Text padding
         double xPaddingPercentage;
         double yPaddingPercentage;
-        
+
         if (smallestSidePos > 4 && smallestSidePos < 7) {
             xPaddingPercentage = 0.33;
             yPaddingPercentage = 0.65;
         } else if (smallestSidePos > 6 && smallestSidePos < 10) {
             xPaddingPercentage = 0.31;
-           yPaddingPercentage = 0.7;
-        } else if (smallestSidePos > 9 && smallestSidePos < 13){
+            yPaddingPercentage = 0.7;
+        } else if (smallestSidePos > 9 && smallestSidePos < 13) {
             xPaddingPercentage = 0.29;
             yPaddingPercentage = 0.75;
         } else if (smallestSidePos > 12 && smallestSidePos < 16) {
@@ -481,7 +484,7 @@ public class ViewController implements Initializable {
             xPaddingPercentage = 0.35;
             yPaddingPercentage = 0.7;
         }
-        
+
         Font oldFont = this.gc.getFont();
         this.gc.setFont(Font.font("Verdana", fontSize));
 
@@ -691,7 +694,7 @@ public class ViewController implements Initializable {
                         }
 
                         this.paintPlayerStart(2, tilePos[0], tilePos[1]);
-                        
+
                         // Add start position to map
                         this.map.setListOfPlayer2StartPosition(tilePos.clone());
 
@@ -1152,6 +1155,38 @@ public class ViewController implements Initializable {
 
             // Toggle flag for detecting unsave map
             this.isCurrentMapSave = true;
+
+            // Prepares for taking snapshot of the canvas
+            WritableImage writableImage = new WritableImage(
+                    (int) this.canvas.getWidth(),
+                    (int) this.canvas.getHeight());
+
+            this.canvas.snapshot(null, writableImage);
+
+            // Get the last filepath to use for saving image file
+            String filePath;
+            
+            if (this.userOS.startsWith(GlobalSettings.OS_LINUX)
+                    || this.userOS.startsWith(GlobalSettings.OS_MAC)) {
+                filePath = file.getPath().substring(0, file.getPath().lastIndexOf("/") + 1);
+            } else {
+                // Other OS is already filtered above, so this is definitely Windows
+                filePath = file.getPath().substring(0, file.getPath().lastIndexOf("\\") + 1);
+            } 
+
+            // Build full path 
+            String imageFilePath = filePath + this.map.getMapID() + ".png";
+
+            // Create file
+            File fileImage = new File(imageFilePath);
+
+            // Try saving it as a PNG image file
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null),
+                        "png", fileImage);
+            } catch (Exception s) {
+                this.showExceptionDialog(s);
+            }
 
         } catch (IOException e) {
             // Add new log
