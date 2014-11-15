@@ -1,26 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * Created by Ryan Gilera <jalapaomaji-github@yahoo.com>
  */
 package com.github.daytron.flipit.map.creator;
 
-/**
- *
- * @author ryan
- */
 import java.util.List;
 
 public class Map {
+
     private String mapID;
     private String name;
     private int[] size;
     private int numOfPlayers;
-    
+
     private int[] listOfPlayer1StartPosition;
     private int[] listOfPlayer2StartPosition;
     private int[] listOfPlayer3StartPosition;
-    private int[] listOfPlayer4StartPosition ;
+    private int[] listOfPlayer4StartPosition;
     private List<Integer[]> listOfBoulders;
 
     public void setMapID(String mapID) {
@@ -30,19 +26,19 @@ public class Map {
     public String getMapID() {
         return mapID;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setSize(int[] size) {
         this.size = size;
     }
-    
+
     public int[] getSize() {
         return this.size;
     }

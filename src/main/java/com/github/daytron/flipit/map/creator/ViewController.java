@@ -1,3 +1,7 @@
+/**
+ *
+ * Created by Ryan Gilera <jalapaomaji-github@yahoo.com>
+ */
 package com.github.daytron.flipit.map.creator;
 
 import com.google.gson.Gson;
@@ -10,7 +14,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -384,13 +387,13 @@ public class ViewController implements Initializable {
         if (!isCurrentMapSave) {
             if (showConfirmDialog(
                     GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE) 
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE)
                     == Dialog.ACTION_CANCEL) {
                 // Cancel opening file if user press cancel
                 return;
             }
         }
-        
+
         // Toggle flag if the map being generated is from opening a file or new
         this.isOpeningAMap = false;
 
@@ -786,18 +789,18 @@ public class ViewController implements Initializable {
 
     @FXML
     private void menuFileOpenOnClick(ActionEvent event) {
-        
+
         // Confirmation dialog
         if (!isCurrentMapSave) {
             if (showConfirmDialog(
                     GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE) 
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE)
                     == Dialog.ACTION_CANCEL) {
                 // Cancel opening file if user press cancel
                 return;
             }
         }
-        
+
         FileChooser fileChooser = new FileChooser();
 
         // Set filechooser title
@@ -880,9 +883,9 @@ public class ViewController implements Initializable {
             String errorMsg = GlobalSettings.LOG_ERROR
                     + "IOEXCEPTION! Error loading map (invalid json map file). ";
             this.addNewLogMessage(errorMsg);
-            
+
             this.showExceptionDialog(e);
-            
+
             e.printStackTrace();
         }
     }
@@ -895,7 +898,7 @@ public class ViewController implements Initializable {
                     + "No map opened or generated.";
             this.addNewLogMessage(emptyMapMsg);
             this.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyMapMsg);
             return;
         }
@@ -905,7 +908,7 @@ public class ViewController implements Initializable {
                     + "Player 1 start position is not set!";
             this.addNewLogMessage(emptyP1StartMsg);
             this.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyP1StartMsg);
             return;
         }
@@ -915,7 +918,7 @@ public class ViewController implements Initializable {
                     + "Player 2 start position is not set!";
             this.addNewLogMessage(emptyP2StartMsg);
             this.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyP2StartMsg);
             return;
         }
@@ -925,7 +928,7 @@ public class ViewController implements Initializable {
                     + "Map title is not set!";
             this.addNewLogMessage(emptyTitleMsg);
             this.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyTitleMsg);
             return;
         } else if (this.map.getName().isEmpty()) {
@@ -933,7 +936,7 @@ public class ViewController implements Initializable {
                     + "Map title is not set!";
             this.addNewLogMessage(emptyTitleMsg);
             this.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyTitleMsg);
             return;
         }
@@ -1037,7 +1040,7 @@ public class ViewController implements Initializable {
             String errorMsg = GlobalSettings.LOG_ERROR
                     + "IOEXCEPTION! Unable to save file.";
             this.addNewLogMessage(errorMsg);
-            
+
             this.showExceptionDialog(e);
 
             e.printStackTrace();
@@ -1050,13 +1053,13 @@ public class ViewController implements Initializable {
         if (!isCurrentMapSave) {
             if (showConfirmDialog(
                     GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE) 
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE)
                     == Dialog.ACTION_CANCEL) {
                 // Cancel opening file if user press cancel
                 return;
             }
         }
-        
+
         // Toggle flag for detecting if the map being generated 
         // is an open file or new
         this.isOpeningAMap = false;
@@ -1124,15 +1127,15 @@ public class ViewController implements Initializable {
                 .message(msgBody)
                 .showWarning();
     }
-    
+
     private void showExceptionDialog(Exception e) {
         Dialogs.create()
-        .owner(this.app.getStage())
-        .title("Exception Dialog")
-        .masthead(e.toString())
-        .message(e.getMessage())
-        .showException(e);
-    } 
+                .owner(this.app.getStage())
+                .title("Exception Dialog")
+                .masthead(e.toString())
+                .message(e.getMessage())
+                .showException(e);
+    }
 
     private Action showConfirmDialog(String msgHead, String msgBody) {
         Action response = Dialogs.create()

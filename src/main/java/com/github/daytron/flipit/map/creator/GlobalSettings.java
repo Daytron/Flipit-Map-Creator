@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * 
+ * Created by Ryan Gilera <jalapaomaji-github@yahoo.com>
  */
 package com.github.daytron.flipit.map.creator;
 
-/**
- *
- * @author ryan
- */
 public class GlobalSettings {
 
     // Default values for map size comboboxes
@@ -56,12 +51,12 @@ public class GlobalSettings {
     // DIALOG MSGs
     public static final String DIALOG_QUIT_HEAD_MSG = "Application Exit";
     public static final String DIALOG_QUIT_BODY_MSG = "Are you sure you want to exit?";
-    
+
     public static final String DIALOG_WARNING_SAVE_HEAD_MSG = "Missing Requirement";
-    
+
     public static final String DIALOG_QUIT_HEAD_MSG_NOT_SAVE = "Unsave map detected.";
     public static final String DIALOG_QUIT_BODY_MSG_NOT_SAVE = "Are you sure you want to exit? Please make sure current map is save or it will be lost.";
-    
+
     public static final String DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE = "Unsave map detected.";
     public static final String DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE = "Are you sure you want to continue? Please make sure current map is save or it will be lost.";
 }
