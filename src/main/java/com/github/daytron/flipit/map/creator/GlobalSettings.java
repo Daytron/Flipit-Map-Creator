@@ -57,6 +57,8 @@ public class GlobalSettings {
     public static final String DIALOG_QUIT_HEAD_MSG = "Application Exit";
     public static final String DIALOG_QUIT_BODY_MSG = "Are you sure you want to exit?";
     
+    public static final String DIALOG_WARNING_SAVE_HEAD_MSG = "Missing Requirement";
+    
     public static final String DIALOG_QUIT_HEAD_MSG_NOT_SAVE = "Unsave map detected.";
     public static final String DIALOG_QUIT_BODY_MSG_NOT_SAVE = "Are you sure you want to exit? Please make sure current map is save or it will be lost.";
     

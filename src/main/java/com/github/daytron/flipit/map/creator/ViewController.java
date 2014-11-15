@@ -894,6 +894,9 @@ public class ViewController implements Initializable {
             String emptyMapMsg = GlobalSettings.LOG_ERROR
                     + "No map opened or generated.";
             this.addNewLogMessage(emptyMapMsg);
+            this.showWarningDialog(
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyMapMsg);
             return;
         }
 
@@ -901,6 +904,9 @@ public class ViewController implements Initializable {
             String emptyP1StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 1 start position is not set!";
             this.addNewLogMessage(emptyP1StartMsg);
+            this.showWarningDialog(
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyP1StartMsg);
             return;
         }
 
@@ -908,6 +914,9 @@ public class ViewController implements Initializable {
             String emptyP2StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 2 start position is not set!";
             this.addNewLogMessage(emptyP2StartMsg);
+            this.showWarningDialog(
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyP2StartMsg);
             return;
         }
 
@@ -915,11 +924,17 @@ public class ViewController implements Initializable {
             String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
             this.addNewLogMessage(emptyTitleMsg);
+            this.showWarningDialog(
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyTitleMsg);
             return;
         } else if (this.map.getName().isEmpty()) {
             String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
             this.addNewLogMessage(emptyTitleMsg);
+            this.showWarningDialog(
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyTitleMsg);
             return;
         }
 
