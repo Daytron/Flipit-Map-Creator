@@ -202,7 +202,7 @@ public class ViewController implements Initializable {
 
     }
 
-    public void addNewLogMessage(String message) {
+    private void addNewLogMessage(String message) {
         Date date = new Date();
         String timeFormat = this.df.format(date);
 
@@ -227,11 +227,11 @@ public class ViewController implements Initializable {
         this.logArea.appendText("");
     }
 
-    public void generateMap() {
+    private void generateMap() {
         this.generateMap("");
     }
 
-    public void generateMap(String path) {
+    private void generateMap(String path) {
         // ################## INIT #################//
         this.isEditMapOn = false;
 
@@ -404,7 +404,7 @@ public class ViewController implements Initializable {
         this.isCurrentMapSave = false;
     }
 
-    public void paintTile(String light_edge_color, String main_color, String shadow_edge_color,
+    private void paintTile(String light_edge_color, String main_color, String shadow_edge_color,
             int count_column, int count_row) {
         // coloring the light top and left edges respectively
         this.gc.setFill(Color.web(light_edge_color));
@@ -641,12 +641,12 @@ public class ViewController implements Initializable {
         }
     }
 
-    public boolean isInsideTheGrid(double x_pos, double y_pos) {
+    private boolean isInsideTheGrid(double x_pos, double y_pos) {
         return (x_pos >= this.halfPaddingWidth && x_pos <= (this.canvas.getWidth() - this.halfPaddingWidth))
                 && (y_pos >= this.halfPaddingHeight && y_pos <= (this.canvas.getWidth() - this.halfPaddingHeight));
     }
 
-    public int[] getTilePosition(double x_pos, double y_pos) {
+    private int[] getTilePosition(double x_pos, double y_pos) {
         int tile_x, tile_y;
 
         // For locating column position
@@ -774,7 +774,7 @@ public class ViewController implements Initializable {
         return firstLetterCapitalTitle;
     }
 
-    public String titleFormatter(String title) {
+    private String titleFormatter(String title) {
         // Capitilize all first letter of a word 
         // separated by space
         title = this.captilizeFirstLetter(title);
@@ -846,7 +846,7 @@ public class ViewController implements Initializable {
 
     }
 
-    public void openMapFile(File file) {
+    private void openMapFile(File file) {
         Gson gson = new Gson();
 
         try {
