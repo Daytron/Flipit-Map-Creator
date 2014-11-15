@@ -42,11 +42,17 @@ Want to contribute? Please do open up an issue. I don't accept pull requests at 
 
 ### Todo's
 
- - Write Tests (Junit)
- - Better UI
+ - Write Tests (Junit and find a great UI Testing library like Robotium for Android)
+ - Add Coveralls badge
+ - Add dependencies compliance badge
+ - Automatic screenshot save image(PNG) in saving map for later use as preview image in the game
+ - Further validation on save filename naming convention
  - Players start positions tile marks
- - Java doc
+ - Create Java doc
  - About Menu
+ - Better UI
+ - Add Edit menu items (undo and redo maybe in the future?)
+ - Add open recent file menu item (no persistence for now)
  - Find bugs
  - Find more bugs
 
