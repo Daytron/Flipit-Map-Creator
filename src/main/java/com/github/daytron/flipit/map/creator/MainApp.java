@@ -6,12 +6,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class MainApp extends Application {
 
@@ -22,6 +24,8 @@ public class MainApp extends Application {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
 
+        
+        
         this.loadScene();
         stage.show();
     }
@@ -44,7 +48,8 @@ public class MainApp extends Application {
         InputStream in = MainApp.class.getResourceAsStream("/fxml/" + fxml);
         loader.setBuilderFactory(new JavaFXBuilderFactory());
         loader.setLocation(MainApp.class.getResource("/fxml/" + fxml));
-
+        
+        
         Parent pane;
 
         try {

@@ -14,11 +14,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -35,6 +37,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.Dialogs;
 
 public class ViewController implements Initializable {
 
@@ -111,6 +117,9 @@ public class ViewController implements Initializable {
 
     // Flag to differentiate from open and new map
     private boolean isOpeningAMap = false;
+
+    // Flag to know if current map is save or not
+    private boolean isCurrentMapSave = true;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -372,8 +381,13 @@ public class ViewController implements Initializable {
 
     @FXML
     private void generateBtnOnClick(ActionEvent event) {
+        // Toggle flag if the map being generated is from opening a file or new
         this.isOpeningAMap = false;
+
         this.generateMap();
+
+        // Toggle flag for detecting unsave map data
+        this.isCurrentMapSave = false;
     }
 
     public void paintTile(String light_edge_color, String main_color, String shadow_edge_color,
@@ -816,7 +830,7 @@ public class ViewController implements Initializable {
             //convert the json string back to object
             this.map = gson.fromJson(br, Map.class);
 
-            // Toggle flag
+            // Toggle flag that the map is an open map file
             this.isOpeningAMap = true;
 
             // Extract columns and rows
@@ -836,6 +850,9 @@ public class ViewController implements Initializable {
             this.listOfBoulders = this.map.getListOfBoulders();
 
             this.generateMap(file.getPath());
+
+            // Toggle flag for detecting unsave map
+            this.isCurrentMapSave = false;
 
         } catch (IOException e) {
             String errorMsg = GlobalSettings.LOG_ERROR
@@ -974,6 +991,9 @@ public class ViewController implements Initializable {
                     + "File is successfully saved at " + file.getPath();
             this.addNewLogMessage(successSaveMsg);
 
+            // Toggle flag for detecting unsave map
+            this.isCurrentMapSave = true;
+
         } catch (IOException e) {
             String errorMsg = GlobalSettings.LOG_ERROR
                     + "IOEXCEPTION! Unable to save file. Please check console for more info.";
@@ -985,17 +1005,84 @@ public class ViewController implements Initializable {
 
     @FXML
     private void menuFileNewOnClick(ActionEvent event) {
+        // Toggle flag for detecting if the map being generated 
+        // is an open file or new
         this.isOpeningAMap = false;
+
+        // Generate the map
         this.generateMap();
+
+        // Toggle flag for detecting unsave map
+        this.isCurrentMapSave = false;
     }
 
     public void setApp(MainApp app) {
         this.app = app;
+
+        // For detecting user pressing close window button
+        // for exit dialog confirmation process
+        this.app.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+            @Override
+            public void handle(WindowEvent event) {
+                String msgHead, msgBody;
+
+                if (isCurrentMapSave) {
+                    msgHead = GlobalSettings.DIALOG_QUIT_HEAD_MSG;
+                    msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG;
+                } else {
+                    msgHead = GlobalSettings.DIALOG_QUIT_HEAD_MSG_NOT_SAVE;
+                    msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG_NOT_SAVE;
+                }
+
+                if (showConfirmDialog(msgHead,
+                        msgBody) == Dialog.ACTION_CANCEL) {
+                    // event consume halts any further action (shutting down)
+                    event.consume();
+                }
+
+            }
+        });
     }
 
     @FXML
     private void menuFileQuitOnClick(ActionEvent event) {
-        System.exit(0);
+        String msgHead, msgBody;
+
+        if (this.isCurrentMapSave) {
+            msgHead = GlobalSettings.DIALOG_QUIT_HEAD_MSG;
+            msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG;
+        } else {
+            msgHead = GlobalSettings.DIALOG_QUIT_HEAD_MSG_NOT_SAVE;
+            msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG_NOT_SAVE;
+        }
+
+        if (this.showConfirmDialog(msgHead,
+                msgBody) == Dialog.ACTION_OK) {
+            Platform.exit();
+        }
+
+    }
+
+    private void showWarningDialog(String msgHead, String msgBody) {
+        Dialogs.create()
+                .owner(this.app.getStage())
+                .title("Warning")
+                .masthead(msgHead)
+                .message(msgBody)
+                .showWarning();
+    }
+
+    private Action showConfirmDialog(String msgHead, String msgBody) {
+        Action response = Dialogs.create()
+                .owner(this.app.getStage())
+                .title("Confirm Dialog")
+                .masthead(msgHead)
+                .message(msgBody)
+                .actions(Dialog.ACTION_OK, Dialog.ACTION_CANCEL)
+                .showConfirm();
+
+        return response;
     }
 
 }
