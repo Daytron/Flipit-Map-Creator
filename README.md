@@ -4,7 +4,7 @@ Flipit Map Creator is a companion JavaFX application for the upcoming game calle
 
 ### Features
   - Create and replace tiles on click
-  - Can create map with size up to 20 by 20.
+  - Can create map with size up to 20 by 20 tiles.
   - Automatically saves a preview image file of the map.
 
 ### Screenshot
