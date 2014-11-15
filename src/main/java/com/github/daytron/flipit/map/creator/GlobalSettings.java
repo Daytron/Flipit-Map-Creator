@@ -31,13 +31,14 @@ public class GlobalSettings {
     public final static String TILE_PLAYER2 = "Player2";
     
     // Log Messages
-    public final static String LOG_WARNING = "[WARNING] ";
-    public final static String LOG_ERROR = "[ERROR] ";
-    public final static String LOG_TILE_OVERWRITTEN = "[TILE OVERWRITTEN] ";
-    public final static String LOG_TILE_SET = "[TILE SET] ";
-    public final static String LOG_NEW_MAP = "[NEW MAP CREATED] ";
-    public final static String LOG_OPEN_MAP = "[FILE MAP OPENED] ";
-    public final static String LOG_TITLE_SET = "[TITLE SET] ";
+    public final static String LOG_WARNING = "[WARNING]\n";
+    public final static String LOG_ERROR = "[ERROR]\n";
+    public final static String LOG_TILE_OVERWRITTEN = "[TILE OVERWRITTEN]\n";
+    public final static String LOG_TILE_SET = "[TILE SET]\n";
+    public final static String LOG_NEW_MAP = "[NEW MAP CREATED]\n";
+    public final static String LOG_OPEN_MAP = "[FILE MAP OPENED]\n";
+    public final static String LOG_SAVE_MAP = "[FILE MAP SAVED]\n";
+    public final static String LOG_TITLE_SET = "[TITLE SET]\n";
     public final static String LOG_BOULDER_OVERWRITTEN = "Boulder tile is overwritten!";
     public final static String LOG_OS_NOT_SUPPORTED = "Your Operating System is not yet supported.";
     
