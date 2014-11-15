@@ -57,6 +57,7 @@ Want to contribute? Please do open up an issue. I don't accept pull requests at 
  - Better UI
  - Add Edit menu items (undo and redo maybe in the future?)
  - Add open recent file menu item (no persistence for now)
+ - Add keyboard control shortcuts
  - Find bugs
  - Find more bugs
 
