@@ -20,14 +20,11 @@
             <MenuItem fx:id="menuFileOpen" mnemonicParsing="false" onAction="#menuFileOpenOnClick" text="Open…" />
             <Menu mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
             <MenuItem fx:id="menuFileSave" mnemonicParsing="false" onAction="#menuFileSaveOnClick" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
+            <MenuItem mnemonicParsing="false" onAction="#menuFileQuitOnClick" text="Quit" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
@@ -46,7 +43,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem mnemonicParsing="false" text="About Flipit Map Creator" />
           </items>
         </Menu>
       </menus>

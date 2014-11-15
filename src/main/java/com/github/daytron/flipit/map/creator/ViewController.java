@@ -721,18 +721,18 @@ public class ViewController implements Initializable {
         }
 
     }
-    
+
     private String captilizeFirstLetter(String word) {
         // Removes any unnecessary leading and trailing space
         word = word.trim();
 
         // Shifts all letters to lowercase
         word = word.toLowerCase();
-        
+
         // Convert the first letter to uppercase
-        String firstLetterCapitalTitle = word.substring(0, 1).toUpperCase() 
+        String firstLetterCapitalTitle = word.substring(0, 1).toUpperCase()
                 + word.substring(1);
-        
+
         // Converts all first letter of word separated by space to uppercase
         for (int i = 0; i < word.length(); i++) {
             if (word.charAt(i) == ' ') {
@@ -780,30 +780,30 @@ public class ViewController implements Initializable {
         // Launch filechooser and get open file
         File file = fileChooser.showOpenDialog(this.app.getStage());
 
-        if (file != null) {
-            String ext = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
-
-            String filename = "";
-            if (this.userOS.startsWith(GlobalSettings.OS_LINUX)
-                    || this.userOS.startsWith(GlobalSettings.OS_MAC)) {
-                filename = file.getPath().substring(file.getPath().lastIndexOf("/") + 1);
-            } else if (this.userOS.startsWith(GlobalSettings.OS_WINDOWS)) {
-                filename = file.getPath().substring(file.getPath().lastIndexOf("\\") + 1);
-            } else {
-                String noOSsupportMsg = GlobalSettings.LOG_ERROR
-                        + GlobalSettings.LOG_OS_NOT_SUPPORTED;
-                this.addNewLogMessage(noOSsupportMsg);
-                return;
-            }
-            String firstWord = filename.substring(0, 3);
-
-            if (file.isFile() && "json".equals(ext) && firstWord.equalsIgnoreCase("Map")) {
-                this.openMapFile(file);
-            }
-
-        } else {
+        if (file == null) {
             return;
         }
+
+        String ext = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
+
+        String filename = "";
+        if (this.userOS.startsWith(GlobalSettings.OS_LINUX)
+                || this.userOS.startsWith(GlobalSettings.OS_MAC)) {
+            filename = file.getPath().substring(file.getPath().lastIndexOf("/") + 1);
+        } else if (this.userOS.startsWith(GlobalSettings.OS_WINDOWS)) {
+            filename = file.getPath().substring(file.getPath().lastIndexOf("\\") + 1);
+        } else {
+            String noOSsupportMsg = GlobalSettings.LOG_ERROR
+                    + GlobalSettings.LOG_OS_NOT_SUPPORTED;
+            this.addNewLogMessage(noOSsupportMsg);
+            return;
+        }
+        String firstWord = filename.substring(0, 3);
+
+        if (file.isFile() && "json".equals(ext) && firstWord.equalsIgnoreCase("Map")) {
+            this.openMapFile(file);
+        }
+
     }
 
     public void openMapFile(File file) {
@@ -850,38 +850,38 @@ public class ViewController implements Initializable {
     private void menuFileSaveOnClick(ActionEvent event) {
         // Detect first if all requirements met
         if (this.map == null) {
-            String emptyMapMsg = GlobalSettings.LOG_ERROR +
-                    "No map opened or generated.";
+            String emptyMapMsg = GlobalSettings.LOG_ERROR
+                    + "No map opened or generated.";
             this.addNewLogMessage(emptyMapMsg);
             return;
         }
-        
+
         if (this.map.getListOfPlayer1StartPosition() == null) {
-            String emptyP1StartMsg = GlobalSettings.LOG_ERROR 
+            String emptyP1StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 1 start position is not set!";
             this.addNewLogMessage(emptyP1StartMsg);
             return;
         }
-        
+
         if (this.map.getListOfPlayer2StartPosition() == null) {
             String emptyP2StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 2 start position is not set!";
             this.addNewLogMessage(emptyP2StartMsg);
             return;
         }
-        
+
         if (this.map.getName() == null) {
-            String emptyTitleMsg = GlobalSettings.LOG_ERROR 
+            String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
             this.addNewLogMessage(emptyTitleMsg);
             return;
         } else if (this.map.getName().isEmpty()) {
-            String emptyTitleMsg = GlobalSettings.LOG_ERROR 
+            String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
             this.addNewLogMessage(emptyTitleMsg);
             return;
         }
-        
+
         // Create a new filchooser for saving file
         FileChooser fileChooser = new FileChooser();
 
@@ -919,46 +919,44 @@ public class ViewController implements Initializable {
             this.addNewLogMessage(noOSsupportMsg);
             return;
         }
-        String firstWord = filename.substring(0,filename.lastIndexOf("."));
-        
+        String firstWord = filename.substring(0, filename.lastIndexOf("."));
+
         if (!firstWord.startsWith("Map")) {
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + "Wrong filename format. Should be [Map] & [3 digit number].json";
             this.addNewLogMessage(wrongFormatNameMsg);
             return;
         }
-        
+
         if (firstWord.contains(" ")) {
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + "Filename shouldn't contain space character";
             this.addNewLogMessage(wrongFormatNameMsg);
             return;
         }
-        
-        
 
         if ("json".equalsIgnoreCase(ext)) {
             // Formay the mapId to proper accepted format
             // E.g. Map002
             firstWord = this.formatMapID(firstWord);
-            
+
             // Apply data to map file
             this.map.setMapID(firstWord);
-            this.map.setSize(new int[] {this.numberOfColumns, this.numberOfRows});
-            
+            this.map.setSize(new int[]{this.numberOfColumns, this.numberOfRows});
+
             this.saveFile(file);
-        } else  {
+        } else {
             String invalidExtMsg = GlobalSettings.LOG_ERROR
                     + "Invalid extension file!";
             this.addNewLogMessage(invalidExtMsg);
         }
 
     }
-    
+
     private String formatMapID(String id) {
         return this.captilizeFirstLetter(id);
     }
-    
+
     private void saveFile(File file) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -967,20 +965,20 @@ public class ViewController implements Initializable {
         String json = gson.toJson(this.map);
 
         try {
-            //write converted json data to a file named "CountryGSON.json"
+            //write converted json data to a file 
             FileWriter writer = new FileWriter(file);
             writer.write(json);
             writer.close();
-            
-            String successSaveMsg = GlobalSettings.LOG_SAVE_MAP +
-                    "File is successfully saved at " + file.getPath();
+
+            String successSaveMsg = GlobalSettings.LOG_SAVE_MAP
+                    + "File is successfully saved at " + file.getPath();
             this.addNewLogMessage(successSaveMsg);
 
         } catch (IOException e) {
-            String errorMsg = GlobalSettings.LOG_ERROR +
-                    "IOEXCEPTION! Unable to save file. Please check console for more info.";
+            String errorMsg = GlobalSettings.LOG_ERROR
+                    + "IOEXCEPTION! Unable to save file. Please check console for more info.";
             this.addNewLogMessage(errorMsg);
-            
+
             e.printStackTrace();
         }
     }
@@ -993,6 +991,11 @@ public class ViewController implements Initializable {
 
     public void setApp(MainApp app) {
         this.app = app;
+    }
+
+    @FXML
+    private void menuFileQuitOnClick(ActionEvent event) {
+        System.exit(0);
     }
 
 }
