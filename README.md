@@ -1,3 +1,5 @@
+Build status: &nbsp; ![Travis-Status](https://travis-ci.org/Daytron/Flipit-Map-Creator.svg?branch=master) &nbsp;&nbsp;&nbsp;Build history: [travis-ci.org/Daytron/Flipit-Map-Creator](https://travis-ci.org/Daytron/Flipit-Map-Creator) 
+
 # Flipit Map Creator
 
 Flipit Map Creator is a companion JavaFX application for the upcoming game called Flipit. Allows to create, modify and save Flipit map json files. This application is still in working progress but the barebone functionalities are in placed.
