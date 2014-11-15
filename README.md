@@ -8,7 +8,7 @@ Flipit Map Creator is a companion JavaFX application for the upcoming game calle
   - Validation on every step, to ensure proper map data modifications
 
 ### Screenshot
-![ScreenShot](https://raw.githubusercontent.com/Daytron/Flipit-Map-Creator/master/Screenshots/FlipitMapCreatorScreenshot.png?token=AGk1WmfYJhKxIHs7AhfcrrNGFyqGxYXxks5UcIMhwA%3D%3D)
+![ScreenShot](https://raw.githubusercontent.com/Daytron/Flipit-Map-Creator/master/Screenshots/FlipitMapCreatorScreenshot.png)
 
 ### Dependencies
 Flipit Map Creator uses a number of open source projects to work properly:
@@ -49,7 +49,7 @@ Want to contribute? Please do open up an issue. Not accepting any pull requests 
  - Add dependencies compliance badge
  - Automatic screenshot save image(PNG) in saving map for later use as preview image in the game
  - Further validation on save filename naming convention
- - Players start positions tile marks
+ - ~~Players start positions tile marks~~
  - Create Java doc
  - About Menu
  - Better UI

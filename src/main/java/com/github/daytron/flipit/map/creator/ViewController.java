@@ -38,6 +38,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import org.controlsfx.control.action.Action;
@@ -156,7 +157,6 @@ public class ViewController implements Initializable {
         // Define column list items
         ObservableList<Integer> columnOptions
                 = (ObservableList<Integer>) GlobalSettings.LIST_POSSIBLE_TILES;
-        
 
         // Define row list items
         ObservableList<Integer> rowOptions
@@ -306,13 +306,23 @@ public class ViewController implements Initializable {
 
                 }
             }
+            
+            // Paint tile for player 1 start position
+            this.paintPlayerStart(1, 
+                    this.map.getListOfPlayer1StartPosition()[0], 
+                    this.map.getListOfPlayer1StartPosition()[1]);
+            
+            // Paint tile for player 2 start position
+            this.paintPlayerStart(2, 
+                    this.map.getListOfPlayer2StartPosition()[0], 
+                    this.map.getListOfPlayer2StartPosition()[1]);
 
             // Prepare log message
             msg = GlobalSettings.LOG_OPEN_MAP + this.numberOfColumns
                     + " columns & " + this.numberOfRows + " rows"
                     + "\n Map file opened: " + path;
         }
-        
+
         // Notify user in log area
         this.addNewLogMessage(msg);
     }
@@ -413,6 +423,79 @@ public class ViewController implements Initializable {
         this.gc.fillRect(this.columnCell.get(count_column) + this.gridXSpace - this.tileEdgeEffect, this.rowCell.get(count_row) + this.tileEdgeEffect, this.tileEdgeEffect, this.gridYSpace - this.tileEdgeEffect);
     }
 
+    private void paintPlayerStart(int playerNumber, int x, int y) {
+
+        double smallestSide = Math.min(this.gridXSpace, this.gridYSpace);
+
+        double padding;
+        double widthRing, heightRing;
+        double xAllowance, yAllowance;
+
+        // For drawing the ring
+        // Calculate necessary adjustments
+        padding = 0.1 * smallestSide;
+        this.gc.setLineWidth(0.05 * smallestSide);
+
+        widthRing = smallestSide - (padding * 2);
+        heightRing = widthRing;
+
+        xAllowance = (this.gridXSpace - widthRing) / 2;
+        yAllowance = (this.gridYSpace - heightRing) / 2;
+
+        this.gc.strokeOval(this.columnCell.get(x - 1) + xAllowance,
+                this.rowCell.get(y - 1) + yAllowance,
+                widthRing,
+                heightRing);
+
+        // For text draw
+        int smallestSidePos = Math.min(this.numberOfColumns, 
+                this.numberOfRows);
+        
+        // this is based on these definitions
+        // with smallest side (row or column) 5 font size is 40
+        // with 6 size is 38
+        // with 7 size is 36
+        // until 20 size is 10
+        int fontSize = 45 - smallestSidePos - (smallestSidePos - 5);
+        
+        // Text padding
+        double xPaddingPercentage;
+        double yPaddingPercentage;
+        
+        if (smallestSidePos > 4 && smallestSidePos < 7) {
+            xPaddingPercentage = 0.33;
+            yPaddingPercentage = 0.65;
+        } else if (smallestSidePos > 6 && smallestSidePos < 10) {
+            xPaddingPercentage = 0.31;
+           yPaddingPercentage = 0.7;
+        } else if (smallestSidePos > 9 && smallestSidePos < 13){
+            xPaddingPercentage = 0.29;
+            yPaddingPercentage = 0.75;
+        } else if (smallestSidePos > 12 && smallestSidePos < 16) {
+            xPaddingPercentage = 0.28;
+            yPaddingPercentage = 0.75;
+        } else if (smallestSidePos > 15 && smallestSidePos < 18) {
+            xPaddingPercentage = 0.32;
+            yPaddingPercentage = 0.7;
+        } else {
+            xPaddingPercentage = 0.35;
+            yPaddingPercentage = 0.7;
+        }
+        
+        Font oldFont = this.gc.getFont();
+        this.gc.setFont(Font.font("Verdana", fontSize));
+
+        this.gc.strokeText(Integer.toString(playerNumber),
+                this.columnCell.get(x - 1) + xAllowance
+                + (widthRing * xPaddingPercentage),
+                this.rowCell.get(y - 1) + yAllowance
+                + (widthRing * yPaddingPercentage));
+
+        // Return back to its original width and font
+        this.gc.setLineWidth(1.0);
+        this.gc.setFont(oldFont);
+    }
+
     @FXML
     private void player1StartBtnOnClick(ActionEvent event) {
         this.isEditMapOn = true;
@@ -453,7 +536,7 @@ public class ViewController implements Initializable {
             if (this.isEditMapOn) {
                 // Extract tile position from mouseclick coordinates
                 int[] tilePos = this.getTilePosition(event.getX(), event.getY());
-                
+
                 boolean isAlreadyBoulder = false;
                 Integer[] boulderReference = null;
 
@@ -552,6 +635,8 @@ public class ViewController implements Initializable {
                             }
                         }
 
+                        this.paintPlayerStart(1, tilePos[0], tilePos[1]);
+
                         // Add start position to map
                         this.map.setListOfPlayer1StartPosition(tilePos.clone());
 
@@ -605,6 +690,9 @@ public class ViewController implements Initializable {
                             }
                         }
 
+                        this.paintPlayerStart(2, tilePos[0], tilePos[1]);
+                        
+                        // Add start position to map
                         this.map.setListOfPlayer2StartPosition(tilePos.clone());
 
                         // LOG Message
@@ -645,8 +733,9 @@ public class ViewController implements Initializable {
     }
 
     /**
-     * Method for extracting grid position from mouseclick coordinates
-     * Uses a simple binary search
+     * Method for extracting grid position from mouseclick coordinates Uses a
+     * simple binary search
+     *
      * @param x_pos Mouseclick x coordinate
      * @param y_pos Mouseclick y coordinate
      * @return An integer array as tile position [column,row]
@@ -1006,12 +1095,12 @@ public class ViewController implements Initializable {
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + "Filename shouldn't contain space character";
             this.addNewLogMessage(wrongFormatNameMsg);
-            
+
             // Show a warning dialog
             this.showWarningDialog(
-                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_HEAD_MSG, 
+                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_HEAD_MSG,
                     GlobalSettings.DIALOG_SAVE_NAME_SPACE_BODY_MSG);
-            
+
             return;
         }
 
@@ -1030,10 +1119,10 @@ public class ViewController implements Initializable {
             String invalidExtMsg = GlobalSettings.LOG_ERROR
                     + "Invalid extension file!";
             this.addNewLogMessage(invalidExtMsg);
-            
+
             // Show error dialog
             this.showErrorDialog(
-                    GlobalSettings.DIALOG_INVALID_EXTENSION_HEAD_MSG, 
+                    GlobalSettings.DIALOG_INVALID_EXTENSION_HEAD_MSG,
                     GlobalSettings.DIALOG_INVALID_EXTENSION_BODY_MSG);
         }
 
@@ -1164,14 +1253,14 @@ public class ViewController implements Initializable {
                 .message(msgBody)
                 .showWarning();
     }
-    
+
     private void showErrorDialog(String msgHead, String msgBody) {
         Dialogs.create()
-        .owner(this.app.getStage())
-        .title("Error")
-        .masthead(msgHead)
-        .message(msgBody)
-        .showError();
+                .owner(this.app.getStage())
+                .title("Error")
+                .masthead(msgHead)
+                .message(msgBody)
+                .showError();
     }
 
     private void showExceptionDialog(Exception e) {
