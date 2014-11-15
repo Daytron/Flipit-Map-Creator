@@ -156,17 +156,12 @@ public class ViewController implements Initializable {
         // ################## MAP SIZE COMBO BOXES #################//
         // Define column list items
         ObservableList<Integer> columnOptions
-                = FXCollections.observableArrayList(
-                        5, 6, 7, 8, 9, 10, 11, 12, 13,
-                        14, 15, 16, 17, 18, 19, 20
-                );
+                = (ObservableList<Integer>) GlobalSettings.LIST_POSSIBLE_TILES;
+        
 
         // Define row list items
         ObservableList<Integer> rowOptions
-                = FXCollections.observableArrayList(
-                        5, 6, 7, 8, 9, 10, 11, 12, 13,
-                        14, 15, 16, 17, 18, 19, 20
-                );
+                = (ObservableList<Integer>) GlobalSettings.LIST_POSSIBLE_TILES;
 
         // Attach lists to their corresponding combo object
         this.column_combo.setItems(columnOptions);

@@ -4,11 +4,22 @@
  */
 package com.github.daytron.flipit.map.creator;
 
+import java.util.ArrayList;
+import java.util.List;
+import javafx.collections.FXCollections;
+
 public class GlobalSettings {
 
     // Default values for map size comboboxes
     public static final Integer COLUMN_DEFAULT_VALUE = 10;
     public static final Integer ROW_DEFAULT_VALUE = 10;
+    
+    // Default number of possible tiles
+    public static final List<Integer> LIST_POSSIBLE_TILES 
+            = FXCollections.observableArrayList(
+                        5, 6, 7, 8, 9, 10, 11, 12, 13,
+                        14, 15, 16, 17, 18, 19, 20
+                );
 
     // Colors
     public final static String TILE_NEUTRAL_LIGHT_EDGE_COLOR = "#FFFFFF";
