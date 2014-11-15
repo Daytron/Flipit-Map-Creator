@@ -3,9 +3,9 @@
 Flipit Map Creator is a companion JavaFX application for the upcoming game called Flipit. Allows to create, modify and save Flipit map json files. This application is still in working progress but the barebone functionalities are in placed.
 
 ### Features
-  - Create and edit tiles on click
-  - Create map up to 20 by 20 size
-  - Validation on every step, to ensure proper map data modifications
+  - Create and replace tiles on click
+  - Can create map with size up to 20 by 20.
+  - Automatically saves a preview image file of the map.
 
 ### Screenshot
 ![ScreenShot](https://raw.githubusercontent.com/Daytron/Flipit-Map-Creator/master/Screenshots/FlipitMapCreatorScreenshot.png)
@@ -45,8 +45,7 @@ Want to contribute? Please do open up an issue. Not accepting any pull requests 
 ### Roadmap to version 1.0 release
 
  - Write Tests (Junit and find a great UI Testing library like Robotium for Android)
- - Add Coveralls badge
- - Add dependencies compliance badge
+ - Add test coverage and Coveralls badge
  - ~~Automatic screenshot save image(PNG) in saving map for later use as preview image in the game~~
  - Further validation on save filename naming convention
  - ~~Players start positions tile marks~~
