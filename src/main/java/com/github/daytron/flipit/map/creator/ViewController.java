@@ -232,7 +232,6 @@ public class ViewController implements Initializable {
         this.isEditMapOn = false;
 
         // Init logArea
-        this.logMessage = new StringBuilder();
         this.preventNewLineAtFirst = true;
 
         this.logArea.setText("");
@@ -381,6 +380,17 @@ public class ViewController implements Initializable {
 
     @FXML
     private void generateBtnOnClick(ActionEvent event) {
+        // Confirmation dialog
+        if (!isCurrentMapSave) {
+            if (showConfirmDialog(
+                    GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE) 
+                    == Dialog.ACTION_CANCEL) {
+                // Cancel opening file if user press cancel
+                return;
+            }
+        }
+        
         // Toggle flag if the map being generated is from opening a file or new
         this.isOpeningAMap = false;
 
@@ -776,6 +786,18 @@ public class ViewController implements Initializable {
 
     @FXML
     private void menuFileOpenOnClick(ActionEvent event) {
+        
+        // Confirmation dialog
+        if (!isCurrentMapSave) {
+            if (showConfirmDialog(
+                    GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE) 
+                    == Dialog.ACTION_CANCEL) {
+                // Cancel opening file if user press cancel
+                return;
+            }
+        }
+        
         FileChooser fileChooser = new FileChooser();
 
         // Set filechooser title
@@ -1005,6 +1027,17 @@ public class ViewController implements Initializable {
 
     @FXML
     private void menuFileNewOnClick(ActionEvent event) {
+        // Confirmation dialog
+        if (!isCurrentMapSave) {
+            if (showConfirmDialog(
+                    GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE) 
+                    == Dialog.ACTION_CANCEL) {
+                // Cancel opening file if user press cancel
+                return;
+            }
+        }
+        
         // Toggle flag for detecting if the map being generated 
         // is an open file or new
         this.isOpeningAMap = false;

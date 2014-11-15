@@ -59,4 +59,7 @@ public class GlobalSettings {
     
     public static final String DIALOG_QUIT_HEAD_MSG_NOT_SAVE = "Unsave map detected.";
     public static final String DIALOG_QUIT_BODY_MSG_NOT_SAVE = "Are you sure you want to exit? Please make sure current map is save or it will be lost.";
+    
+    public static final String DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE = "Unsave map detected.";
+    public static final String DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE = "Are you sure you want to continue? Please make sure current map is save or it will be lost.";
 }
