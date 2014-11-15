@@ -65,15 +65,15 @@ public class GlobalSettings {
 
     public static final String DIALOG_WARNING_SAVE_HEAD_MSG = "Missing Requirement";
     
-    public static final String DIALOG_SAVE_NAME_SPACE_HEAD_MSG = "Space detected";
+    public static final String DIALOG_SAVE_NAME_SPACE_HEAD_MSG = "Space Character Detected";
     public static final String DIALOG_SAVE_NAME_SPACE_BODY_MSG = "Please remove unnecessary space";
     
     public static final String DIALOG_INVALID_EXTENSION_HEAD_MSG = "Unsupported File Extension";
     public static final String DIALOG_INVALID_EXTENSION_BODY_MSG = "Please use only .json extension.";
 
-    public static final String DIALOG_QUIT_HEAD_MSG_NOT_SAVE = "Unsave map detected.";
+    public static final String DIALOG_QUIT_HEAD_MSG_NOT_SAVE = "Unsave Map Detected.";
     public static final String DIALOG_QUIT_BODY_MSG_NOT_SAVE = "Are you sure you want to exit? Please make sure current map is save or it will be lost.";
 
-    public static final String DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE = "Unsave map detected.";
+    public static final String DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE = "Unsave Map Detected.";
     public static final String DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE = "Are you sure you want to continue? Please make sure current map is save or it will be lost.";
 }
