@@ -20,7 +20,6 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -78,7 +77,7 @@ public class ViewController implements Initializable {
     @FXML
     private MenuItem menuFileSave;
 
-    // MainAPp object
+    // MainApp object
     private MainApp app;
 
     private boolean isEditMapOn;
@@ -229,11 +228,6 @@ public class ViewController implements Initializable {
     private void generateMap(String path) {
         // ################## INIT #################//
         this.isEditMapOn = false;
-
-        // Init logArea
-        this.preventNewLineAtFirst = true;
-
-        this.logArea.setText("");
 
         if (!this.isOpeningAMap) {
             // Resets list of boulders and new map
