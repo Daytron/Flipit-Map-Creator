@@ -206,6 +206,7 @@ public class ViewController implements Initializable {
         Date date = new Date();
         String timeFormat = this.df.format(date);
 
+        // Prevents to create new line on first log
         if (this.preventNewLineAtFirst) {
             this.logMessage.append("[")
                     .append(timeFormat)
