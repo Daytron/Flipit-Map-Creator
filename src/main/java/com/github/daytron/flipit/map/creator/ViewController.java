@@ -146,7 +146,7 @@ public class ViewController implements Initializable {
         // Extract GraphicsContext from canvas
         this.gc = this.canvas.getGraphicsContext2D();
 
-        this.dateFormatter = new SimpleDateFormat("hh:mm:ss");
+        this.dateFormatter = new SimpleDateFormat("hh:mm");
         // Init logArea
         this.logMessage = new StringBuilder();
         this.preventNewLineAtFirst = true;
@@ -1476,5 +1476,11 @@ public class ViewController implements Initializable {
     @FXML
     private void menuAboutOnClick(ActionEvent event) {
     }
+
+    public boolean isThereAMapVisible() {
+        return isThereAMapVisible;
+    }
+    
+    
 
 }

@@ -21,6 +21,7 @@ public class MainApp extends Application {
 
     private Stage stage;
     private final String MAIN_FXML = "View.fxml";
+    private ViewController viewController;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -36,10 +37,18 @@ public class MainApp extends Application {
 
     private void loadScene() {
         try {
-            ViewController viewController = (ViewController) replaceScene(MAIN_FXML);
-            viewController.setApp(this);
+            this.viewController = (ViewController) replaceScene(MAIN_FXML);
+            this.viewController.setApp(this);
         } catch (IOException ex) {
             Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public ViewController getView() {
+        if (this.viewController != null) {
+            return this.viewController;
+        } else {
+            return  null;
         }
     }
 
@@ -57,13 +66,19 @@ public class MainApp extends Application {
             in.close();
         }
         Scene scene = new Scene(pane);
-
         stage.setTitle("Flipit Map Creator");
+        stage.centerOnScreen();
+        
         stage.setScene(scene);
 
         stage.sizeToScene();
 
         return (Initializable) loader.getController();
+    }
+    
+    Parent getRoot() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/View.fxml"));
+        return root;
     }
 
     /**
