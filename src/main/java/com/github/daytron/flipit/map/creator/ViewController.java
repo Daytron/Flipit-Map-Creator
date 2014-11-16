@@ -295,7 +295,7 @@ public class ViewController implements Initializable {
             this.columnCell.add(xi);
         }
 
-        String msg = "";
+        String msgMapDrawnLog;
 
         if (!this.isOpeningAMap) {
             // Fill grid tiles with neutral color
@@ -310,7 +310,7 @@ public class ViewController implements Initializable {
             }
 
             // Prepare log message
-            msg = GlobalSettings.LOG_NEW_MAP + this.numberOfColumns
+            msgMapDrawnLog = GlobalSettings.LOG_NEW_MAP + this.numberOfColumns
                     + " columns & " + this.numberOfRows + " rows";
         } else {
             // Fill grid tiles from the save map data file
@@ -335,13 +335,13 @@ public class ViewController implements Initializable {
                     this.map.getListOfPlayer2StartPosition()[1]);
 
             // Prepare log message
-            msg = GlobalSettings.LOG_OPEN_MAP + this.numberOfColumns
+            msgMapDrawnLog = GlobalSettings.LOG_OPEN_MAP + this.numberOfColumns
                     + " columns & " + this.numberOfRows + " rows"
                     + "\n Map file opened: " + path;
         }
 
         // Notify user in log area
-        this.addNewLogMessage(msg);
+        this.addNewLogMessage(msgMapDrawnLog);
 
         // Toggles a flag to know a map is now visible from the canvas.
         // This is use for preventing the object buttons (player, boulderm 
@@ -515,6 +515,10 @@ public class ViewController implements Initializable {
             this.tileToEdit = GlobalSettings.TILE_PLAYER1;
 
             this.addNewLogMessage(GlobalSettings.LOG_PLAYER1_ON);
+        } else {
+            String noMapMsg = GlobalSettings.LOG_WARNING
+                    + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
+            this.addNewLogMessage(noMapMsg);
         }
 
     }
@@ -526,6 +530,10 @@ public class ViewController implements Initializable {
             this.tileToEdit = GlobalSettings.TILE_PLAYER2;
 
             this.addNewLogMessage(GlobalSettings.LOG_PLAYER2_ON);
+        } else {
+            String noMapMsg = GlobalSettings.LOG_WARNING
+                    + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
+            this.addNewLogMessage(noMapMsg);
         }
     }
 
@@ -536,6 +544,10 @@ public class ViewController implements Initializable {
             this.tileToEdit = GlobalSettings.TILE_BOULDER;
 
             this.addNewLogMessage(GlobalSettings.LOG_BOULDER_ON);
+        } else {
+            String noMapMsg = GlobalSettings.LOG_WARNING
+                    + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
+            this.addNewLogMessage(noMapMsg);
         }
     }
 
@@ -546,6 +558,10 @@ public class ViewController implements Initializable {
             this.tileToEdit = GlobalSettings.TILE_NEUTRAL;
 
             this.addNewLogMessage(GlobalSettings.LOG_NEUTRAL_ON);
+        } else {
+            String noMapMsg = GlobalSettings.LOG_WARNING
+                    + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
+            this.addNewLogMessage(noMapMsg);
         }
     }
 
@@ -921,7 +937,7 @@ public class ViewController implements Initializable {
                 }
             } else {
                 String noMapMsg = GlobalSettings.LOG_WARNING
-                        + "Generate a map first!";
+                        + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
                 this.addNewLogMessage(noMapMsg);
             }
 

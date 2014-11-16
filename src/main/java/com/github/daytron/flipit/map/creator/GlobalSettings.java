@@ -50,6 +50,7 @@ public class GlobalSettings {
     public final static String LOG_TITLE_SET = "[TITLE SET]\n";
     public final static String LOG_BOULDER_OVERWRITTEN = "Boulder tile is overwritten!";
     public final static String LOG_OS_NOT_SUPPORTED = "Your Operating System is not yet supported.";
+    public final static String LOG_GENERATE_OPEN_MAP_FIRST = "Generate or open a map first.";
 
     public final static String LOG_BOULDER_ON = "[BOULDER TILE SELECTED]";
     public final static String LOG_NEUTRAL_ON = "[NEUTRAL TILE SELECTED]";
