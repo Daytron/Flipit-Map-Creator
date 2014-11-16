@@ -4,8 +4,13 @@ jdk:
   - oraclejdk8
 
 before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install oracle-java8-installer
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
+
+install:
+    - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes jq; fi
 
 notifications:
   email:
