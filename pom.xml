@@ -123,7 +123,8 @@
                 <version>2.16</version>
                 <configuration>
                     <additionalClasspathElements>
-                        <additionalClasspathElement>${java.home}/lib/jfxrt.jar</additionalClasspathElement>
+                        
+                        <additionalClasspathElement>/usr/lib/jvm/java-8-oracle/jre/lib/ext/jfxrt.jar</additionalClasspathElement>
                     </additionalClasspathElements>
                 </configuration>
             </plugin>
