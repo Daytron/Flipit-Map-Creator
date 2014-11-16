@@ -48,7 +48,7 @@ Want to contribute? Please do open up an issue. Not accepting any pull requests 
  - Write Tests (Junit and find a great UI Testing library like Robotium for Android)
  - Add test coverage and Coveralls badge
  - ~~Automatic screenshot save image(PNG) in saving map for later use as preview image in the game~~
- - Further validation on save filename naming convention
+ - ~~Further validation on save filename naming convention~~
  - ~~Players start positions tile marks~~
  - Create Java doc
  - About Menu

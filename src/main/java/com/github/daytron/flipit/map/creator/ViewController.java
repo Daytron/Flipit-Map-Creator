@@ -346,6 +346,8 @@ public class ViewController implements Initializable {
         // Toggles a flag to know a map is now visible from the canvas.
         // This is use for preventing the object buttons (player, boulderm 
         // and neutral tiles) to initiate
+        // Alternatively the condition (this.map != null) can also be used)
+        // But a more verbose variable name is better suited
         this.isThereAMapVisible = true;
     }
 
@@ -875,30 +877,20 @@ public class ViewController implements Initializable {
         }
         tile_y = lowY + 1;
 
-        /*
-         System.out.println("tile: [" + tile_x + "," + tile_y + "]" );
-        
-        
-         System.out.println("X clicked: " + x_pos);
-        
-         System.out.println("low: " + lowX);
-         System.out.println(this.columnCell.get(lowX));
-        
-         System.out.println("high: " + highX);
-         System.out.println(this.columnCell.get(highX));
-        
-         System.out.println("mid: " + midX);
-         */
         return new int[]{tile_x, tile_y};
     }
 
+    /**
+     * 
+     * @param event 
+     */
     @FXML
     private void titleFieldOnKeyPressed(KeyEvent event) {
         // Detect if key pressed is Enter key
         if (event.getCode() == KeyCode.ENTER) {
             // If a map is generated either by opening a file or new map,
             // save map title to current map object
-            if (this.map != null) {
+            if (this.isThereAMapVisible) {
                 String title = this.title_field.getText();
 
                 if (title.isEmpty()) {
@@ -942,7 +934,6 @@ public class ViewController implements Initializable {
             }
 
         }
-
     }
 
     private String captilizeFirstLetter(String word) {
@@ -1210,21 +1201,11 @@ public class ViewController implements Initializable {
             this.showErrorDialog("OS Not Supported", GlobalSettings.LOG_OS_NOT_SUPPORTED);
             return;
         }
+        
         String firstWord = filename.substring(0, filename.lastIndexOf("."));
 
-        if (!firstWord.startsWith("Map")) {
-            String msgHead = "Invalid Filename Format";
-            String msgBody = "Should be [Map] & [3 digit number].json";
-            String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
-                    + msgHead + ". " + msgBody;
-            this.addNewLogMessage(wrongFormatNameMsg);
-            this.showErrorDialog(msgHead, msgBody);
-
-            return;
-        }
-
         // Prevents user from using a space character on Title
-        if (firstWord.contains(" ")) {
+        if (filename.contains(" ")) {
             // Add new log
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + "Filename shouldn't contain space character";
@@ -1234,6 +1215,17 @@ public class ViewController implements Initializable {
             this.showWarningDialog(
                     GlobalSettings.DIALOG_SAVE_NAME_SPACE_HEAD_MSG,
                     GlobalSettings.DIALOG_SAVE_NAME_SPACE_BODY_MSG);
+            return;
+        }
+        
+        if (!this.isValidFileName(firstWord)) {
+            String msgHead = "Invalid Filename Format";
+            String msgBody = "Should be [\"Map\"] + [3 digit number].json." + 
+                    "Example: Map004.json";
+            String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
+                    + msgHead + ". " + msgBody;
+            this.addNewLogMessage(wrongFormatNameMsg);
+            this.showErrorDialog(msgHead, msgBody);
 
             return;
         }
@@ -1260,6 +1252,30 @@ public class ViewController implements Initializable {
                     GlobalSettings.DIALOG_INVALID_EXTENSION_BODY_MSG);
         }
 
+    }
+    
+    /**
+     * Verify if the filename follows the name convention: 
+     * "Map" + [3 digit number].
+     * @param filename
+     * @return 
+     */
+    private boolean isValidFileName(String filename) {
+        if (!filename.startsWith("Map")) {
+            return  false;
+        }
+        
+        if (filename.length() != 6) {
+            return false;
+        }
+        
+        if (!(Character.isDigit(filename.charAt(3)) ||
+                Character.isDigit(filename.charAt(4)) ||
+                Character.isDigit(filename.charAt(5)))) {
+            return false;
+        }
+        
+        return true;
     }
 
     private String formatMapID(String id) {
