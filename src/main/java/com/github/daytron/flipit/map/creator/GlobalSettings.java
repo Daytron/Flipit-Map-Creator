@@ -4,7 +4,6 @@
  */
 package com.github.daytron.flipit.map.creator;
 
-import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 
@@ -40,6 +39,7 @@ public class GlobalSettings {
     public final static String TILE_PLAYER2 = "Player2";
 
     // Log Messages
+    public final static String LOG_NOTE = "[NOTE]\n";
     public final static String LOG_WARNING = "[WARNING]\n";
     public final static String LOG_ERROR = "[ERROR]\n";
     public final static String LOG_TILE_OVERWRITTEN = "[TILE OVERWRITTEN]\n";

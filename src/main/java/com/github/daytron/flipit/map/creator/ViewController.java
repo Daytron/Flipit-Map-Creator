@@ -560,115 +560,147 @@ public class ViewController implements Initializable {
     private void canvasOnClick(MouseEvent event) {
         // Check first if the mouseclick event is inside the grip map
         if (this.isInsideTheGrid(event.getX(), event.getY())) {
+            // Extract tile position from mouseclick coordinates
+            int[] tilePos = this.getTilePosition(event.getX(), event.getY());
+
             // Check if any tile button (boulder/neutral/player) is activated
             if (this.isEditMapOn) {
-                // Extract tile position from mouseclick coordinates
-                int[] tilePos = this.getTilePosition(event.getX(), event.getY());
+                boolean isBoulder = false;
+                boolean isPlayer1Start = false;
+                boolean isPlayer2Start = false;
 
-                boolean isAlreadyBoulder = false;
                 Integer[] boulderReference = null;
 
-                // Chec current selected tile if a boulder tile
+                // Check current selected tile if it is a boulder tile
                 for (Integer[] boulder : this.listOfBoulders) {
                     if (tilePos[0] == boulder[0] && tilePos[1] == boulder[1]) {
-                        isAlreadyBoulder = true;
+                        isBoulder = true;
                         boulderReference = boulder;
+                    }
+                }
+
+                // Check current selected tile if it is a player 1 start tile
+                if (this.map.getListOfPlayer1StartPosition() != null) {
+                    if (tilePos[0] == this.map.getListOfPlayer1StartPosition()[0]
+                            && tilePos[1] == this.map.getListOfPlayer1StartPosition()[1]) {
+                        isPlayer1Start = true;
+                    }
+                }
+
+                // Check current selected tile if it is a player 2 start tile
+                if (this.map.getListOfPlayer2StartPosition() != null) {
+                    if (tilePos[0] == this.map.getListOfPlayer2StartPosition()[0]
+                            && tilePos[1] == this.map.getListOfPlayer2StartPosition()[1]) {
+                        isPlayer2Start = true;
                     }
                 }
 
                 // Apply necessary action to the tile selected
                 switch (this.tileToEdit) {
                     case GlobalSettings.TILE_BOULDER:
-
                         // If the tile selected is not a boulder, change it to boulder
-                        if (!isAlreadyBoulder) {
-                            // Add to list of boulders
+                        if (!isBoulder) {
+                            // Check if it is previously a player 1 start tile
+                            if (isPlayer1Start) {
+                                // Remove player 1 start reference
+                                this.map.setListOfPlayer1StartPosition(null);
+                                this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 1 start position is overwritten!");
+                            }
+
+                            // Check if it is previously a player 2 start tile
+                            if (isPlayer2Start) {
+                                // Remove player 2 start reference
+                                this.map.setListOfPlayer2StartPosition(null);
+                                this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 2 start position is overwritten!");
+                            }
+
+                            // Add tile to list of boulders
                             this.listOfBoulders.add(new Integer[]{tilePos[0], tilePos[1]});
 
-                            // paint tile to boulder
-                            this.paintTile(GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR,
-                                    GlobalSettings.TILE_BOULDER_MAIN_COLOR,
-                                    GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR,
-                                    tilePos[0] - 1,
-                                    tilePos[1] - 1);
+                            // Paint tile to boulder
+                            this.paintBoulderTile(tilePos[0], tilePos[1]);
 
                             // Toggle flag for detecting unsave map
                             this.isCurrentMapSave = false;
 
-                            String msg8 = GlobalSettings.LOG_TILE_SET
+                            String msgBoulderSet = GlobalSettings.LOG_TILE_SET
                                     + "boulder tile is set to "
                                     + "[" + tilePos[0] + "," + tilePos[1] + "]";
-                            this.addNewLogMessage(msg8);
-
+                            this.addNewLogMessage(msgBoulderSet);
                         } else {
-                            String msg7 = GlobalSettings.LOG_WARNING
-                                    + "It's already a boulder tile.";
-                            this.addNewLogMessage(msg7);
+                            this.addNewLogMessage(GlobalSettings.LOG_NOTE
+                                    + "It's already a boulder tile.");
                         }
-
                         break;
 
                     case GlobalSettings.TILE_NEUTRAL:
-                        if (isAlreadyBoulder) {
+                        if (isBoulder) {
                             // Remove from boulder list
                             this.listOfBoulders.remove(boulderReference);
+                            this.addNewLogMessage(GlobalSettings.LOG_WARNING
+                                    + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
+                        }
 
-                            // paint tile to neutral
-                            this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
-                                    GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
-                                    GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
-                                    tilePos[0] - 1,
-                                    tilePos[1] - 1);
+                        // Check if it is previously a player 1 start tile
+                        if (isPlayer1Start) {
+                            // Remove player 1 start reference
+                            this.map.setListOfPlayer1StartPosition(null);
+                            this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 1 start position is overwritten!");
+                        }
+
+                        // Check if it is previously a player 2 start tile
+                        if (isPlayer2Start) {
+                            // Remove player 2 start reference
+                            this.map.setListOfPlayer2StartPosition(null);
+                            this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 2 start position is overwritten!");
+                        }
+
+                        // This is necessary to avoid overpainting previous neutral tile
+                        if (isBoulder || isPlayer1Start || isPlayer2Start) {
+                            // Paint tile to neutral
+                            this.paintNeutralTile(tilePos[0], tilePos[1]);
 
                             // Toggle flag for detecting unsave map
                             this.isCurrentMapSave = false;
 
-                            String msg6 = GlobalSettings.LOG_WARNING
-                                    + GlobalSettings.LOG_BOULDER_OVERWRITTEN;
-                            this.addNewLogMessage(msg6);
-
-                            String msg9 = GlobalSettings.LOG_TILE_SET
+                            String msgNeutralSet = GlobalSettings.LOG_TILE_SET
                                     + "neutral tile is set to "
                                     + "[" + tilePos[0] + "," + tilePos[1] + "]";
-                            this.addNewLogMessage(msg9);
+                            this.addNewLogMessage(msgNeutralSet);
 
+                        } else {
+                            this.addNewLogMessage(GlobalSettings.LOG_NOTE
+                                    + "It's already a neutral tile.");
                         }
                         break;
 
                     case GlobalSettings.TILE_PLAYER1:
-                        if (isAlreadyBoulder) {
+                        if (isBoulder) {
                             // Remove from boulder list
                             this.listOfBoulders.remove(boulderReference);
 
-                            // paint tile to neutral
-                            this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
-                                    GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
-                                    GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
-                                    tilePos[0] - 1,
-                                    tilePos[1] - 1);
+                            // Revert it to neutral tile
+                            this.paintNeutralTile(tilePos[0], tilePos[1]);
 
-                            // Log message
-                            String msg4 = GlobalSettings.LOG_WARNING
-                                    + GlobalSettings.LOG_BOULDER_OVERWRITTEN;
-                            this.addNewLogMessage(msg4);
+                            this.addNewLogMessage(GlobalSettings.LOG_WARNING
+                                    + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
                         }
 
+                        // Check if it is previously a player 2 start tile
                         // If this is already a player 2 position, it resets the
                         // player 2 start position to null. Null because it's easy to
                         // detect later on if it is properly configure before saving the map
-                        boolean isP2Overwritten = false;
-                        if (this.map.getListOfPlayer2StartPosition() != null) {
-                            if (tilePos[0] == this.map.getListOfPlayer2StartPosition()[0]
-                                    && tilePos[1] == this.map.getListOfPlayer2StartPosition()[1]) {
-                                this.map.setListOfPlayer2StartPosition(null);
+                        if (isPlayer2Start) {
+                            // Remove player 2 start reference
+                            this.map.setListOfPlayer2StartPosition(null);
 
-                                String msg = GlobalSettings.LOG_WARNING + "Player 2 start position is overwritten!";
-                                this.addNewLogMessage(msg);
+                            // Revert it to neutral tile
+                            this.paintNeutralTile(tilePos[0], tilePos[1]);
 
-                                isP2Overwritten = true;
-                            }
+                            this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 2 start position is overwritten!");
                         }
 
+                        // Paint tile to player 1 start
                         this.paintPlayerStart(1, tilePos[0], tilePos[1]);
 
                         // Toggle flag for detecting unsave map
@@ -678,15 +710,15 @@ public class ViewController implements Initializable {
                         this.map.setListOfPlayer1StartPosition(tilePos.clone());
 
                         // LOG Message
-                        String msg2 = "";
-                        if (isP2Overwritten) {
-                            msg2 = GlobalSettings.LOG_TILE_OVERWRITTEN;
+                        String msgPlayer1Log;
+                        if (isPlayer2Start) {
+                            msgPlayer1Log = GlobalSettings.LOG_TILE_OVERWRITTEN;
                         } else {
-                            msg2 = GlobalSettings.LOG_TILE_SET;
+                            msgPlayer1Log = GlobalSettings.LOG_TILE_SET;
                         }
-                        msg2 += "Player 1 start position is now set to "
+                        msgPlayer1Log += "Player 1 start position is now set to "
                                 + "[" + tilePos[0] + "," + tilePos[1] + "]";
-                        this.addNewLogMessage(msg2);
+                        this.addNewLogMessage(msgPlayer1Log);
 
                         // Reset isEditOn
                         this.isEditMapOn = false;
@@ -694,70 +726,62 @@ public class ViewController implements Initializable {
                         break;
 
                     case GlobalSettings.TILE_PLAYER2:
-                        if (isAlreadyBoulder) {
+                        if (isBoulder) {
                             // Remove from boulder list
                             this.listOfBoulders.remove(boulderReference);
 
-                            // paint tile to neutral
-                            this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
-                                    GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
-                                    GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
-                                    tilePos[0] - 1,
-                                    tilePos[1] - 1);
+                            // Revert it to neutral tile
+                            this.paintNeutralTile(tilePos[0], tilePos[1]);
 
-                            // Log message
-                            String msg5 = GlobalSettings.LOG_WARNING
-                                    + GlobalSettings.LOG_BOULDER_OVERWRITTEN;
-                            this.addNewLogMessage(msg5);
+                            this.addNewLogMessage(GlobalSettings.LOG_WARNING
+                                    + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
                         }
 
+                        // Check if it is previously a player 1 start tile
                         // If this is already a player 1 position, it resets the
                         // player 1 start position to null. Null because it's easy to
                         // detect later on if it is properly configure before saving the map
-                        boolean isP1Overwritten = false;
-                        if (this.map.getListOfPlayer1StartPosition() != null) {
-                            if (tilePos[0] == this.map.getListOfPlayer1StartPosition()[0]
-                                    && tilePos[1] == this.map.getListOfPlayer1StartPosition()[1]) {
-                                this.map.setListOfPlayer2StartPosition(null);
+                        if (isPlayer1Start) {
+                            // Remove player 2 start reference
+                            this.map.setListOfPlayer1StartPosition(null);
 
-                                String msg = GlobalSettings.LOG_WARNING + "Player 1 start position is overwritten!";
-                                this.addNewLogMessage(msg);
+                            // Revert it to neutral tile
+                            this.paintNeutralTile(tilePos[0], tilePos[1]);
 
-                                isP1Overwritten = true;
-                            }
+                            this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 1 start position is overwritten!");
                         }
 
+                        // Paint tile to player 2 start
                         this.paintPlayerStart(2, tilePos[0], tilePos[1]);
-
-                        // Add start position to map
-                        this.map.setListOfPlayer2StartPosition(tilePos.clone());
 
                         // Toggle flag for detecting unsave map
                         this.isCurrentMapSave = false;
 
+                        // Add start position to map
+                        this.map.setListOfPlayer2StartPosition(tilePos.clone());
+
                         // LOG Message
-                        String msg3 = "";
-                        if (isP1Overwritten) {
-                            msg3 = GlobalSettings.LOG_TILE_OVERWRITTEN;
+                        String msgPlayer2Log;
+                        if (isPlayer1Start) {
+                            msgPlayer2Log = GlobalSettings.LOG_TILE_OVERWRITTEN;
                         } else {
-                            msg3 = GlobalSettings.LOG_TILE_SET;
+                            msgPlayer2Log = GlobalSettings.LOG_TILE_SET;
                         }
-                        msg3 += "Player 2 start position is now set to "
+                        msgPlayer2Log += "Player 2 start position is now set to "
                                 + "[" + tilePos[0] + "," + tilePos[1] + "]";
-                        this.addNewLogMessage(msg3);
+                        this.addNewLogMessage(msgPlayer2Log);
 
                         // Reset isEditOn
                         this.isEditMapOn = false;
 
                         break;
                 }
-
-                // Update map list data
+                // Update map list boulder data
                 this.map.setListOfBoulders(listOfBoulders);
-
             } else {
-                String msg = GlobalSettings.LOG_WARNING + "No object/player selected!";
-                this.addNewLogMessage(msg);
+                String msgNoObjectSelected = GlobalSettings.LOG_NOTE + "Nothing selected. "
+                        + "[" + tilePos[0] + "," + tilePos[1] + "]";
+                this.addNewLogMessage(msgNoObjectSelected);
             }
         } else {
             String msg = GlobalSettings.LOG_WARNING + "Mouse clicked "
@@ -765,6 +789,20 @@ public class ViewController implements Initializable {
                     + "is outside the grid map!";
             this.addNewLogMessage(msg);
         }
+    }
+
+    private void paintNeutralTile(int x, int y) {
+        this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
+                GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
+                GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
+                x - 1, y - 1);
+    }
+
+    private void paintBoulderTile(int x, int y) {
+        this.paintTile(GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR,
+                GlobalSettings.TILE_BOULDER_MAIN_COLOR,
+                GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR,
+                x - 1, y - 1);
     }
 
     private boolean isInsideTheGrid(double x_pos, double y_pos) {
@@ -858,7 +896,7 @@ public class ViewController implements Initializable {
                     String warningMsg1 = GlobalSettings.LOG_WARNING
                             + "Title field is empty!";
                     this.addNewLogMessage(warningMsg1);
-                    
+
                     // Better be safe than sorry
                     return;
                 } else {
@@ -989,7 +1027,7 @@ public class ViewController implements Initializable {
             this.addNewLogMessage(noOSsupportMsg);
             return;
         }
-        
+
         // Get the first 3 letters for inspection
         String firstWord = filename.substring(0, 3);
 
@@ -1001,9 +1039,9 @@ public class ViewController implements Initializable {
                     String msgHead = "Invalid Filename";
                     String msgBody = "Map files must "
                             + "start at \"Map\" followed by a number";
-                    String invalidPatterName = GlobalSettings.LOG_ERROR +
-                            msgHead + ". " + msgBody;
-                    
+                    String invalidPatterName = GlobalSettings.LOG_ERROR
+                            + msgHead + ". " + msgBody;
+
                     this.addNewLogMessage(invalidPatterName);
                     this.showErrorDialog(msgHead, msgBody);
                 }
@@ -1019,15 +1057,14 @@ public class ViewController implements Initializable {
             }
         } else {
             String msgHead = "No File Detected";
-                String msgBody = "Not a proper file.";
-                String invalidFile = GlobalSettings.LOG_ERROR
-                        + msgHead + ". " + msgBody;
+            String msgBody = "Not a proper file.";
+            String invalidFile = GlobalSettings.LOG_ERROR
+                    + msgHead + ". " + msgBody;
 
-                this.addNewLogMessage(invalidFile);
-                this.showErrorDialog(msgHead, msgBody);
+            this.addNewLogMessage(invalidFile);
+            this.showErrorDialog(msgHead, msgBody);
         }
-        
-        
+
     }
 
     private void openMapFile(File file) {
@@ -1160,7 +1197,7 @@ public class ViewController implements Initializable {
             String noOSsupportMsg = GlobalSettings.LOG_ERROR
                     + GlobalSettings.LOG_OS_NOT_SUPPORTED;
             this.addNewLogMessage(noOSsupportMsg);
-            
+
             this.showErrorDialog("OS Not Supported", GlobalSettings.LOG_OS_NOT_SUPPORTED);
             return;
         }
@@ -1173,7 +1210,7 @@ public class ViewController implements Initializable {
                     + msgHead + ". " + msgBody;
             this.addNewLogMessage(wrongFormatNameMsg);
             this.showErrorDialog(msgHead, msgBody);
-            
+
             return;
         }
 
