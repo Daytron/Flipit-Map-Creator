@@ -105,6 +105,7 @@ public class MainAppTest extends GuiTest {
      * Test of main method, of class MainApp.
      */
     @Test
+    @Ignore
     public void clickFileQuitWithDialogTest() {
         click("#file").click("#open");
         sleep(2, SECONDS);
