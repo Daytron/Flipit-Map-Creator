@@ -30,6 +30,9 @@ public class GlobalSettings {
     public final static String TILE_BOULDER_MAIN_COLOR = "#4F4F4F";
     public final static String TILE_BOULDER_SHADOW_EDGE_COLOR = "#000000";
 
+    // Tile edge effect
+    public static final int TILE_EDGE_WIDTH = 2;
+    
     // Tile to edit
     public final static String TILE_BOULDER = "Boulder";
     public final static String TILE_NEUTRAL = "Neutral";

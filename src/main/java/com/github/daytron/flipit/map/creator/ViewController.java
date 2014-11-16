@@ -84,37 +84,46 @@ public class ViewController implements Initializable {
     // MainApp object
     private MainApp app;
 
+    // Flag for letting canvas know an object can be applied to the map
     private boolean isEditMapOn;
+
+    // The key word for the canvas to know which button is pressed and 
+    // apply necessary tile modification when user click the canvas
     private String tileToEdit;
+
+    // The GraphicsContext of the canvas
     private GraphicsContext gc;
 
     // Log notes
     private StringBuilder logMessage;
     private boolean preventNewLineAtFirst;
 
-    // Date Time
-    private SimpleDateFormat df;
+    // Time formatter
+    private SimpleDateFormat dateFormatter;
 
     // Map
     private Map map;
 
     // Map variables
+    // Size of a tile
     private double gridXSpace;
     private double gridYSpace;
 
     private double preferredHeight;
     private double preferredWidth;
 
+    // The padding for x and y position of the map to the canvas
     private double halfPaddingWidth;
     private double halfPaddingHeight;
 
     private int numberOfRows;
     private int numberOfColumns;
 
+    // List of coordinates that dictates the boundary of a tile
     private List<Double> rowCell;
     private List<Double> columnCell;
 
-    // Tile
+    // Tile  variables
     private int tileEdgeEffect;
     private List<Integer[]> listOfBoulders;
 
@@ -127,6 +136,9 @@ public class ViewController implements Initializable {
     // Flag to know if current map is save or not
     private boolean isCurrentMapSave = true;
 
+    // Flag to know if no map is opened or generated
+    private boolean isThereAMapVisible = false;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -134,7 +146,7 @@ public class ViewController implements Initializable {
         // Extract GraphicsContext from canvas
         this.gc = this.canvas.getGraphicsContext2D();
 
-        this.df = new SimpleDateFormat("hh:mm:ss");
+        this.dateFormatter = new SimpleDateFormat("hh:mm:ss");
         // Init logArea
         this.logMessage = new StringBuilder();
         this.preventNewLineAtFirst = true;
@@ -143,7 +155,9 @@ public class ViewController implements Initializable {
         this.logArea.setEditable(false);
         this.logArea.setWrapText(true);
 
-        this.tileEdgeEffect = 2;
+        this.tileEdgeEffect = GlobalSettings.TILE_EDGE_WIDTH;
+
+        // Resets the flag for detecting button pressed from objects
         this.isEditMapOn = false;
 
         // Init listener for log textarea to autoscroll bottom
@@ -185,6 +199,10 @@ public class ViewController implements Initializable {
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 column_combo.getSelectionModel().select(newValue);
                 numberOfColumns = (int) newValue;
+
+                // Toggle flag for detecting unsave map
+                isCurrentMapSave = false;
+
             }
         });
 
@@ -194,6 +212,9 @@ public class ViewController implements Initializable {
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 row_combo.getSelectionModel().select(newValue);
                 numberOfRows = (int) newValue;
+
+                // Toggle flag for detecting unsave map
+                isCurrentMapSave = false;
             }
         });
 
@@ -201,7 +222,7 @@ public class ViewController implements Initializable {
 
     private void addNewLogMessage(String message) {
         Date date = new Date();
-        String timeFormat = this.df.format(date);
+        String timeFormat = this.dateFormatter.format(date);
 
         // Prevents to create new line on first log
         if (this.preventNewLineAtFirst) {
@@ -328,6 +349,11 @@ public class ViewController implements Initializable {
 
         // Notify user in log area
         this.addNewLogMessage(msg);
+
+        // Toggles a flag to know a map is now visible from the canvas.
+        // This is use for preventing the object buttons (player, boulderm 
+        // and neutral tiles) to initiate
+        this.isThereAMapVisible = true;
     }
 
     // type 1: light edges color
@@ -343,16 +369,6 @@ public class ViewController implements Initializable {
             }
         }
 
-        /*
-         if (this.map.getListOfPlayer1StartPosition()[0] == column + 1
-         && this.map.getListOfPlayer1StartPosition()[1] == row + 1) {
-         tile_type = "player_1";
-         }
-
-         if (this.map.getListOfPlayer2StartPosition()[0] == column + 1
-         && this.map.getListOfPlayer2StartPosition()[1] == row + 1) {
-         tile_type = "player_2";
-         } */
         switch (tile_type) {
             case "boulder":
                 switch (type) {
@@ -455,10 +471,10 @@ public class ViewController implements Initializable {
                 this.numberOfRows);
 
         // this is based on these definitions
-        // with smallest side (row or column) 5 font size is 40
-        // with 6 size is 38
-        // with 7 size is 36
-        // until 20 size is 10
+        // with smallest side (row or column) 5, font size is 40
+        // with 6, size is 38
+        // with 7, size is 36
+        // until 20, size is 10
         int fontSize = 45 - smallestSidePos - (smallestSidePos - 5);
 
         // Text padding
@@ -501,34 +517,43 @@ public class ViewController implements Initializable {
 
     @FXML
     private void player1StartBtnOnClick(ActionEvent event) {
-        this.isEditMapOn = true;
-        this.tileToEdit = GlobalSettings.TILE_PLAYER1;
+        if (this.isThereAMapVisible) {
+            this.isEditMapOn = true;
+            this.tileToEdit = GlobalSettings.TILE_PLAYER1;
 
-        this.addNewLogMessage(GlobalSettings.LOG_PLAYER1_ON);
+            this.addNewLogMessage(GlobalSettings.LOG_PLAYER1_ON);
+        }
+
     }
 
     @FXML
     private void player2StartBtnOnClick(ActionEvent event) {
-        this.isEditMapOn = true;
-        this.tileToEdit = GlobalSettings.TILE_PLAYER2;
+        if (this.isThereAMapVisible) {
+            this.isEditMapOn = true;
+            this.tileToEdit = GlobalSettings.TILE_PLAYER2;
 
-        this.addNewLogMessage(GlobalSettings.LOG_PLAYER2_ON);
+            this.addNewLogMessage(GlobalSettings.LOG_PLAYER2_ON);
+        }
     }
 
     @FXML
     private void boulderBtnOnClick(ActionEvent event) {
-        this.isEditMapOn = true;
-        this.tileToEdit = GlobalSettings.TILE_BOULDER;
+        if (this.isThereAMapVisible) {
+            this.isEditMapOn = true;
+            this.tileToEdit = GlobalSettings.TILE_BOULDER;
 
-        this.addNewLogMessage(GlobalSettings.LOG_BOULDER_ON);
+            this.addNewLogMessage(GlobalSettings.LOG_BOULDER_ON);
+        }
     }
 
     @FXML
     private void neutralBtnOnClick(ActionEvent event) {
-        this.isEditMapOn = true;
-        this.tileToEdit = GlobalSettings.TILE_NEUTRAL;
+        if (this.isThereAMapVisible) {
+            this.isEditMapOn = true;
+            this.tileToEdit = GlobalSettings.TILE_NEUTRAL;
 
-        this.addNewLogMessage(GlobalSettings.LOG_NEUTRAL_ON);
+            this.addNewLogMessage(GlobalSettings.LOG_NEUTRAL_ON);
+        }
     }
 
     @FXML
@@ -567,6 +592,9 @@ public class ViewController implements Initializable {
                                     tilePos[0] - 1,
                                     tilePos[1] - 1);
 
+                            // Toggle flag for detecting unsave map
+                            this.isCurrentMapSave = false;
+
                             String msg8 = GlobalSettings.LOG_TILE_SET
                                     + "boulder tile is set to "
                                     + "[" + tilePos[0] + "," + tilePos[1] + "]";
@@ -591,6 +619,9 @@ public class ViewController implements Initializable {
                                     GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
                                     tilePos[0] - 1,
                                     tilePos[1] - 1);
+
+                            // Toggle flag for detecting unsave map
+                            this.isCurrentMapSave = false;
 
                             String msg6 = GlobalSettings.LOG_WARNING
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN;
@@ -639,6 +670,9 @@ public class ViewController implements Initializable {
                         }
 
                         this.paintPlayerStart(1, tilePos[0], tilePos[1]);
+
+                        // Toggle flag for detecting unsave map
+                        this.isCurrentMapSave = false;
 
                         // Add start position to map
                         this.map.setListOfPlayer1StartPosition(tilePos.clone());
@@ -697,6 +731,9 @@ public class ViewController implements Initializable {
 
                         // Add start position to map
                         this.map.setListOfPlayer2StartPosition(tilePos.clone());
+
+                        // Toggle flag for detecting unsave map
+                        this.isCurrentMapSave = false;
 
                         // LOG Message
                         String msg3 = "";
@@ -821,6 +858,9 @@ public class ViewController implements Initializable {
                     String warningMsg1 = GlobalSettings.LOG_WARNING
                             + "Title field is empty!";
                     this.addNewLogMessage(warningMsg1);
+                    
+                    // Better be safe than sorry
+                    return;
                 } else {
                     // Only accepts letters, numbers and spaces
                     // No leading space allowed
@@ -831,13 +871,21 @@ public class ViewController implements Initializable {
                         // Set title to the map
                         this.map.setName(title);
 
+                        // Toggle flag for detecting unsave map
+                        this.isCurrentMapSave = false;
+
                         String successMsg = GlobalSettings.LOG_TITLE_SET
                                 + "Title: " + title + " is set.";
                         this.addNewLogMessage(successMsg);
                     } else {
+                        String msgHead = "Invalid Title";
+                        String msgBody = "Only use alphanumeric and space characters. No leading space.";
+
                         String invalidMsg = GlobalSettings.LOG_ERROR
-                                + "Invalid title! Only use alphanumeric and space characters. No leading space.";
+                                + msgHead + ". " + msgBody;
                         this.addNewLogMessage(invalidMsg);
+
+                        this.showErrorDialog(msgHead, msgBody);
                     }
                 }
             } else {
@@ -861,7 +909,7 @@ public class ViewController implements Initializable {
         String firstLetterCapitalTitle = word.substring(0, 1).toUpperCase()
                 + word.substring(1);
 
-        // Converts all first letter of word separated by space to uppercase
+        // Converts all first letter of words separated by space to uppercase
         for (int i = 0; i < word.length(); i++) {
             if (word.charAt(i) == ' ') {
                 firstLetterCapitalTitle = firstLetterCapitalTitle.substring(0, i + 1)
@@ -890,7 +938,6 @@ public class ViewController implements Initializable {
 
     @FXML
     private void menuFileOpenOnClick(ActionEvent event) {
-
         // Confirmation dialog
         if (!isCurrentMapSave) {
             if (showConfirmDialog(
@@ -926,8 +973,10 @@ public class ViewController implements Initializable {
             return;
         }
 
+        // Extract extension name
         String ext = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
 
+        // Extract filename
         String filename = "";
         if (this.userOS.startsWith(GlobalSettings.OS_LINUX)
                 || this.userOS.startsWith(GlobalSettings.OS_MAC)) {
@@ -940,12 +989,45 @@ public class ViewController implements Initializable {
             this.addNewLogMessage(noOSsupportMsg);
             return;
         }
+        
+        // Get the first 3 letters for inspection
         String firstWord = filename.substring(0, 3);
 
-        if (file.isFile() && "json".equals(ext) && firstWord.equalsIgnoreCase("Map")) {
-            this.openMapFile(file);
-        }
+        if (file.isFile()) {
+            if ("json".equals(ext)) {
+                if (firstWord.equals("Map")) {
+                    this.openMapFile(file);
+                } else {
+                    String msgHead = "Invalid Filename";
+                    String msgBody = "Map files must "
+                            + "start at \"Map\" followed by a number";
+                    String invalidPatterName = GlobalSettings.LOG_ERROR +
+                            msgHead + ". " + msgBody;
+                    
+                    this.addNewLogMessage(invalidPatterName);
+                    this.showErrorDialog(msgHead, msgBody);
+                }
+            } else {
+                String msgHead = "Invalid Extension";
+                String msgBody = "Map files are "
+                        + ".json files";
+                String invalidExtension = GlobalSettings.LOG_ERROR
+                        + msgHead + ". " + msgBody;
 
+                this.addNewLogMessage(invalidExtension);
+                this.showErrorDialog(msgHead, msgBody);
+            }
+        } else {
+            String msgHead = "No File Detected";
+                String msgBody = "Not a proper file.";
+                String invalidFile = GlobalSettings.LOG_ERROR
+                        + msgHead + ". " + msgBody;
+
+                this.addNewLogMessage(invalidFile);
+                this.showErrorDialog(msgHead, msgBody);
+        }
+        
+        
     }
 
     private void openMapFile(File file) {
@@ -978,9 +1060,6 @@ public class ViewController implements Initializable {
             this.listOfBoulders = this.map.getListOfBoulders();
 
             this.generateMap(file.getPath());
-
-            // Toggle flag for detecting unsave map
-            this.isCurrentMapSave = false;
 
         } catch (IOException e) {
             String errorMsg = GlobalSettings.LOG_ERROR
@@ -1081,14 +1160,20 @@ public class ViewController implements Initializable {
             String noOSsupportMsg = GlobalSettings.LOG_ERROR
                     + GlobalSettings.LOG_OS_NOT_SUPPORTED;
             this.addNewLogMessage(noOSsupportMsg);
+            
+            this.showErrorDialog("OS Not Supported", GlobalSettings.LOG_OS_NOT_SUPPORTED);
             return;
         }
         String firstWord = filename.substring(0, filename.lastIndexOf("."));
 
         if (!firstWord.startsWith("Map")) {
+            String msgHead = "Invalid Filename Format";
+            String msgBody = "Should be [Map] & [3 digit number].json";
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
-                    + "Wrong filename format. Should be [Map] & [3 digit number].json";
+                    + msgHead + ". " + msgBody;
             this.addNewLogMessage(wrongFormatNameMsg);
+            this.showErrorDialog(msgHead, msgBody);
+            
             return;
         }
 
@@ -1165,14 +1250,14 @@ public class ViewController implements Initializable {
 
             // Get the last filepath to use for saving image file
             String filePath;
-            
+
             if (this.userOS.startsWith(GlobalSettings.OS_LINUX)
                     || this.userOS.startsWith(GlobalSettings.OS_MAC)) {
                 filePath = file.getPath().substring(0, file.getPath().lastIndexOf("/") + 1);
             } else {
                 // Other OS is already filtered above, so this is definitely Windows
                 filePath = file.getPath().substring(0, file.getPath().lastIndexOf("\\") + 1);
-            } 
+            }
 
             // Build full path 
             String imageFilePath = filePath + this.map.getMapID() + ".png";
