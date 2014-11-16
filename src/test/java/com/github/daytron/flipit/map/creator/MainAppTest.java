@@ -60,6 +60,7 @@ public class MainAppTest extends GuiTest {
      * Test of start method, of class MainApp.
      */
     @Test
+    @Ignore
     public void clickGenerateButtonAtStartTest() throws Exception {
         click("#generate_map_btn");
         Date date = new Date();
@@ -78,6 +79,7 @@ public class MainAppTest extends GuiTest {
      * Test of getStage method, of class MainApp.
      */
     @Test
+    @Ignore
     public void comboBoxexClickAndGenerateTest() {
         click("#column_combo").click("5");
         sleep(2, SECONDS);
