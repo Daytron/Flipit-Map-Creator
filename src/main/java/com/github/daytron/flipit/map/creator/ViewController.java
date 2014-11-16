@@ -199,10 +199,6 @@ public class ViewController implements Initializable {
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 column_combo.getSelectionModel().select(newValue);
                 numberOfColumns = (int) newValue;
-
-                // Toggle flag for detecting unsave map
-                isCurrentMapSave = false;
-
             }
         });
 
@@ -212,9 +208,6 @@ public class ViewController implements Initializable {
             public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
                 row_combo.getSelectionModel().select(newValue);
                 numberOfRows = (int) newValue;
-
-                // Toggle flag for detecting unsave map
-                isCurrentMapSave = false;
             }
         });
 
@@ -1439,6 +1432,17 @@ public class ViewController implements Initializable {
                 .showConfirm();
 
         return response;
+    }
+
+    @FXML
+    private void meuLogClearLogOnClick(ActionEvent event) {
+        this.logMessage = new StringBuilder();
+        this.preventNewLineAtFirst = true;
+        this.logArea.setText("");
+    }
+
+    @FXML
+    private void menuAboutOnClick(ActionEvent event) {
     }
 
 }
