@@ -217,15 +217,23 @@ public class ViewController implements Initializable {
         Date date = new Date();
         String timeFormat = this.dateFormatter.format(date);
 
+        String separator = "--------------------------------"
+                + "-------------------\n";
+        
         // Prevents to create new line on first log
         if (this.preventNewLineAtFirst) {
-            this.logMessage.append("[")
+            this.logMessage
+                    .append(separator)
+                    .append("[")
                     .append(timeFormat)
                     .append("] ")
                     .append(message);
             this.preventNewLineAtFirst = false;
         } else {
-            this.logMessage.append("\n[")
+            this.logMessage
+                    .append("\n")
+                    .append(separator)
+                    .append("[")
                     .append(timeFormat)
                     .append("] ")
                     .append(message);
@@ -635,7 +643,7 @@ public class ViewController implements Initializable {
                             this.isCurrentMapSave = false;
 
                             String msgBoulderSet = GlobalSettings.LOG_TILE_SET
-                                    + "boulder tile is set to "
+                                    + "Boulder tile is set to "
                                     + "[" + tilePos[0] + "," + tilePos[1] + "]";
                             this.addNewLogMessage(msgBoulderSet);
                         } else {
@@ -675,7 +683,7 @@ public class ViewController implements Initializable {
                             this.isCurrentMapSave = false;
 
                             String msgNeutralSet = GlobalSettings.LOG_TILE_SET
-                                    + "neutral tile is set to "
+                                    + "Neutral tile is set to "
                                     + "[" + tilePos[0] + "," + tilePos[1] + "]";
                             this.addNewLogMessage(msgNeutralSet);
 

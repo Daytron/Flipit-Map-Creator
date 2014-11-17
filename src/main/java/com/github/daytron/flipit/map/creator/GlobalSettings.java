@@ -41,7 +41,7 @@ public class GlobalSettings {
     // Log Messages
     public final static String LOG_NOTE = "[NOTE]\n";
     public final static String LOG_WARNING = "[WARNING]\n";
-    public final static String LOG_ERROR = "[ERROR]\n";
+    public final static String LOG_ERROR = "[ERROR]\n   ";
     public final static String LOG_TILE_OVERWRITTEN = "[TILE OVERWRITTEN]\n";
     public final static String LOG_TILE_SET = "[TILE SET]\n";
     public final static String LOG_NEW_MAP = "[NEW MAP CREATED]\n";
