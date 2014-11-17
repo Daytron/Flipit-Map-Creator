@@ -45,8 +45,8 @@ Want to contribute? Please do open up an issue. Not accepting any pull requests 
 
 ### Roadmap to version 1.0 release
 
- - Write Tests (Junit and find a great UI Testing library like Robotium for Android)
- - Add test coverage and Coveralls badge
+ - Write Tests for Junit and TestFX
+ - Add and achieve high test coverage (Cobertura) and include Coveralls badge
  - ~~Automatic screenshot save image(PNG) in saving map for later use as preview image in the game~~
  - ~~Further validation on save filename naming convention~~
  - ~~Players start positions tile marks~~
