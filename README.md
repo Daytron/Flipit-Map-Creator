@@ -17,6 +17,7 @@ Flipit Map Creator uses a number of open source projects to work properly:
 - [Gson 2.3] For converting json files to Java objects and vice versa. See license [here](https://raw.githubusercontent.com/Daytron/Flipit-Map-Creator/master/LICENSES/GSON_LICENSE.txt).
 - [TestFX 3.1.2] A simple GUI test framework for JavaFX application.
 - [JUnit 4.11] De facto standard unit test framework for Java application.
+
 ### Requirements
 - Java 8
 - JavaFX
