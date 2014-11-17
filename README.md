@@ -59,7 +59,7 @@ Want to contribute? Please do open up an issue. Not accepting any pull requests 
 
 ### Roadmap to version 1.0 release
 
- - Write Tests for JUnit and TestFX
+ - Write Tests for JUnit and TestFX (For TestFX, wait for version 3.2 DeathThread bug fix)
  - Add and achieve high test coverage (Cobertura) and include Coveralls badge
  - ~~Automatic screenshot save image(PNG) in saving map for later use as preview image in the game~~
  - ~~Further validation on save filename naming convention~~

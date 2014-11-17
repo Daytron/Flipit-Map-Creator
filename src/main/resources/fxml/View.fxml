@@ -49,7 +49,7 @@
          <children>
             <AnchorPane id="pane_canvas" fx:id="pane_canvas" prefHeight="570.0" prefWidth="900.0">
                <children>
-                  <Canvas fx:id="canvas" height="570.0" layoutX="110.0" layoutY="126.0" onMouseClicked="#canvasOnClick" width="900.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+                  <Canvas id="canvas" fx:id="canvas" height="570.0" layoutX="110.0" layoutY="126.0" onMouseClicked="#canvasOnClick" width="900.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="570.0" prefWidth="300.0">
@@ -123,7 +123,7 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="title_field" maxWidth="1.7976931348623157E308" onKeyPressed="#titleFieldOnKeyPressed" GridPane.columnSpan="3" GridPane.rowIndex="11">
+                        <TextField id="title_field" fx:id="title_field" maxWidth="1.7976931348623157E308" onKeyPressed="#titleFieldOnKeyPressed" GridPane.columnSpan="3" GridPane.rowIndex="11">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
@@ -139,12 +139,12 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Button fx:id="player1_start_btn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#player1StartBtnOnClick" prefHeight="25.0" prefWidth="150.0" text="Player 1 Start Tile" GridPane.columnSpan="3" GridPane.rowIndex="14">
+                        <Button id="p1_start_btn" fx:id="player1_start_btn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#player1StartBtnOnClick" prefHeight="25.0" prefWidth="150.0" text="Player 1 Start Tile" GridPane.columnSpan="3" GridPane.rowIndex="14">
                            <GridPane.margin>
                               <Insets left="70.0" top="20.0" />
                            </GridPane.margin>
                         </Button>
-                        <Button fx:id="player2_start_btn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#player2StartBtnOnClick" prefHeight="25.0" prefWidth="150.0" text="Player 2 Start Tile" GridPane.columnSpan="3" GridPane.rowIndex="15">
+                        <Button id="p2_start_btn" fx:id="player2_start_btn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#player2StartBtnOnClick" prefHeight="25.0" prefWidth="150.0" text="Player 2 Start Tile" GridPane.columnSpan="3" GridPane.rowIndex="15">
                            <GridPane.margin>
                               <Insets left="70.0" top="30.0" />
                            </GridPane.margin>
@@ -157,12 +157,12 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
-                        <Button fx:id="boulder_btn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#boulderBtnOnClick" prefHeight="25.0" prefWidth="150.0" text="Boulder Tile" GridPane.columnSpan="3" GridPane.rowIndex="18">
+                        <Button id="boulder_btn" fx:id="boulder_btn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#boulderBtnOnClick" prefHeight="25.0" prefWidth="150.0" text="Boulder Tile" GridPane.columnSpan="3" GridPane.rowIndex="18">
                            <GridPane.margin>
                               <Insets left="70.0" top="20.0" />
                            </GridPane.margin>
                         </Button>
-                        <Button fx:id="neutral_btn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#neutralBtnOnClick" prefHeight="25.0" prefWidth="150.0" text="Neutral Tile" GridPane.columnSpan="3" GridPane.rowIndex="19">
+                        <Button id="neutral_btn" fx:id="neutral_btn" contentDisplay="CENTER" mnemonicParsing="false" onAction="#neutralBtnOnClick" prefHeight="25.0" prefWidth="150.0" text="Neutral Tile" GridPane.columnSpan="3" GridPane.rowIndex="19">
                            <GridPane.margin>
                               <Insets left="70.0" top="30.0" />
                            </GridPane.margin>

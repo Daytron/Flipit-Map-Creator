@@ -65,7 +65,7 @@ public class GlobalSettings {
     public static final String OS_LINUX = "linux";
     public static final String OS_MAC = "mac";
 
-    // DIALOG MSGs
+    // Dialog Messages
     public static final String DIALOG_QUIT_HEAD_MSG = "Application Exit";
     public static final String DIALOG_QUIT_BODY_MSG = "Are you sure you want to exit?";
 
