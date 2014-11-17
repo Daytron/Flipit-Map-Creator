@@ -69,7 +69,9 @@ public class MainAppTest extends GuiTest {
         
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat =  df.format(date);
-        String outputLog = "[" + timeFormat + "] " + "[NEW MAP CREATED]\n"
+        String outputLog = "--------------------------------"
+                + "-------------------\n" +
+                "[" + timeFormat + "] " + "[NEW MAP CREATED]\n"
                 + "10 columns & 10 rows";
         
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
@@ -91,7 +93,8 @@ public class MainAppTest extends GuiTest {
         
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat =  df.format(date);
-        String outputLog = 
+        String outputLog = "--------------------------------"
+                + "-------------------\n" +
                 "[" + timeFormat + "] " + "[NEW MAP CREATED]\n"
                 + "5 columns & 6 rows";
         /*

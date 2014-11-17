@@ -217,8 +217,7 @@ public class ViewController implements Initializable {
         Date date = new Date();
         String timeFormat = this.dateFormatter.format(date);
 
-        String separator = "--------------------------------"
-                + "-------------------\n";
+        String separator = GlobalSettings.LOG_SEPARATOR;
         
         // Prevents to create new line on first log
         if (this.preventNewLineAtFirst) {

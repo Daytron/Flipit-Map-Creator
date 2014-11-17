@@ -39,6 +39,8 @@ public class GlobalSettings {
     public final static String TILE_PLAYER2 = "Player2";
 
     // Log Messages
+    public final static String LOG_SEPARATOR = "--------------------------------"
+                + "-------------------\n"; 
     public final static String LOG_NOTE = "[NOTE]\n";
     public final static String LOG_WARNING = "[WARNING]\n";
     public final static String LOG_ERROR = "[ERROR]\n   ";
