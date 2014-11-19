@@ -58,6 +58,7 @@ Add the following dependencies to your POM file:
 Want to contribute? Please do open up an issue. Not accepting any pull requests at the moment.
 
 ### Roadmap to version 1.0 release
+See Milestone and Issues sections for more information and updates.
 
  - Write Tests for JUnit and TestFX (For TestFX, wait for version 3.2 DeathThread bug fix)
  - Add and achieve high test coverage (Cobertura) and include Coveralls badge
@@ -67,7 +68,6 @@ Want to contribute? Please do open up an issue. Not accepting any pull requests 
  - Create Java doc
  - About Menu
  - Better UI
- - Add Edit menu items (undo and redo maybe in the future?)
  - Add open recent file menu item (no persistence for now)
  - Add keyboard control shortcuts
  - Find bugs
