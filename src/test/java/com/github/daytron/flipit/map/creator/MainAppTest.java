@@ -8,11 +8,15 @@ package com.github.daytron.flipit.map.creator;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,20 +26,24 @@ import org.junit.Ignore;
 import org.loadui.testfx.Assertions;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.controls.Commons;
+import org.loadui.testfx.framework.robot.impl.FxRobotImpl;
+import org.loadui.testfx.utils.RunWaitUtils;
 
 /**
  *
  * @author ryan
  */
-public class MainAppTest extends GuiTest {
+public class MainAppTest extends FxRobotImpl {
     private MainApp app;
-    
+    public static Stage primaryStage;
     public MainAppTest() {
     }
 
     @BeforeClass
     public static void setUpClass() {
+        // Start the Toolkit and block until the primary Stage was retrieved.
         
+        //primaryStage = FxLifecycle.registerPrimaryStage();
     }
 
     @AfterClass
@@ -44,6 +52,15 @@ public class MainAppTest extends GuiTest {
 
     @Before
     public void setUp() {
+        // Construct the Application and call start() with the primary Stage. 
+        //Application demoApplication = FxLifecycle.setupApplication(MainApp.class);
+ 
+        try {
+            // Wait for the primary Stage to be shown by start().
+            RunWaitUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
+        } catch (TimeoutException ex) {
+            Logger.getLogger(MainAppTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @After
@@ -58,7 +75,7 @@ public class MainAppTest extends GuiTest {
     @Test
     @Ignore
     public void clickGenerateButtonAtStartTest() throws Exception {
-        click("#generate_map_btn");
+        clickOn("#generate_map_btn");
         Date date = new Date();
         
         sleep(1, SECONDS);
@@ -78,11 +95,11 @@ public class MainAppTest extends GuiTest {
     @Test
     @Ignore
     public void clickComboBoxesAndGenerateTest() {
-        click("#column_combo").click("5");
+        clickOn("#column_combo").clickOn("5");
         sleep(2, SECONDS);
-        click("#row_combo").click("6");
+        clickOn("#row_combo").clickOn("6");
         sleep(1, SECONDS);
-        click("#generate_map_btn");
+        clickOn("#generate_map_btn");
         Date date = new Date();
         sleep(1, SECONDS);
         
@@ -106,11 +123,12 @@ public class MainAppTest extends GuiTest {
     @Test
     @Ignore
     public void clickGenerateAndEnterTitleTest() {
-        click("#generate_map_btn");
+        clickOn("#generate_map_btn");
         Date date = new Date();
         
         sleep(1, SECONDS);
-        click("#title_field").type("eye of the world").push(KeyCode.ENTER);
+        clickOn("#title_field").write("eye of the world").push(KeyCode.ENTER);
+        
         Date date2 = new Date();
         
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
@@ -142,11 +160,11 @@ public class MainAppTest extends GuiTest {
     @Test
     @Ignore
     public void clickGenerateThenPlayer1StartAndCanvasTest(){
-        click("#generate_map_btn");
+        clickOn("#generate_map_btn");
         Date date = new Date();
         
         sleep(1, SECONDS);
-        click("#p1_start_btn").moveBy(-400.00, -200.00).click();
+        clickOn("#p1_start_btn").moveBy(-400.00, -200.00).clickOn();
         
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat =  df.format(date);
@@ -160,7 +178,7 @@ public class MainAppTest extends GuiTest {
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
     }
     
-    @Override
+    
     protected Parent getRootNode() {
         try {
             this.app = new MainApp();
