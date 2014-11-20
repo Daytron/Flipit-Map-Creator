@@ -127,6 +127,11 @@ public class MainAppTest extends GuiTest {
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
         Assertions.verifyThat("#title_field", Commons.hasText("Eye Of The World"));
     }
+    
+    @Test
+    public void newTest() {
+        System.out.println(this.app.getView().isThereAMapVisible());
+    }
 
     /**
      * Test of generate button and player 1 start button.

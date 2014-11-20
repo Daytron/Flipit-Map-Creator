@@ -48,6 +48,10 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 
+/**
+ *
+ * @author ryan
+ */
 public class ViewController implements Initializable {
 
     @FXML
@@ -1379,6 +1383,13 @@ public class ViewController implements Initializable {
         this.isCurrentMapSave = false;
     }
 
+    /**
+     * Get a reference to the MainApp object, once ViewController is initiated.
+     * <p>
+     * This also setups an eventHandler for handling on close window button click 
+     * to launch a confirmation dialog
+     * @param app The main MainApp object initiated
+     */
     public void setApp(MainApp app) {
         this.app = app;
 
@@ -1461,6 +1472,13 @@ public class ViewController implements Initializable {
                 .showException(e);
     }
 
+    /**
+     * Creates and shows a confirmation dialog, with available actions, OK and CANCEL
+     * @param msgHead The masthead message for the dialog
+     * @param msgBody The message body for the dialog
+     * @return returns an Action object as the response 
+     * from the confirmation dialog created
+     */
     private Action showConfirmDialog(String msgHead, String msgBody) {
         Action response = Dialogs.create()
                 .owner(this.app.getStage())
@@ -1484,6 +1502,9 @@ public class ViewController implements Initializable {
     private void menuAboutOnClick(ActionEvent event) {
     }
 
+    /**
+     * @return returns <tt>true</tt> if a map is generated on the canvas, otherwise false
+     */
     public boolean isThereAMapVisible() {
         return isThereAMapVisible;
     }
