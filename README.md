@@ -57,6 +57,9 @@ Add the following dependencies to your POM file:
 
 Want to contribute? Please do open up an issue. Not accepting any pull requests at the moment.
 
+### Javadoc
+[Javadoc source]
+
 ### Roadmap to version 1.0 release
 See Milestone and Issues sections for more information and updates.
 
@@ -84,4 +87,5 @@ MIT
 [JavaFX]:http://www.oracle.com/technetwork/java/javase/overview/javafx-overview-2158620.html
 [TestFX 3.1.2]:https://github.com/TestFX/TestFX
 [JUnit 4.11]:http://junit.org/
+[Javadoc source]:https://daytron.github.io/Flipit-Map-Creator/apidocs/
 
