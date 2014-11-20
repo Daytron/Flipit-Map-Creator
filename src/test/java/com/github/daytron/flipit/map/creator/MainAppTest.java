@@ -129,6 +129,7 @@ public class MainAppTest extends GuiTest {
     }
     
     @Test
+    @Ignore
     public void newTest() {
         System.out.println(this.app.getView().isThereAMapVisible());
     }
