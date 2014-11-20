@@ -68,7 +68,7 @@ See Milestone and Issues sections for more information and updates.
  - ~~Automatic screenshot save image(PNG) in saving map for later use as preview image in the game~~
  - ~~Further validation on save filename naming convention~~
  - ~~Players start positions tile marks~~
- - ~~Create Java doc~~
+ - ~~Create Javadoc~~
  - About Menu
  - Better UI
  - Add open recent file menu item (no persistence for now)
