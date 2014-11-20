@@ -49,7 +49,7 @@ import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 
 /**
- * The controller class that manage and handles all of application's user
+ * The controller class that manages and handles all of application's user
  * events.
  *
  * @author Ryan Gilera
