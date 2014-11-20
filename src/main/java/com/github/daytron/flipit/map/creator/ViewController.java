@@ -49,8 +49,10 @@ import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 
 /**
+ * The controller class that manage and handles all of application's user
+ * events.
  *
- * @author ryan
+ * @author Ryan Gilera
  */
 public class ViewController implements Initializable {
 
@@ -143,6 +145,15 @@ public class ViewController implements Initializable {
     // Flag to know if no map is opened or generated
     private boolean isThereAMapVisible = false;
 
+    /**
+     * An override method implemented from Initializable interface. Initialize
+     * all necessary configurations in launching the application's view.
+     *
+     * @param url The location used to resolve relative paths for the root
+     * object, or null if the location is not known.
+     * @param rb The resources used to localize the root object, or null if the
+     * root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -217,12 +228,17 @@ public class ViewController implements Initializable {
 
     }
 
+    /**
+     * Adds and process a new log message from the received String argument.
+     *
+     * @param message The full text message of the log event
+     */
     private void addNewLogMessage(String message) {
         Date date = new Date();
         String timeFormat = this.dateFormatter.format(date);
 
         String separator = GlobalSettings.LOG_SEPARATOR;
-        
+
         // Prevents to create new line on first log
         if (this.preventNewLineAtFirst) {
             this.logMessage
@@ -249,10 +265,20 @@ public class ViewController implements Initializable {
         this.logArea.appendText("");
     }
 
+    /**
+     * Generates a map with no arguments. This is called only when Generate
+     * button or File>New menu item is clicked.
+     */
     private void generateMap() {
         this.generateMap("");
     }
 
+    /**
+     * Overloads generateMap method with path as an argument. This is called
+     * only when File>Open event starts.
+     *
+     * @param path The full directory path of the newly opened map.
+     */
     private void generateMap(String path) {
         // ################## INIT #################//
         this.isEditMapOn = false;
@@ -362,9 +388,15 @@ public class ViewController implements Initializable {
         this.isThereAMapVisible = true;
     }
 
-    // type 1: light edges color
-    // type 2: main color
-    // type 3: shadow color
+    /**
+     * Extracts the tile color of a tile when generating a new map.
+     *
+     * @param column The column position (with 0 as base, instead of 1)
+     * @param row The row position (with 0 as base, instead of 1)
+     * @param type The color type. 1 is for the light edge color, 2 is for the
+     * main body color and 3 is for shadow edge color.
+     * @return The tile color (Hex).
+     */
     private String extractPositionColor(int column, int row, int type) {
         String tile_color = "";
         String tile_type = "neutral";
@@ -408,6 +440,11 @@ public class ViewController implements Initializable {
         return tile_color;
     }
 
+    /**
+     * The event handler when Generate button is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void generateBtnOnClick(ActionEvent event) {
         // Confirmation dialog before proceeding
@@ -521,6 +558,11 @@ public class ViewController implements Initializable {
         this.gc.setFont(oldFont);
     }
 
+    /**
+     * The event handler when player 1 start button is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void player1StartBtnOnClick(ActionEvent event) {
         if (this.isThereAMapVisible) {
@@ -550,6 +592,11 @@ public class ViewController implements Initializable {
         }
     }
 
+    /**
+     * The event handler when Boulder button is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void boulderBtnOnClick(ActionEvent event) {
         if (this.isThereAMapVisible) {
@@ -564,6 +611,11 @@ public class ViewController implements Initializable {
         }
     }
 
+    /**
+     * The event handler when Neutral button is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void neutralBtnOnClick(ActionEvent event) {
         if (this.isThereAMapVisible) {
@@ -578,6 +630,11 @@ public class ViewController implements Initializable {
         }
     }
 
+    /**
+     * The event handler when Canvas is clicked.
+     *
+     * @param event The MouseEvent object
+     */
     @FXML
     private void canvasOnClick(MouseEvent event) {
         // Check first if the mouseclick event is inside the grip map
@@ -833,12 +890,12 @@ public class ViewController implements Initializable {
     }
 
     /**
-     * Method for extracting grid position from mouseclick coordinates Uses a
-     * simple binary search
+     * Extracts grid position from mouseclick coordinates. Uses a simple binary
+     * search.
      *
      * @param x_pos Mouseclick x coordinate
      * @param y_pos Mouseclick y coordinate
-     * @return An integer array as tile position [column,row]
+     * @return Returns tile position [column,row]
      */
     private int[] getTilePosition(double x_pos, double y_pos) {
         int tile_x, tile_y;
@@ -846,7 +903,7 @@ public class ViewController implements Initializable {
         // For locating column position
         int highX = this.columnCell.size() - 1;
         int lowX = 0;
-        int midX = 0;
+        int midX;
 
         while (lowX <= highX) {
             midX = lowX + (highX - lowX) / 2;
@@ -869,7 +926,7 @@ public class ViewController implements Initializable {
 
         int highY = this.rowCell.size() - 1;
         int lowY = 0;
-        int midY = 0;
+        int midY;
 
         while (lowY <= highY) {
             midY = lowY + (highY - lowY) / 2;
@@ -892,8 +949,9 @@ public class ViewController implements Initializable {
     }
 
     /**
-     * 
-     * @param event 
+     * The event handler when Title field is on focus.
+     *
+     * @param event The KeyEvent object
      */
     @FXML
     private void titleFieldOnKeyPressed(KeyEvent event) {
@@ -947,6 +1005,12 @@ public class ViewController implements Initializable {
         }
     }
 
+    /**
+     * Capitalize the first letter of a word.
+     *
+     * @param word The word to be capitilized
+     * @return Returns the formatted word
+     */
     private String captilizeFirstLetter(String word) {
         // Removes any unnecessary leading and trailing space
         word = word.trim();
@@ -971,6 +1035,12 @@ public class ViewController implements Initializable {
         return firstLetterCapitalTitle;
     }
 
+    /**
+     * Formats the title of the map.
+     *
+     * @param title The map's title
+     * @return Returns the formatted title
+     */
     private String titleFormatter(String title) {
         // Capitilize all first letter of a word 
         // separated by space
@@ -985,6 +1055,11 @@ public class ViewController implements Initializable {
         return title;
     }
 
+    /**
+     * The event handler when Menu>Open menu item is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void menuFileOpenOnClick(ActionEvent event) {
         // Confirmation dialog
@@ -1078,6 +1153,11 @@ public class ViewController implements Initializable {
 
     }
 
+    /**
+     * Opens the map json file and set it to the map instance variable.
+     *
+     * @param file The map json file
+     */
     private void openMapFile(File file) {
         Gson gson = new Gson();
 
@@ -1120,6 +1200,11 @@ public class ViewController implements Initializable {
         }
     }
 
+    /**
+     * The event handler when File>Save menu item is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void menuFileSaveOnClick(ActionEvent event) {
         // Detect first if all requirements are met
@@ -1212,7 +1297,7 @@ public class ViewController implements Initializable {
             this.showErrorDialog("OS Not Supported", GlobalSettings.LOG_OS_NOT_SUPPORTED);
             return;
         }
-        
+
         String firstWord = filename.substring(0, filename.lastIndexOf("."));
 
         // Prevents user from using a space character on Title
@@ -1228,11 +1313,11 @@ public class ViewController implements Initializable {
                     GlobalSettings.DIALOG_SAVE_NAME_SPACE_BODY_MSG);
             return;
         }
-        
+
         if (!this.isValidFileName(firstWord)) {
             String msgHead = "Invalid Filename Format";
-            String msgBody = "Should be [\"Map\"] + [3 digit number].json." + 
-                    "Example: Map004.json";
+            String msgBody = "Should be [\"Map\"] + [3 digit number].json."
+                    + "Example: Map004.json";
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + msgHead + ". " + msgBody;
             this.addNewLogMessage(wrongFormatNameMsg);
@@ -1264,35 +1349,47 @@ public class ViewController implements Initializable {
         }
 
     }
-    
+
     /**
-     * Verify if the filename follows the name convention: 
-     * "Map" + [3 digit number].
-     * @param filename
-     * @return 
+     * Verifies if the filename follows the name convention: "Map" + [3 digit
+     * number].
+     *
+     * @param filename The filename to inspect.
+     * @return Returns true if filename is valid, otherwise false.
      */
     private boolean isValidFileName(String filename) {
         if (!filename.startsWith("Map")) {
-            return  false;
+            return false;
         }
-        
+
         if (filename.length() != 6) {
             return false;
         }
-        
-        if (!(Character.isDigit(filename.charAt(3)) ||
-                Character.isDigit(filename.charAt(4)) ||
-                Character.isDigit(filename.charAt(5)))) {
+
+        if (!(Character.isDigit(filename.charAt(3))
+                || Character.isDigit(filename.charAt(4))
+                || Character.isDigit(filename.charAt(5)))) {
             return false;
         }
-        
+
         return true;
     }
 
+    /**
+     * Formats the map's ID.
+     *
+     * @param id The ID to be formatted.
+     * @return Returns the formatted ID.
+     */
     private String formatMapID(String id) {
         return this.captilizeFirstLetter(id);
     }
 
+    /**
+     * Saves the map object as a json file.
+     *
+     * @param file The map file to save.
+     */
     private void saveFile(File file) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -1359,6 +1456,11 @@ public class ViewController implements Initializable {
         }
     }
 
+    /**
+     * The event handler when File>New menu item is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void menuFileNewOnClick(ActionEvent event) {
         // Confirmation dialog
@@ -1384,10 +1486,11 @@ public class ViewController implements Initializable {
     }
 
     /**
-     * Get a reference to the MainApp object, once ViewController is initiated.
+     * Gets a reference to the MainApp object, once ViewController is initiated.
      * <p>
-     * This also setups an eventHandler for handling on close window button click 
-     * to launch a confirmation dialog
+     * This also setups an eventHandler for handling on close window button
+     * click to launch a confirmation dialog
+     *
      * @param app The main MainApp object initiated
      */
     public void setApp(MainApp app) {
@@ -1424,6 +1527,11 @@ public class ViewController implements Initializable {
         });
     }
 
+    /**
+     * The event handler when File>Quit menu item is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void menuFileQuitOnClick(ActionEvent event) {
         String msgHead, msgBody;
@@ -1445,6 +1553,12 @@ public class ViewController implements Initializable {
 
     }
 
+    /**
+     * Creates and shows a warning dialog.
+     *
+     * @param msgHead The masthead message for the dialog.
+     * @param msgBody The message body for the dialog.
+     */
     private void showWarningDialog(String msgHead, String msgBody) {
         Dialogs.create()
                 .owner(this.app.getStage())
@@ -1454,6 +1568,12 @@ public class ViewController implements Initializable {
                 .showWarning();
     }
 
+    /**
+     * Creates and shows an error dialog.
+     *
+     * @param msgHead The masthead message for the dialog.
+     * @param msgBody The message body for the dialog.
+     */
     private void showErrorDialog(String msgHead, String msgBody) {
         Dialogs.create()
                 .owner(this.app.getStage())
@@ -1463,6 +1583,11 @@ public class ViewController implements Initializable {
                 .showError();
     }
 
+    /**
+     * Creates and shows an exception dialog.
+     *
+     * @param e The exception to show.
+     */
     private void showExceptionDialog(Exception e) {
         Dialogs.create()
                 .owner(this.app.getStage())
@@ -1473,11 +1598,13 @@ public class ViewController implements Initializable {
     }
 
     /**
-     * Creates and shows a confirmation dialog, with available actions, OK and CANCEL
+     * Creates and shows a confirmation dialog, with available actions, OK and
+     * CANCEL
+     *
      * @param msgHead The masthead message for the dialog
      * @param msgBody The message body for the dialog
-     * @return returns an Action object as the response 
-     * from the confirmation dialog created
+     * @return returns an Action object as the response from the confirmation
+     * dialog created
      */
     private Action showConfirmDialog(String msgHead, String msgBody) {
         Action response = Dialogs.create()
@@ -1491,6 +1618,11 @@ public class ViewController implements Initializable {
         return response;
     }
 
+    /**
+     * The event handler when Log>Clear menu item is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void meuLogClearLogOnClick(ActionEvent event) {
         this.logMessage = new StringBuilder();
@@ -1498,17 +1630,21 @@ public class ViewController implements Initializable {
         this.logArea.setText("");
     }
 
+    /**
+     * The event handler when About>About App menu item is clicked.
+     *
+     * @param event The ActionEvent object
+     */
     @FXML
     private void menuAboutOnClick(ActionEvent event) {
     }
 
     /**
-     * @return returns <tt>true</tt> if a map is generated on the canvas, otherwise false
+     * @return returns <tt>true</tt> if a map is generated on the canvas,
+     * otherwise false
      */
     public boolean isThereAMapVisible() {
         return isThereAMapVisible;
     }
-    
-    
 
 }

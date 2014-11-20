@@ -7,6 +7,10 @@ package com.github.daytron.flipit.map.creator;
 import java.util.List;
 import javafx.collections.FXCollections;
 
+/**
+ * A static class that holds all of application's constants and settings
+ * @author Ryan Gilera
+ */
 public class GlobalSettings {
 
     // COMBOXES
@@ -108,14 +112,18 @@ public class GlobalSettings {
     public static final String DIALOG_WARNING_SAVE_HEAD_MSG = "Missing Requirement";
     /** Dialog head message for space character detection warning */
     public static final String DIALOG_SAVE_NAME_SPACE_HEAD_MSG = "Space Character Detected";
+    /** Dialog body message for space character detection warning */
     public static final String DIALOG_SAVE_NAME_SPACE_BODY_MSG = "Please remove unnecessary space";
-    
+    /** Dialog head message for unsupported file extension */
     public static final String DIALOG_INVALID_EXTENSION_HEAD_MSG = "Unsupported File Extension";
+    /** Dialog body message for unsupported file extension */
     public static final String DIALOG_INVALID_EXTENSION_BODY_MSG = "Please use only .json extension.";
-
+    /** Dialog head message for unsave map in exiting application */
     public static final String DIALOG_QUIT_HEAD_MSG_NOT_SAVE = "Unsave Map Detected.";
+    /** Dialog body message for unsave map in exiting application */
     public static final String DIALOG_QUIT_BODY_MSG_NOT_SAVE = "Are you sure you want to exit? Please make sure current map is save or it will be lost.";
-
+    /** Dialog head message for unsave map in creating a new map */
     public static final String DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE = "Unsave Map Detected.";
+    /** Dialog body message for unsave map in creating a new map */
     public static final String DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE = "Are you sure you want to continue? Please make sure current map is save or it will be lost.";
 }
