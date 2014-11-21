@@ -76,7 +76,6 @@ public class MainAppTest extends FxRobotImpl {
     public void clickGenerateButtonAtStartTest() throws Exception {
         clickOn("#generate_map_btn");
         Date date = new Date();
-
         sleep(1, SECONDS);
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
@@ -95,10 +94,8 @@ public class MainAppTest extends FxRobotImpl {
     @Test
     public void clickComboBoxesAndGenerateTest() {
         clickOn("#column_combo").clickOn("5");
-        sleep(2, SECONDS);
         
         clickOn("#row_combo").clickOn("6");
-        sleep(1, SECONDS);
         
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -142,35 +139,39 @@ public class MainAppTest extends FxRobotImpl {
                 + "[" + timeFormat2 + "] " + GlobalSettings.LOG_TITLE_SET
                 + "Title: Eye Of The World 10x10 is set.";
 
-        assertTrue(this.app.getView().isThereAMapVisible());
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
         Assertions.verifyThat("#title_field", Commons.hasText("Eye Of The World"));
+        assertTrue(this.app.getView().isThereAMapVisible());
     }
 
-    @Test
-    public void newTest() {
-        System.out.println(this.app.getView().isThereAMapVisible());
-    }
-
+    
     /**
      * Test of generate button and player 1 start button. 
      */
     @Test
-    public void clickGenerateThenPlayer1StartAndCanvasTest() {
+    public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
-
         sleep(1, SECONDS);
+        
         clickOn("#p1_start_btn");
         Date date2 = new Date();
                 
         moveBy(-400.00, -200.00).clickOn();
         Date date3 = new Date();
+        
+        clickOn("#p2_start_btn");
+        Date date4 = new Date();
+        
+        moveBy(-300.00, -300.00).clickOn();
+        Date date5 = new Date();
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat = df.format(date);
         String timeFormat2 = df.format(date2);
         String timeFormat3 = df.format(date3);
+        String timeFormat4 = df.format(date4);
+        String timeFormat5 = df.format(date5);
         
         String outputLog = GlobalSettings.LOG_SEPARATOR
                 + "[" + timeFormat + "] " + GlobalSettings.LOG_NEW_MAP
@@ -179,9 +180,65 @@ public class MainAppTest extends FxRobotImpl {
                 + "[" + timeFormat2 + "] " + GlobalSettings.LOG_PLAYER1_ON
                 + "\n" + GlobalSettings.LOG_SEPARATOR
                 + "[" + timeFormat3 + "] " + GlobalSettings.LOG_TILE_SET
-                + "Player 1 start position is now set to [8,4]";
+                + "Player 1 start position is now set to [8,4]"
+                + "\n" + GlobalSettings.LOG_SEPARATOR
+                + "[" + timeFormat4 + "] " + GlobalSettings.LOG_PLAYER2_ON
+                + "\n" + GlobalSettings.LOG_SEPARATOR
+                + "[" + timeFormat5 + "] " + GlobalSettings.LOG_TILE_SET
+                + "Player 2 start position is now set to [9,3]";
 
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
+        assertTrue(this.app.getView().isThereAMapVisible());
+    }
+    
+    /**
+     * Test of generate button and player 1 start button. 
+     */
+    @Test
+    public void clickGenerateThenBoulderAndOverwrittenByNeutralTest() {
+        clickOn("#generate_map_btn");
+        Date date = new Date();
+
+        sleep(1, SECONDS);
+        clickOn("#boulder_btn");
+        Date date2 = new Date();
+                
+        moveBy(-400.00, -200.00).clickOn();
+        Date date3 = new Date();
+        
+        clickOn("#neutral_btn");
+        Date date4 = new Date();
+        
+        moveBy(-400.00, -250.00).clickOn();
+        Date date5 = new Date();
+
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+        String timeFormat = df.format(date);
+        String timeFormat2 = df.format(date2);
+        String timeFormat3 = df.format(date3);
+        String timeFormat4 = df.format(date4);
+        String timeFormat5 = df.format(date5);
+        
+        String outputLog = GlobalSettings.LOG_SEPARATOR
+                + "[" + timeFormat + "] " + GlobalSettings.LOG_NEW_MAP
+                + "10 columns & 10 rows"
+                + "\n" + GlobalSettings.LOG_SEPARATOR
+                + "[" + timeFormat2 + "] " + GlobalSettings.LOG_BOULDER_ON
+                + "\n" + GlobalSettings.LOG_SEPARATOR
+                + "[" + timeFormat3 + "] " + GlobalSettings.LOG_TILE_SET
+                + "Boulder tile is set to [8,6]"
+                + "\n" + GlobalSettings.LOG_SEPARATOR
+                + "[" + timeFormat4 + "] " + GlobalSettings.LOG_NEUTRAL_ON
+                + "\n" + GlobalSettings.LOG_SEPARATOR
+                + "[" + timeFormat5 + "] " + GlobalSettings.LOG_WARNING 
+                + GlobalSettings.LOG_BOULDER_OVERWRITTEN
+                + "\n" + GlobalSettings.LOG_SEPARATOR
+                + "[" + timeFormat5 + "] " + GlobalSettings.LOG_TILE_SET
+                + "Neutral tile is set to [8,6]";
+
+        Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
+        assertTrue(this.app.getView().isThereAMapVisible());
+        assertTrue(this.app.getView().isEditMapOn());
     }
 
 }
