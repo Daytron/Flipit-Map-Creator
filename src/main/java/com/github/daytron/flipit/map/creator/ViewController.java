@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,7 +27,9 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -144,6 +148,8 @@ public class ViewController implements Initializable {
 
     // Flag to know if no map is opened or generated
     private boolean isThereAMapVisible = false;
+    @FXML
+    private MenuItem menuHelpAbout;
 
     /**
      * An override method implemented from Initializable interface. Initialize
@@ -247,12 +253,12 @@ public class ViewController implements Initializable {
         } else {
             this.logMessage.append("\n");
         }
-        
+
         this.logMessage.append(separator)
-                    .append("[")
-                    .append(timeFormat)
-                    .append("] ")
-                    .append(message);
+                .append("[")
+                .append(timeFormat)
+                .append("] ")
+                .append(message);
 
         this.logArea.setText(this.logMessage.toString());
 
@@ -412,22 +418,28 @@ public class ViewController implements Initializable {
         switch (tile_type) {
             case "boulder":
                 switch (type) {
-                    case 1: tile_color = GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR;
-                            break;
-                    case 2: tile_color = GlobalSettings.TILE_BOULDER_MAIN_COLOR;
-                            break;
-                    case 3: tile_color = GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR;
-                            break;
+                    case 1:
+                        tile_color = GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR;
+                        break;
+                    case 2:
+                        tile_color = GlobalSettings.TILE_BOULDER_MAIN_COLOR;
+                        break;
+                    case 3:
+                        tile_color = GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR;
+                        break;
                 }
                 break;
             case "neutral":
                 switch (type) {
-                    case 1: tile_color = GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR;
-                            break;
-                    case 2: tile_color = GlobalSettings.TILE_NEUTRAL_MAIN_COLOR;
-                            break;
-                    case 3: tile_color = GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR;
-                            break;
+                    case 1:
+                        tile_color = GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR;
+                        break;
+                    case 2:
+                        tile_color = GlobalSettings.TILE_NEUTRAL_MAIN_COLOR;
+                        break;
+                    case 3:
+                        tile_color = GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR;
+                        break;
                 }
                 break;
         }
@@ -489,10 +501,9 @@ public class ViewController implements Initializable {
 
         // For drawing the ring
         // Calculate necessary adjustments
-        
         // Padding is set to 10% of the smallest side
         padding = 0.1 * smallestSide;
-        
+
         // Drawing line width is set to 5% of the smallest side
         this.gc.setLineWidth(0.05 * smallestSide);
 
@@ -514,12 +525,12 @@ public class ViewController implements Initializable {
                 this.numberOfRows);
 
         /* 
-        * this calculation is based on these definitions:
-        * with smallest side (row or column) 5, font size is 40
-        * with 6, size is 38
-        * with 7, size is 36
-        * until 20, size is 10
-        */
+         * this calculation is based on these definitions:
+         * with smallest side (row or column) 5, font size is 40
+         * with 6, size is 38
+         * with 7, size is 36
+         * until 20, size is 10
+         */
         int fontSize = 45 - smallestSidePos - (smallestSidePos - 5);
 
         // Text padding
@@ -711,7 +722,7 @@ public class ViewController implements Initializable {
                             this.addNewLogMessage(GlobalSettings.LOG_NOTE
                                     + "It's already a boulder tile.");
                         }
-                        
+
                         break;
 
                     case GlobalSettings.TILE_NEUTRAL:
@@ -753,7 +764,7 @@ public class ViewController implements Initializable {
                             this.addNewLogMessage(GlobalSettings.LOG_NOTE
                                     + "It's already a neutral tile.");
                         }
-                        
+
                         break;
 
                     case GlobalSettings.TILE_PLAYER1:
@@ -1369,8 +1380,8 @@ public class ViewController implements Initializable {
         }
 
         if (!(Character.isDigit(filename.charAt(3))
-            || Character.isDigit(filename.charAt(4))
-            || Character.isDigit(filename.charAt(5)))) {
+                || Character.isDigit(filename.charAt(4))
+                || Character.isDigit(filename.charAt(5)))) {
             return false;
         }
 
@@ -1613,11 +1624,25 @@ public class ViewController implements Initializable {
 
     /**
      * The event handler when About>About App menu item is clicked.
-     *
+     * Opens a dialog window about the application.
      * @param event The ActionEvent object
      */
     @FXML
     private void menuAboutOnClick(ActionEvent event) {
+        try {
+            Dialog aboutDialog = new Dialog(this.app.getStage(), "About");
+            
+            Node viewNode = FXMLLoader.load(getClass().getResource("/fxml/AboutAppView.fxml"));
+            aboutDialog.setIconifiable(false);
+            aboutDialog.setResizable(false);
+            
+            aboutDialog.setContent(viewNode);
+            
+            aboutDialog.show();
+        } catch (IOException ex) {
+            Logger.getLogger(ViewController.class.getName()).log(Level.SEVERE, null, ex);
+            this.showExceptionDialog(ex);
+        }
     }
 
     /**

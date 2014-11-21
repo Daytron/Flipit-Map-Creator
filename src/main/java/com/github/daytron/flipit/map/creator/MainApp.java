@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * Created by Ryan Gilera <jalapaomaji-github@yahoo.com>
  */
 package com.github.daytron.flipit.map.creator;
@@ -18,8 +18,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * The main class. Entry point of the application. Sets and loads the view 
- * of the application.
+ * The main class. Entry point of the application. Sets and loads the view of
+ * the application.
+ *
  * @author Ryan Gilera
  */
 public class MainApp extends Application {
@@ -29,19 +30,20 @@ public class MainApp extends Application {
     private ViewController viewController;
 
     /**
-     * The first method to launch in a JavaFX application. Calls loadScene() 
-     * to load the view fxml file.
-     * @param stage Stage object pass by the System 
+     * The first method to launch in a JavaFX application. Calls loadScene() to
+     * load the view fxml file.
+     *
+     * @param stage Stage object pass by the System
      */
     @Override
-    public void start(Stage stage){
+    public void start(Stage stage) {
         this.stage = stage;
         this.loadScene();
         stage.show();
     }
 
     /**
-     * @return Returns the application's stage. 
+     * @return Returns the application's stage.
      */
     public Stage getStage() {
         return stage;
@@ -58,22 +60,24 @@ public class MainApp extends Application {
             Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
-     * @return Returns the view controller object 
+     * @return Returns the view controller object
      */
     public ViewController getView() {
         if (this.viewController != null) {
             return this.viewController;
         } else {
-            return  null;
+            return null;
         }
     }
 
     /**
      * Replace a scene based on the argument passed and set it to stage.
+     *
      * @param fxml The name of the fxml file to load.
-     * @return Returns a Initializable object that can be cast to ViewController later on.
+     * @return Returns a Initializable object that can be cast to ViewController
+     * later on.
      * @throws IOException if file is not a valid fxml file.
      */
     private Initializable replaceScene(String fxml) throws IOException {
@@ -96,9 +100,9 @@ public class MainApp extends Application {
 
         return (Initializable) loader.getController();
     }
-    
+
     /**
-     * @return  Returns a Parent object, that is the root of the application.
+     * @return Returns a Parent object, that is the root of the application.
      * @throws IOException Throws an IOException if it is not a valid fxml file.
      */
     public Parent getRoot() throws IOException {

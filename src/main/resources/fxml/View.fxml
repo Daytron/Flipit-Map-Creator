@@ -40,7 +40,7 @@
             </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#menuAboutOnClick" text="About Flipit Map Creator" />
+            <MenuItem fx:id="menuHelpAbout" mnemonicParsing="false" onAction="#menuAboutOnClick" text="About Flipit Map Creator" />
           </items>
         </Menu>
       </menus>

@@ -1,0 +1,16 @@
+/* 
+    Author     : Ryan Gilera
+*/
+#title {
+    -fx-font-size: 30pt;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: black;
+}
+
+#title-version {
+    -fx-font-size: 10pt;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: black;
+}

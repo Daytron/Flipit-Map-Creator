@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/AboutAppStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.daytron.flipit.map.creator.AboutAppViewController">
+   <children>
+      <Label id="title" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Flipit Map Creator">
+         <padding>
+            <Insets bottom="5.0" top="30.0" />
+         </padding>
+      </Label>
+      <Label id="title-version" maxWidth="1.7976931348623157E308" text="version 0.1">
+         <padding>
+            <Insets bottom="30.0" left="98.0" />
+         </padding>
+      </Label>
+      <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0">
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" />
+         </VBox.margin>
+      </TextArea>
+      <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="Created by Ryan Gilera. All rights reserved. 2014">
+         <padding>
+            <Insets right="20.0" top="20.0" />
+         </padding>
+      </Label>
+   </children>
+</VBox>
