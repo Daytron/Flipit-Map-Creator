@@ -42,7 +42,7 @@ public class MainApp extends Application {
     }
 
     /**
-     * @return Returns the application's stage 
+     * @return Returns the application's stage. 
      */
     public Stage getStage() {
         return stage;
