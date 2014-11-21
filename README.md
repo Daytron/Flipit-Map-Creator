@@ -69,7 +69,7 @@ See Milestone and Issues sections for more information and updates.
  - ~~Further validation on save filename naming convention~~
  - ~~Players start positions tile marks~~
  - ~~Create Javadoc~~
- - About Menu
+ - ~~About Menu~~
  - Better UI
  - Add open recent file menu item (no persistence for now)
  - Add keyboard control shortcuts
