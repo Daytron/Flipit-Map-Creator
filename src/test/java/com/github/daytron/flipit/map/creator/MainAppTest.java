@@ -5,7 +5,6 @@
  */
 package com.github.daytron.flipit.map.creator;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +12,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.After;
@@ -21,11 +19,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.Ignore;
 import org.loadui.testfx.Assertions;
 import org.loadui.testfx.controls.Commons;
 import org.loadui.testfx.framework.robot.impl.FxRobotImpl;
 import org.loadui.testfx.utils.RunWaitUtils;
+import org.testfx.api.FxLifecycle;
 
 /**
  *
@@ -41,9 +39,12 @@ public class MainAppTest extends FxRobotImpl {
 
     @BeforeClass
     public static void setUpClass() {
-        // Start the Toolkit and block until the primary Stage was retrieved.
-
-        //primaryStage = FxLifecycle.registerPrimaryStage();
+        try {
+            // Start the Toolkit and block until the primary Stage was retrieved.
+            primaryStage = FxLifecycle.registerPrimaryStage();
+        } catch (TimeoutException ex) {
+            Logger.getLogger(MainAppTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @AfterClass
@@ -52,11 +53,15 @@ public class MainAppTest extends FxRobotImpl {
 
     @Before
     public void setUp() {
-        // Construct the Application and call start() with the primary Stage. 
-        //Application demoApplication = FxLifecycle.setupApplication(MainApp.class);
-
-        // Wait for the primary Stage to be shown by start().
-        //RunWaitUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
+        try {
+            // Construct the Application and call start() with the primary Stage.
+            this.app = (MainApp) FxLifecycle.setupApplication(MainApp.class);
+            
+            // Wait for the primary Stage to be shown by start().
+            RunWaitUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
+        } catch (TimeoutException ex) {
+            Logger.getLogger(MainAppTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @After
@@ -67,7 +72,6 @@ public class MainAppTest extends FxRobotImpl {
      * Test for generate button.
      */
     @Test
-    @Ignore
     public void clickGenerateButtonAtStartTest() throws Exception {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -87,7 +91,6 @@ public class MainAppTest extends FxRobotImpl {
      * Test of comboboxes and generate button.
      */
     @Test
-    @Ignore
     public void clickComboBoxesAndGenerateTest() {
         clickOn("#column_combo").clickOn("5");
         sleep(2, SECONDS);
@@ -115,7 +118,6 @@ public class MainAppTest extends FxRobotImpl {
      * Test of generate button and title field.
      */
     @Test
-    @Ignore
     public void clickGenerateAndEnterTitleTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -141,18 +143,14 @@ public class MainAppTest extends FxRobotImpl {
     }
 
     @Test
-    @Ignore
     public void newTest() {
         System.out.println(this.app.getView().isThereAMapVisible());
     }
 
     /**
-     * Test of generate button and player 1 start button. Note: There is a bug
-     * currently in TestFX 3.1.2, method moveBy causes a DeathThread
-     * RuntimeException, author said bug is fix by next version.
+     * Test of generate button and player 1 start button. 
      */
     @Test
-    @Ignore
     public void clickGenerateThenPlayer1StartAndCanvasTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -166,22 +164,12 @@ public class MainAppTest extends FxRobotImpl {
                 + "[" + timeFormat + "] " + GlobalSettings.LOG_NEW_MAP
                 + "10 columns & 10 rows"
                 + "\n" + GlobalSettings.LOG_SEPARATOR
+                + "[" + timeFormat + "] " + GlobalSettings.LOG_PLAYER1_ON
+                + "\n" + GlobalSettings.LOG_SEPARATOR
                 + "[" + timeFormat + "] " + GlobalSettings.LOG_TILE_SET
-                + "Player 1 start position is now set to [8,14]";
+                + "Player 1 start position is now set to [8,4]";
 
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
-    }
-
-    protected Parent getRootNode() {
-        try {
-            this.app = new MainApp();
-            return app.getRoot();
-        } catch (IOException ex) {
-            Logger.getLogger(MainAppTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return null;
-
     }
 
 }
