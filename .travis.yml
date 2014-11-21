@@ -12,4 +12,4 @@ notifications:
     - ryangilera@gmail.com
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+  - mvn -e clean cobertura:cobertura coveralls:report
