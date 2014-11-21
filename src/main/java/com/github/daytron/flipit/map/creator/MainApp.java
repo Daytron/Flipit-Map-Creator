@@ -36,7 +36,6 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage){
         this.stage = stage;
-
         this.loadScene();
         stage.show();
     }
@@ -84,7 +83,6 @@ public class MainApp extends Application {
         loader.setLocation(MainApp.class.getResource("/fxml/" + fxml));
 
         Parent pane;
-
         try {
             pane = loader.load(in);
         } finally {
@@ -93,9 +91,7 @@ public class MainApp extends Application {
         Scene scene = new Scene(pane);
         stage.setTitle("Flipit Map Creator");
         stage.centerOnScreen();
-        
         stage.setScene(scene);
-
         stage.sizeToScene();
 
         return (Initializable) loader.getController();

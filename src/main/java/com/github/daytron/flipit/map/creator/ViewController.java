@@ -201,10 +201,12 @@ public class ViewController implements Initializable {
         // Set default value for each combobox
         this.column_combo.getSelectionModel().select(
                 GlobalSettings.COLUMN_DEFAULT_VALUE);
+        // Saves current column selection
         this.numberOfColumns = (int) GlobalSettings.COLUMN_DEFAULT_VALUE;
 
         this.row_combo.getSelectionModel().select(
                 GlobalSettings.ROW_DEFAULT_VALUE);
+        // Saves current row selection
         this.numberOfRows = (int) GlobalSettings.ROW_DEFAULT_VALUE;
 
         // Apply listeners
@@ -275,6 +277,8 @@ public class ViewController implements Initializable {
      */
     private void generateMap(String path) {
         // ################## INIT #################//
+        // Resets any previous toggles of this flag
+        // Use to notify player/object button is clicked if true.
         this.isEditMapOn = false;
 
         if (!this.isOpeningAMap) {
@@ -301,10 +305,11 @@ public class ViewController implements Initializable {
         double x = this.canvas.getWidth();
         double y = this.canvas.getHeight();
 
+        // Map preferred size (double)
         this.preferredHeight = ((int) y / this.numberOfRows) * (double) this.numberOfRows;
         this.preferredWidth = ((int) x / this.numberOfColumns) * (double) this.numberOfColumns;
 
-        // Padding space for width and height
+        // Canvas padding space for width and height
         this.halfPaddingWidth = (x - preferredWidth) / 2;
         this.halfPaddingHeight = (y - preferredHeight) / 2;
 
@@ -315,17 +320,20 @@ public class ViewController implements Initializable {
         this.gc.setLineWidth(2);
 
         // generate rows
+        // Note: rowCell is base 0 not 1, so row 1 is actually 0, 2 is 1, etc
         for (double yi = this.halfPaddingHeight; yi <= (y - this.halfPaddingHeight); yi = yi + this.gridYSpace) {
             //gc.strokeLine(halfPaddingWidth, yi, x - halfPaddingWidth, yi);
             this.rowCell.add(yi);
         }
 
         // generate columns
+        // Note: columnCell is base 0 not 1, so column 1 is actually 0, 2 is 1, etc
         for (double xi = this.halfPaddingWidth; xi <= (x - this.halfPaddingWidth); xi = xi + this.gridXSpace) {
             //gc.strokeLine(xi, halfPaddingHeight, xi, y - halfPaddingHeight);
             this.columnCell.add(xi);
         }
 
+        // String log message
         String msgMapDrawnLog;
 
         if (!this.isOpeningAMap) {
@@ -336,7 +344,6 @@ public class ViewController implements Initializable {
                             GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
                             GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
                             count_column, count_row);
-
                 }
             }
 
@@ -351,7 +358,6 @@ public class ViewController implements Initializable {
                             this.extractPositionColor(count_column, count_row, 2),
                             this.extractPositionColor(count_column, count_row, 3),
                             count_column, count_row);
-
                 }
             }
 
@@ -395,38 +401,33 @@ public class ViewController implements Initializable {
         String tile_color = "";
         String tile_type = "neutral";
 
+        // If current tile is a boulder, set tile_type to boulder
         for (Integer[] pos : this.map.getListOfBoulders()) {
             if (pos[0] == column + 1 && pos[1] == row + 1) {
                 tile_type = "boulder";
+                break;
             }
         }
 
         switch (tile_type) {
             case "boulder":
                 switch (type) {
-                    case 1:
-                        tile_color = GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR;
-                        break;
-                    case 2:
-                        tile_color = GlobalSettings.TILE_BOULDER_MAIN_COLOR;
-                        break;
-                    case 3:
-                        tile_color = GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR;
-                        break;
+                    case 1: tile_color = GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR;
+                            break;
+                    case 2: tile_color = GlobalSettings.TILE_BOULDER_MAIN_COLOR;
+                            break;
+                    case 3: tile_color = GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR;
+                            break;
                 }
                 break;
-
             case "neutral":
                 switch (type) {
-                    case 1:
-                        tile_color = GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR;
-                        break;
-                    case 2:
-                        tile_color = GlobalSettings.TILE_NEUTRAL_MAIN_COLOR;
-                        break;
-                    case 3:
-                        tile_color = GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR;
-                        break;
+                    case 1: tile_color = GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR;
+                            break;
+                    case 2: tile_color = GlobalSettings.TILE_NEUTRAL_MAIN_COLOR;
+                            break;
+                    case 3: tile_color = GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR;
+                            break;
                 }
                 break;
         }
@@ -480,7 +481,6 @@ public class ViewController implements Initializable {
     }
 
     private void paintPlayerStart(int playerNumber, int x, int y) {
-
         double smallestSide = Math.min(this.gridXSpace, this.gridYSpace);
 
         double padding;
@@ -489,29 +489,37 @@ public class ViewController implements Initializable {
 
         // For drawing the ring
         // Calculate necessary adjustments
+        
+        // Padding is set to 10% of the smallest side
         padding = 0.1 * smallestSide;
+        
+        // Drawing line width is set to 5% of the smallest side
         this.gc.setLineWidth(0.05 * smallestSide);
 
+        // Calculate the diameter of the ring
         widthRing = smallestSide - (padding * 2);
         heightRing = widthRing;
 
+        // Calculate extra x,y allowance to position the ring
         xAllowance = (this.gridXSpace - widthRing) / 2;
         yAllowance = (this.gridYSpace - heightRing) / 2;
 
+        // Draw the ring
         this.gc.strokeOval(this.columnCell.get(x - 1) + xAllowance,
                 this.rowCell.get(y - 1) + yAllowance,
-                widthRing,
-                heightRing);
+                widthRing, heightRing);
 
         // For text draw
         int smallestSidePos = Math.min(this.numberOfColumns,
                 this.numberOfRows);
 
-        // this is based on these definitions
-        // with smallest side (row or column) 5, font size is 40
-        // with 6, size is 38
-        // with 7, size is 36
-        // until 20, size is 10
+        /* 
+        * this calculation is based on these definitions:
+        * with smallest side (row or column) 5, font size is 40
+        * with 6, size is 38
+        * with 7, size is 36
+        * until 20, size is 10
+        */
         int fontSize = 45 - smallestSidePos - (smallestSidePos - 5);
 
         // Text padding
@@ -538,9 +546,12 @@ public class ViewController implements Initializable {
             yPaddingPercentage = 0.7;
         }
 
+        // Get a reference to the current font, to be retained later 
         Font oldFont = this.gc.getFont();
+        // Set a new font
         this.gc.setFont(Font.font("Verdana", fontSize));
 
+        // Draw the player number as text
         this.gc.strokeText(Integer.toString(playerNumber),
                 this.columnCell.get(x - 1) + xAllowance
                 + (widthRing * xPaddingPercentage),
@@ -562,7 +573,6 @@ public class ViewController implements Initializable {
         if (this.isThereAMapVisible) {
             this.isEditMapOn = true;
             this.tileToEdit = GlobalSettings.TILE_PLAYER1;
-
             this.addNewLogMessage(GlobalSettings.LOG_PLAYER1_ON);
         } else {
             String noMapMsg = GlobalSettings.LOG_WARNING
@@ -577,7 +587,6 @@ public class ViewController implements Initializable {
         if (this.isThereAMapVisible) {
             this.isEditMapOn = true;
             this.tileToEdit = GlobalSettings.TILE_PLAYER2;
-
             this.addNewLogMessage(GlobalSettings.LOG_PLAYER2_ON);
         } else {
             String noMapMsg = GlobalSettings.LOG_WARNING
@@ -596,7 +605,6 @@ public class ViewController implements Initializable {
         if (this.isThereAMapVisible) {
             this.isEditMapOn = true;
             this.tileToEdit = GlobalSettings.TILE_BOULDER;
-
             this.addNewLogMessage(GlobalSettings.LOG_BOULDER_ON);
         } else {
             String noMapMsg = GlobalSettings.LOG_WARNING
@@ -615,7 +623,6 @@ public class ViewController implements Initializable {
         if (this.isThereAMapVisible) {
             this.isEditMapOn = true;
             this.tileToEdit = GlobalSettings.TILE_NEUTRAL;
-
             this.addNewLogMessage(GlobalSettings.LOG_NEUTRAL_ON);
         } else {
             String noMapMsg = GlobalSettings.LOG_WARNING
@@ -704,6 +711,7 @@ public class ViewController implements Initializable {
                             this.addNewLogMessage(GlobalSettings.LOG_NOTE
                                     + "It's already a boulder tile.");
                         }
+                        
                         break;
 
                     case GlobalSettings.TILE_NEUTRAL:
@@ -745,6 +753,7 @@ public class ViewController implements Initializable {
                             this.addNewLogMessage(GlobalSettings.LOG_NOTE
                                     + "It's already a neutral tile.");
                         }
+                        
                         break;
 
                     case GlobalSettings.TILE_PLAYER1:
@@ -1182,7 +1191,6 @@ public class ViewController implements Initializable {
             this.listOfBoulders = this.map.getListOfBoulders();
 
             this.generateMap(file.getPath());
-
         } catch (IOException e) {
             String errorMsg = GlobalSettings.LOG_ERROR
                     + "IOEXCEPTION! Error loading map (invalid json map file). ";
@@ -1361,8 +1369,8 @@ public class ViewController implements Initializable {
         }
 
         if (!(Character.isDigit(filename.charAt(3))
-                || Character.isDigit(filename.charAt(4))
-                || Character.isDigit(filename.charAt(5)))) {
+            || Character.isDigit(filename.charAt(4))
+            || Character.isDigit(filename.charAt(5)))) {
             return false;
         }
 
@@ -1478,7 +1486,6 @@ public class ViewController implements Initializable {
             @Override
             public void handle(WindowEvent event) {
                 String msgHead, msgBody;
-
                 if (isCurrentMapSave) {
                     msgHead = GlobalSettings.DIALOG_QUIT_HEAD_MSG;
                     msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG;
@@ -1510,7 +1517,6 @@ public class ViewController implements Initializable {
     @FXML
     private void menuFileQuitOnClick(ActionEvent event) {
         String msgHead, msgBody;
-
         if (this.isCurrentMapSave) {
             msgHead = GlobalSettings.DIALOG_QUIT_HEAD_MSG;
             msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG;
