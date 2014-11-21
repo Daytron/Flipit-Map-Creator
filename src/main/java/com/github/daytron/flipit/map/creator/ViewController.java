@@ -241,22 +241,16 @@ public class ViewController implements Initializable {
 
         // Prevents to create new line on first log
         if (this.preventNewLineAtFirst) {
-            this.logMessage
-                    .append(separator)
-                    .append("[")
-                    .append(timeFormat)
-                    .append("] ")
-                    .append(message);
             this.preventNewLineAtFirst = false;
         } else {
-            this.logMessage
-                    .append("\n")
-                    .append(separator)
+            this.logMessage.append("\n");
+        }
+        
+        this.logMessage.append(separator)
                     .append("[")
                     .append(timeFormat)
                     .append("] ")
                     .append(message);
-        }
 
         this.logArea.setText(this.logMessage.toString());
 
@@ -1463,26 +1457,7 @@ public class ViewController implements Initializable {
      */
     @FXML
     private void menuFileNewOnClick(ActionEvent event) {
-        // Confirmation dialog
-        if (!isCurrentMapSave) {
-            if (showConfirmDialog(
-                    GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE)
-                    == Dialog.ACTION_CANCEL) {
-                // Cancel opening file if user press cancel
-                return;
-            }
-        }
-
-        // Toggle flag for detecting if the map being generated 
-        // is an open file or new
-        this.isOpeningAMap = false;
-
-        // Generate the map
-        this.generateMap();
-
-        // Toggle flag for detecting unsave map
-        this.isCurrentMapSave = false;
+        this.generateBtnOnClick(event);
     }
 
     /**
