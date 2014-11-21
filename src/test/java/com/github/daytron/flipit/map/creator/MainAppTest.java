@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -85,6 +86,7 @@ public class MainAppTest extends FxRobotImpl {
                 + "10 columns & 10 rows";
 
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
+        assertTrue(this.app.getView().isThereAMapVisible());
     }
 
     /**
@@ -112,6 +114,7 @@ public class MainAppTest extends FxRobotImpl {
          System.out.println(ta.getText().equals(outputLog));
          */
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
+        assertTrue(this.app.getView().isThereAMapVisible());
     }
 
     /**
@@ -138,6 +141,7 @@ public class MainAppTest extends FxRobotImpl {
                 + "[" + timeFormat2 + "] " + GlobalSettings.LOG_TITLE_SET
                 + "Title: Eye Of The World 10x10 is set.";
 
+        assertTrue(this.app.getView().isThereAMapVisible());
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
         Assertions.verifyThat("#title_field", Commons.hasText("Eye Of The World"));
     }

@@ -1623,21 +1623,22 @@ public class ViewController implements Initializable {
     }
 
     /**
-     * The event handler when About>About App menu item is clicked.
-     * Opens a dialog window about the application.
+     * The event handler when About>About App menu item is clicked. Opens a
+     * dialog window about the application.
+     *
      * @param event The ActionEvent object
      */
     @FXML
     private void menuAboutOnClick(ActionEvent event) {
         try {
             Dialog aboutDialog = new Dialog(this.app.getStage(), "About");
-            
+
             Node viewNode = FXMLLoader.load(getClass().getResource("/fxml/AboutAppView.fxml"));
             aboutDialog.setIconifiable(false);
             aboutDialog.setResizable(false);
-            
+
             aboutDialog.setContent(viewNode);
-            
+
             aboutDialog.show();
         } catch (IOException ex) {
             Logger.getLogger(ViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -1646,11 +1647,18 @@ public class ViewController implements Initializable {
     }
 
     /**
-     * @return returns <tt>true</tt> if a map is generated on the canvas,
+     * @return Returns <tt>true</tt> if a map is generated on the canvas,
      * otherwise false
      */
     public boolean isThereAMapVisible() {
         return isThereAMapVisible;
+    }
+
+    /**
+     * @return Returns true if any of player or object buttons is clicked
+     */
+    public boolean isEditMapOn() {
+        return isEditMapOn;
     }
 
 }
