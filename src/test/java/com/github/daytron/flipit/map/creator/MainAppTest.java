@@ -96,8 +96,10 @@ public class MainAppTest extends FxRobotImpl {
     public void clickComboBoxesAndGenerateTest() {
         clickOn("#column_combo").clickOn("5");
         sleep(2, SECONDS);
+        
         clickOn("#row_combo").clickOn("6");
         sleep(1, SECONDS);
+        
         clickOn("#generate_map_btn");
         Date date = new Date();
         sleep(1, SECONDS);
@@ -127,7 +129,6 @@ public class MainAppTest extends FxRobotImpl {
 
         sleep(1, SECONDS);
         clickOn("#title_field").write("eye of the world").push(KeyCode.ENTER);
-
         Date date2 = new Date();
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
@@ -160,17 +161,24 @@ public class MainAppTest extends FxRobotImpl {
         Date date = new Date();
 
         sleep(1, SECONDS);
-        clickOn("#p1_start_btn").moveBy(-400.00, -200.00).clickOn();
+        clickOn("#p1_start_btn");
+        Date date2 = new Date();
+                
+        moveBy(-400.00, -200.00).clickOn();
+        Date date3 = new Date();
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat = df.format(date);
+        String timeFormat2 = df.format(date2);
+        String timeFormat3 = df.format(date3);
+        
         String outputLog = GlobalSettings.LOG_SEPARATOR
                 + "[" + timeFormat + "] " + GlobalSettings.LOG_NEW_MAP
                 + "10 columns & 10 rows"
                 + "\n" + GlobalSettings.LOG_SEPARATOR
-                + "[" + timeFormat + "] " + GlobalSettings.LOG_PLAYER1_ON
+                + "[" + timeFormat2 + "] " + GlobalSettings.LOG_PLAYER1_ON
                 + "\n" + GlobalSettings.LOG_SEPARATOR
-                + "[" + timeFormat + "] " + GlobalSettings.LOG_TILE_SET
+                + "[" + timeFormat3 + "] " + GlobalSettings.LOG_TILE_SET
                 + "Player 1 start position is now set to [8,4]";
 
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
