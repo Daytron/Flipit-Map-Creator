@@ -85,6 +85,12 @@ You can build the project through Maven by using the following command:
 mvn clean install
 ```
 
+### Run
+You can run the application jar with:
+```
+java -jar Flipit-Map-Creator-<Version number>.jar
+```
+Change `<Version number>` with the current version number.
 ### Javadoc
 [Javadoc source]
 
