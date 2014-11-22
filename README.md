@@ -106,7 +106,7 @@ See Milestone and Issues sections for more information and updates.
  - ~~About Menu~~
  - Better UI
  - Add open recent file menu item (no persistence for now)
- - Add keyboard control shortcuts
+ - ~~Add keyboard control shortcuts~~
  - Find bugs
  - Find more bugs
 
