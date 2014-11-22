@@ -104,8 +104,7 @@ See Milestone and Issues sections for more information and updates.
  - ~~Players start positions tile marks~~
  - ~~Create Javadoc~~
  - ~~About Menu~~
- - Better UI
- - Add open recent file menu item (no persistence for now)
+ - ~~Add open recent file menu item (no persistence for now)~~
  - ~~Add keyboard control shortcuts~~
  - Find bugs
  - Find more bugs
