@@ -34,6 +34,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
@@ -91,6 +92,14 @@ public class ViewController implements Initializable {
     private MenuItem menuFileOpen;
     @FXML
     private MenuItem menuFileSave;
+    @FXML
+    private MenuItem menuHelpAbout;
+    @FXML
+    private MenuItem menuFileQuit;
+    @FXML
+    private MenuItem menuLogClear;
+    @FXML
+    private Menu menuFileRecent;
 
     // MainApp object
     private MainApp app;
@@ -114,6 +123,7 @@ public class ViewController implements Initializable {
 
     // Map
     private Map map;
+    private File currentFileOpened;
 
     // Map variables
     // Size of a tile
@@ -149,12 +159,9 @@ public class ViewController implements Initializable {
 
     // Flag to know if no map is opened or generated
     private boolean isThereAMapVisible = false;
-    @FXML
-    private MenuItem menuHelpAbout;
-    @FXML
-    private MenuItem menuFileQuit;
-    @FXML
-    private MenuItem menuLogClear;
+
+    // List of opened map files
+    private List<File> listOfRecentFiles;
 
     /**
      * An override method implemented from Initializable interface. Initialize
@@ -195,23 +202,25 @@ public class ViewController implements Initializable {
                 //use Double.MIN_VALUE to scroll to the top 
             }
         });
-        
+
         // Add Keyboard shortcuts
-        this.menuFileNew.setAccelerator(new KeyCodeCombination(KeyCode.N, 
+        this.menuFileNew.setAccelerator(new KeyCodeCombination(KeyCode.N,
                 KeyCodeCombination.CONTROL_DOWN));
-        this.menuFileOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, 
+        this.menuFileOpen.setAccelerator(new KeyCodeCombination(KeyCode.O,
                 KeyCodeCombination.CONTROL_DOWN));
-        this.menuFileSave.setAccelerator(new KeyCodeCombination(KeyCode.S, 
+        this.menuFileSave.setAccelerator(new KeyCodeCombination(KeyCode.S,
                 KeyCodeCombination.CONTROL_DOWN));
-        this.menuFileQuit.setAccelerator(new KeyCodeCombination(KeyCode.Q, 
+        this.menuFileQuit.setAccelerator(new KeyCodeCombination(KeyCode.Q,
                 KeyCodeCombination.CONTROL_DOWN));
-        
-        this.menuLogClear.setAccelerator(new KeyCodeCombination(KeyCode.C, 
+
+        this.menuLogClear.setAccelerator(new KeyCodeCombination(KeyCode.C,
                 KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
-        
-        this.menuHelpAbout.setAccelerator(new KeyCodeCombination(KeyCode.A, 
+
+        this.menuHelpAbout.setAccelerator(new KeyCodeCombination(KeyCode.A,
                 KeyCodeCombination.ALT_DOWN));
-        
+
+        // Initialize list of recent map files
+        this.listOfRecentFiles = new ArrayList<>();
 
         // ################## MAP SIZE COMBO BOXES #################//
         // Define column list items
@@ -1098,17 +1107,6 @@ public class ViewController implements Initializable {
      */
     @FXML
     private void menuFileOpenOnClick(ActionEvent event) {
-        // Confirmation dialog
-        if (!isCurrentMapSave) {
-            if (showConfirmDialog(
-                    GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE)
-                    == Dialog.ACTION_CANCEL) {
-                // Cancel opening file if user press cancel
-                return;
-            }
-        }
-
         FileChooser fileChooser = new FileChooser();
 
         // Set filechooser title
@@ -1194,7 +1192,18 @@ public class ViewController implements Initializable {
      *
      * @param file The map json file
      */
-    private void openMapFile(File file) {
+    public void openMapFile(File file) {
+        // Confirmation dialog
+        if (!isCurrentMapSave) {
+            if (showConfirmDialog(
+                    GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE)
+                    == Dialog.ACTION_CANCEL) {
+                // Cancel opening file if user press cancel
+                return;
+            }
+        }
+        
         Gson gson = new Gson();
 
         try {
@@ -1223,7 +1232,51 @@ public class ViewController implements Initializable {
             // Set list of boulders
             this.listOfBoulders = this.map.getListOfBoulders();
 
+            // Generate map
             this.generateMap(file.getPath());
+
+            // Set to current file map
+            // Use to compare for recent map menu item
+            this.currentFileOpened = file;
+            
+            // Add to list of current opened files
+            if (!this.listOfRecentFiles.contains(file)) {
+                this.listOfRecentFiles.add(file);
+            }
+
+            // Update recent files menu items and add listeners
+            if (!this.listOfRecentFiles.isEmpty()) {
+                // Resets menu items
+                this.menuFileRecent.getItems().clear();
+
+                for (File aFile : this.listOfRecentFiles) {
+                    // Create new menu item
+                    MenuItem aMenuItem = new MenuItem(aFile.getPath());
+
+                    // Add menu item to the recent open menu
+                    this.menuFileRecent.getItems().add(aMenuItem);
+
+                    // Set handler
+                    aMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+
+                        @Override
+                        public void handle(ActionEvent event) {
+                            // Get back the reference from the menuitem object
+                            MenuItem anObject = (MenuItem)event.getSource();
+                            
+                            // only opens a map if it is not "open" currently
+                            if (!currentFileOpened.getPath().equals(anObject.getText())) {
+                                openMapFile(new File(anObject.getText()));
+                            } else  {
+                                String itsAlreadyOpenLogMessage = GlobalSettings.LOG_NOTE
+                                        + "Map is already open.";
+                                addNewLogMessage(itsAlreadyOpenLogMessage);
+                            }
+                        }
+                    });
+                }
+            }
+
         } catch (IOException e) {
             String errorMsg = GlobalSettings.LOG_ERROR
                     + "IOEXCEPTION! Error loading map (invalid json map file). ";
@@ -1233,6 +1286,25 @@ public class ViewController implements Initializable {
 
             e.printStackTrace();
         }
+    }
+
+    
+    public class RecentMapEventHandler implements EventHandler<ActionEvent> {
+
+        private File openedFile;
+
+        public RecentMapEventHandler(File file) {
+            this.openedFile = file;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            System.out.println("it's clicked");
+            openMapFile(openedFile);
+        }
+        
+        
+
     }
 
     /**
@@ -1681,6 +1753,11 @@ public class ViewController implements Initializable {
      */
     public boolean isEditMapOn() {
         return isEditMapOn;
+    }
+
+    @FXML
+    private void menuFileRecentOnClick(ActionEvent event) {
+
     }
 
 }
