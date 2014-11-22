@@ -38,10 +38,34 @@ Add the following dependencies to your POM file:
     <artifactId>controlsfx</artifactId>
     <version>8.20.8</version>
 </dependency>
+```
+### For Test Dependencies for Maven
+Currently using prerelease version (SNAPSHOT) of TestFX. Please add the following to your pom file.
+
+```
+<repositories>
+    <repository>
+        <id>maven-central-repo</id>
+        <url>http://repo1.maven.org/maven2</url>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+    </repository>
+    <repository>
+        <id>sonatype-snapshots-repo</id>
+        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+```
+Then on your dependencies add the following:
+```
 <dependency>
-    <groupId>org.loadui</groupId>
-    <artifactId>testFx</artifactId>
-    <version>3.1.2</version>
+    <groupId>org.testfx</groupId>
+    <artifactId>testfx-core</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -51,11 +75,15 @@ Add the following dependencies to your POM file:
     <scope>test</scope>
 </dependency>
 ```
-
-
 ### Development
 
-Want to contribute? Please do open up an issue. Not accepting any pull requests at the moment.
+Want to contribute? Please do open up an issue for any bug reports and feedback. I'm not accepting any pull requests at the moment.
+
+### Build
+You can build the project through Maven by using the following command:
+```
+mvn clean install
+```
 
 ### Javadoc
 [Javadoc source]
