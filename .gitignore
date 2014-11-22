@@ -1,6 +1,6 @@
 *.class
 
-## All backup files from Linux
+## All backup text files from Linux
 *~
 
 # Mobile Tools for Java (J2ME)
