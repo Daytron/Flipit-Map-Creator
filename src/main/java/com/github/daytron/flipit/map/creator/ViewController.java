@@ -40,6 +40,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -150,6 +151,10 @@ public class ViewController implements Initializable {
     private boolean isThereAMapVisible = false;
     @FXML
     private MenuItem menuHelpAbout;
+    @FXML
+    private MenuItem menuFileQuit;
+    @FXML
+    private MenuItem menuLogClear;
 
     /**
      * An override method implemented from Initializable interface. Initialize
@@ -190,6 +195,23 @@ public class ViewController implements Initializable {
                 //use Double.MIN_VALUE to scroll to the top 
             }
         });
+        
+        // Add Keyboard shortcuts
+        this.menuFileNew.setAccelerator(new KeyCodeCombination(KeyCode.N, 
+                KeyCodeCombination.CONTROL_DOWN));
+        this.menuFileOpen.setAccelerator(new KeyCodeCombination(KeyCode.O, 
+                KeyCodeCombination.CONTROL_DOWN));
+        this.menuFileSave.setAccelerator(new KeyCodeCombination(KeyCode.S, 
+                KeyCodeCombination.CONTROL_DOWN));
+        this.menuFileQuit.setAccelerator(new KeyCodeCombination(KeyCode.Q, 
+                KeyCodeCombination.CONTROL_DOWN));
+        
+        this.menuLogClear.setAccelerator(new KeyCodeCombination(KeyCode.C, 
+                KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
+        
+        this.menuHelpAbout.setAccelerator(new KeyCodeCombination(KeyCode.A, 
+                KeyCodeCombination.ALT_DOWN));
+        
 
         // ################## MAP SIZE COMBO BOXES #################//
         // Define column list items

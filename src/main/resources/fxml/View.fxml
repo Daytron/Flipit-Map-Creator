@@ -24,7 +24,7 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem id="quit" mnemonicParsing="false" onAction="#menuFileQuitOnClick" text="Quit" />
+            <MenuItem id="quit" fx:id="menuFileQuit" mnemonicParsing="false" onAction="#menuFileQuitOnClick" text="Quit" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
@@ -35,7 +35,7 @@
         </Menu>
             <Menu mnemonicParsing="false" text="Log">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#meuLogClearLogOnClick" text="Clear Log" />
+                <MenuItem fx:id="menuLogClear" mnemonicParsing="false" onAction="#meuLogClearLogOnClick" text="Clear Log" />
               </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Help">
