@@ -270,6 +270,7 @@ public class MainAppTest extends FxRobotImpl {
     }
 
     @Test
+    @Ignore
     public void clickHelpAboutAppTest() {
         clickOn("#help").clickOn("#about");
         sleep(1, SECONDS);
