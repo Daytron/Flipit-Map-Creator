@@ -32,6 +32,12 @@ import javafx.collections.FXCollections;
  */
 public final class GlobalSettings {
 
+    /**
+     * Prevents other classes from instantiating this class.
+     */
+    private GlobalSettings() {
+    }
+
     // COMBOXES
     /** The default value for the Column Combobox */
     public static final Integer COLUMN_DEFAULT_VALUE = 10;
