@@ -467,13 +467,4 @@ public class MainAppTest extends FxRobotImpl {
         assertTrue(this.app.getView().isEditMapOn());
     }
 
-    @Test
-    @Ignore
-    public void clickFileOpenMapTest() {
-        clickOn("#file").clickOn("#open");
-        sleep(1, SECONDS);
-
-        //clickOn(".file-path-textfield").write("/home/user/fixtures/enterprise-data.xml"); 
-    }
-
 }
