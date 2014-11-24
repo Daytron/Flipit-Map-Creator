@@ -77,7 +77,7 @@ public class MainAppTest extends FxRobotImpl {
         try {
             // Construct the Application and call start() with the primary Stage.
             this.app = (MainApp) FxLifecycle.setupApplication(MainApp.class);
-            
+
             // Wait for the primary Stage to be shown by start().
             RunWaitUtils.waitFor(20, TimeUnit.SECONDS, primaryStage.showingProperty());
         } catch (TimeoutException ex) {
@@ -90,10 +90,10 @@ public class MainAppTest extends FxRobotImpl {
     }
 
     /**
-     * Test for generate button.
+     * Test event:
+     * 1. click generate button
      */
     @Test
-    @Ignore
     public void clickGenerateButtonAtStartTest() throws Exception {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -110,15 +110,19 @@ public class MainAppTest extends FxRobotImpl {
     }
 
     /**
-     * Test of comboboxes and generate button.
+     * Test events:
+     * 1. click column combo box
+     * 2. select and click number 5
+     * 3. click row combo box
+     * 4. select and click number 6
+     * 5. click generate button
      */
     @Test
-    @Ignore
     public void clickComboBoxesAndGenerateTest() {
         clickOn("#column_combo").clickOn("5");
-        
+
         clickOn("#row_combo").clickOn("6");
-        
+
         clickOn("#generate_map_btn");
         Date date = new Date();
         sleep(1, SECONDS);
@@ -139,10 +143,13 @@ public class MainAppTest extends FxRobotImpl {
     }
 
     /**
-     * Test of generate button and title field.
+     * Test events:
+     * 1. click generate button
+     * 2. click on title field
+     * 3. type "eye of the world" in the field
+     * 4. press ENTER key
      */
     @Test
-    @Ignore
     public void clickGenerateAndEnterTitleTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -167,26 +174,29 @@ public class MainAppTest extends FxRobotImpl {
         assertTrue(this.app.getView().isThereAMapVisible());
     }
 
-    
     /**
-     * Test of generate button and player 1 start button. 
+     * Test events:
+     * 1. click generate button
+     * 2. click player 1 start button
+     * 3. click tile 8,4
+     * 4. click player 2 start button
+     * 5. click tile 9,3
      */
     @Test
-    @Ignore
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
         sleep(1, SECONDS);
-        
+
         clickOn("#p1_start_btn");
         Date date2 = new Date();
-                
+
         moveBy(-400.00, -200.00).clickOn();
         Date date3 = new Date();
-        
+
         clickOn("#p2_start_btn");
         Date date4 = new Date();
-        
+
         moveBy(-300.00, -300.00).clickOn();
         Date date5 = new Date();
 
@@ -196,7 +206,7 @@ public class MainAppTest extends FxRobotImpl {
         String timeFormat3 = df.format(date3);
         String timeFormat4 = df.format(date4);
         String timeFormat5 = df.format(date5);
-        
+
         String outputLog = GlobalSettings.LOG_SEPARATOR
                 + "[" + timeFormat + "] " + GlobalSettings.LOG_NEW_MAP
                 + "10 columns & 10 rows"
@@ -214,12 +224,203 @@ public class MainAppTest extends FxRobotImpl {
         Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
         assertTrue(this.app.getView().isThereAMapVisible());
     }
-    
+
     /**
-     * Test of generate button and player 1 start button. 
+     * Test events:
+     * 1. click generate button
+     * 2. click player 1 start button
+     * 3. click on tile 8,4
+     * 4. click on tile 3,4
+     * 5. click player 1 start button
+     * 6. click on tile 8,8
+     * 7. click player 1 start button
+     * 8. click on tile 8,8 (click again on the same tile)
+     * 9. click player 2 start button
+     * 10. click tile 9,3
+     * 11. click player 2 start button
+     * 12. click tile 9,3 (click again on the same tile)
+     * 13. click player 2 start button
+     * 14. click tile 8,1
+     * 15. click player 2 start button (overwrite p1 start tile )
+     * 16. click tile 8,8
      */
     @Test
-    @Ignore
+    public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTwiceTest() {
+        clickOn("#generate_map_btn");
+        Date date = new Date();
+        sleep(1, SECONDS);
+
+        clickOn("#p1_start_btn");
+        Date date2 = new Date();
+
+        moveBy(-400.00, -200.00).clickOn();
+        Date date3 = new Date();
+
+        moveBy(-400.00, 0.00).clickOn();
+        Date date4 = new Date();
+
+        clickOn("#p1_start_btn");
+        Date date5 = new Date();
+
+        moveBy(-400.00, 0.0).clickOn();
+        Date date6 = new Date();
+        
+        clickOn("#p1_start_btn");
+        Date date7 = new Date();
+
+        moveBy(-400.00, 0.0).clickOn();
+        Date date8 = new Date();
+
+        clickOn("#p2_start_btn");
+        Date date9 = new Date();
+
+        moveBy(-300.00, -300.00).clickOn();
+        Date date10 = new Date();
+        
+        clickOn("#p2_start_btn");
+        Date date11 = new Date();
+        
+        moveBy(-300.00, -300.00).clickOn();
+        Date date12 = new Date();
+        
+        clickOn("#p2_start_btn");
+        Date date13 = new Date();
+        
+        moveBy(-350.00, -400.00).clickOn();
+        Date date14 = new Date();
+        
+        clickOn("#p2_start_btn");
+        Date date15 = new Date();
+        
+        moveBy(-400.00, 0.0).clickOn();
+        Date date16 = new Date();
+
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+        String timeFormat = df.format(date);
+        String timeFormat2 = df.format(date2);
+        String timeFormat3 = df.format(date3);
+        String timeFormat4 = df.format(date4);
+        String timeFormat5 = df.format(date5);
+        String timeFormat6 = df.format(date6);
+        String timeFormat7 = df.format(date7);
+        String timeFormat8 = df.format(date8);
+        String timeFormat9 = df.format(date9);
+        String timeFormat10 = df.format(date10);
+        String timeFormat11 = df.format(date11);
+        String timeFormat12 = df.format(date12);
+        String timeFormat13 = df.format(date13);
+        String timeFormat14 = df.format(date14);
+        String timeFormat15 = df.format(date15);
+        String timeFormat16 = df.format(date16);
+
+        StringBuilder outputLog = new StringBuilder();
+
+        // clickOn("#generate_map_btn");
+        outputLog.append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat).append("] ");
+        outputLog.append(GlobalSettings.LOG_NEW_MAP);
+        outputLog.append("10 columns & 10 rows");
+        
+        // clickOn("#p1_start_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat2).append("] ");
+        outputLog.append(GlobalSettings.LOG_PLAYER1_ON);
+        
+        // moveBy(-400.00, -200.00).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat3).append("] ");
+        outputLog.append(GlobalSettings.LOG_TILE_SET);
+        outputLog.append("Player 1 start position is now set to [8,4]");
+        
+        // moveBy(-400.00, 0.0).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat4).append("] ");
+        outputLog.append(GlobalSettings.LOG_NOTE);
+        outputLog.append("Nothing selected. [3,4]");
+        
+        // clickOn("#p1_start_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat5).append("] ");
+        outputLog.append(GlobalSettings.LOG_PLAYER1_ON);
+        
+        // moveBy(-400.00, 0.0).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat6).append("] ");
+        outputLog.append(GlobalSettings.LOG_TILE_SET);
+        outputLog.append("Player 1 start position is now set to [8,8]");
+        
+        // clickOn("#p1_start_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat7).append("] ");
+        outputLog.append(GlobalSettings.LOG_PLAYER1_ON);
+        
+        // moveBy(-400.00, 0.0).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat8).append("] ");
+        outputLog.append(GlobalSettings.LOG_ERROR);
+        outputLog.append("You already have selected this tile.");
+        
+        // clickOn("#p2_start_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat9).append("] ");
+        outputLog.append(GlobalSettings.LOG_PLAYER2_ON);
+        
+        // moveBy(-300.00, -300.00).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat10).append("] ");
+        outputLog.append(GlobalSettings.LOG_TILE_SET);
+        outputLog.append("Player 2 start position is now set to [9,3]");
+        
+        // clickOn("#p2_start_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat11).append("] ");
+        outputLog.append(GlobalSettings.LOG_PLAYER2_ON);
+        
+        // moveBy(-300.00, -300.00).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat12).append("] ");
+        outputLog.append(GlobalSettings.LOG_ERROR);
+        outputLog.append("You already have selected this tile.");
+        
+        // clickOn("#p2_start_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat13).append("] ");
+        outputLog.append(GlobalSettings.LOG_PLAYER2_ON);
+        
+        // moveBy(-350.00, -400.00).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat14).append("] ");
+        outputLog.append(GlobalSettings.LOG_TILE_SET);
+        outputLog.append("Player 2 start position is now set to [8,1]");
+        
+        // clickOn("#p2_start_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat15).append("] ");
+        outputLog.append(GlobalSettings.LOG_PLAYER2_ON);
+        
+        // moveBy(-400.00, 0.0).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat16).append("] ");
+        outputLog.append(GlobalSettings.LOG_WARNING);
+        outputLog.append("Player 1 start position is overwritten!");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat16).append("] ");
+        outputLog.append(GlobalSettings.LOG_TILE_OVERWRITTEN);
+        outputLog.append("Player 2 start position is now set to [8,8]");
+
+        Assertions.verifyThat("#logArea", Commons.hasText(outputLog.toString()));
+        assertTrue(this.app.getView().isThereAMapVisible());
+    }
+
+    /**
+     * Test events:
+     * 1. click generate button
+     * 2, click boulder button
+     * 3. click on tile 8,6
+     * 4. click neutral button (overwrites boulder button)
+     * 5. click on tile 8,6
+     */
+    @Test
     public void clickGenerateThenBoulderAndOverwrittenByNeutralTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -227,13 +428,13 @@ public class MainAppTest extends FxRobotImpl {
         sleep(1, SECONDS);
         clickOn("#boulder_btn");
         Date date2 = new Date();
-                
+
         moveBy(-400.00, -200.00).clickOn();
         Date date3 = new Date();
-        
+
         clickOn("#neutral_btn");
         Date date4 = new Date();
-        
+
         moveBy(-400.00, -250.00).clickOn();
         Date date5 = new Date();
 
@@ -243,7 +444,7 @@ public class MainAppTest extends FxRobotImpl {
         String timeFormat3 = df.format(date3);
         String timeFormat4 = df.format(date4);
         String timeFormat5 = df.format(date5);
-        
+
         String outputLog = GlobalSettings.LOG_SEPARATOR
                 + "[" + timeFormat + "] " + GlobalSettings.LOG_NEW_MAP
                 + "10 columns & 10 rows"
@@ -255,7 +456,7 @@ public class MainAppTest extends FxRobotImpl {
                 + "\n" + GlobalSettings.LOG_SEPARATOR
                 + "[" + timeFormat4 + "] " + GlobalSettings.LOG_NEUTRAL_ON
                 + "\n" + GlobalSettings.LOG_SEPARATOR
-                + "[" + timeFormat5 + "] " + GlobalSettings.LOG_WARNING 
+                + "[" + timeFormat5 + "] " + GlobalSettings.LOG_WARNING
                 + GlobalSettings.LOG_BOULDER_OVERWRITTEN
                 + "\n" + GlobalSettings.LOG_SEPARATOR
                 + "[" + timeFormat5 + "] " + GlobalSettings.LOG_TILE_SET
@@ -265,22 +466,14 @@ public class MainAppTest extends FxRobotImpl {
         assertTrue(this.app.getView().isThereAMapVisible());
         assertTrue(this.app.getView().isEditMapOn());
     }
-    
+
     @Test
     @Ignore
     public void clickFileOpenMapTest() {
         clickOn("#file").clickOn("#open");
         sleep(1, SECONDS);
-        
+
         //clickOn(".file-path-textfield").write("/home/user/fixtures/enterprise-data.xml"); 
     }
 
-    @Test
-    @Ignore
-    public void clickHelpAboutAppTest() {
-        clickOn("#help").clickOn("#about");
-        sleep(1, SECONDS);
-        closeCurrentWindow();
-        sleep(1, SECONDS);
-    }
 }
