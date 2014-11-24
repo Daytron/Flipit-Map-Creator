@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.daytron.flipit.map.creator.utilities;
+package com.github.daytron.flipit.map.creator.model;
 
 import com.github.daytron.flipit.map.creator.MainApp;
 import org.controlsfx.control.action.Action;

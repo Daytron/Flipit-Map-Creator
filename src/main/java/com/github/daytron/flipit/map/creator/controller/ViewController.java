@@ -26,7 +26,8 @@ package com.github.daytron.flipit.map.creator.controller;
 import com.github.daytron.flipit.map.creator.MainApp;
 import com.github.daytron.flipit.map.creator.utilities.GlobalSettings;
 import com.github.daytron.flipit.map.creator.model.Map;
-import com.github.daytron.flipit.map.creator.utilities.DialogManager;
+import com.github.daytron.flipit.map.creator.model.DialogManager;
+import com.github.daytron.flipit.map.creator.model.GraphicsManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
@@ -54,7 +55,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Menu;
@@ -68,14 +68,10 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import javax.imageio.ImageIO;
-import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
 
 /**
  * The controller class that manages and handles all of application's user
@@ -134,9 +130,6 @@ public class ViewController implements Initializable {
     // apply necessary tile modification when user click the canvas
     private String tileToEdit;
 
-    // The GraphicsContext of the canvas
-    private GraphicsContext gc;
-
     // Log notes
     private StringBuilder logMessage;
     private boolean preventNewLineAtFirst;
@@ -149,26 +142,10 @@ public class ViewController implements Initializable {
     private File currentFileOpened;
 
     // Map variables
-    // Size of a tile
-    private double gridXSpace;
-    private double gridYSpace;
-
-    private double preferredHeight;
-    private double preferredWidth;
-
-    // The padding for x and y position of the map to the canvas
-    private double halfPaddingWidth;
-    private double halfPaddingHeight;
-
     private int numberOfRows;
     private int numberOfColumns;
 
-    // List of coordinates that dictates the boundary of a tile
-    private List<Double> rowCell;
-    private List<Double> columnCell;
-
     // Tile  variables
-    private int tileEdgeEffect;
     private List<Integer[]> listOfBoulders;
 
     // User OS
@@ -186,6 +163,8 @@ public class ViewController implements Initializable {
     // List of opened map files
     private List<File> listOfRecentFiles;
 
+    private GraphicsManager graphicsManager;
+
     /**
      * An override method implemented from Initializable interface. Initialize
      * all necessary configurations in launching the application's view.
@@ -200,7 +179,8 @@ public class ViewController implements Initializable {
 
         // ################## INIT #################//
         // Extract GraphicsContext from canvas
-        this.gc = this.canvas.getGraphicsContext2D();
+        this.graphicsManager = GraphicsManager.getInstance();
+        this.graphicsManager.init(this.canvas, this.map);
 
         this.dateFormatter = new SimpleDateFormat("hh:mm");
         // Init logArea
@@ -210,8 +190,6 @@ public class ViewController implements Initializable {
         this.logArea.setText("");
         this.logArea.setEditable(false);
         this.logArea.setWrapText(true);
-
-        this.tileEdgeEffect = GlobalSettings.TILE_EDGE_WIDTH;
 
         // Resets the flag for detecting button pressed from objects
         this.isEditMapOn = false;
@@ -347,87 +325,38 @@ public class ViewController implements Initializable {
             this.listOfBoulders = new ArrayList<>();
             this.map = new Map();
         }
-        // Resets new columnCell and rowCell
-        this.rowCell = new ArrayList<>();
-        this.columnCell = new ArrayList<>();
 
         // Apply appropriate edge effect
         if (this.numberOfColumns > 8 && this.numberOfRows > 8) {
-            this.tileEdgeEffect = 2;
+            this.graphicsManager.setTileEdgeEffect(2);
         } else {
-            this.tileEdgeEffect = 4;
+            this.graphicsManager.setTileEdgeEffect(4);
         }
-
-        // Clears any previous drawings
-        this.gc.clearRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
 
         // ################## GENERATE MAP #################//
-        double x = this.canvas.getWidth();
-        double y = this.canvas.getHeight();
-
-        // Map preferred size (double)
-        this.preferredHeight = ((int) y / this.numberOfRows) * (double) this.numberOfRows;
-        this.preferredWidth = ((int) x / this.numberOfColumns) * (double) this.numberOfColumns;
-
-        // Canvas padding space for width and height
-        this.halfPaddingWidth = (x - preferredWidth) / 2;
-        this.halfPaddingHeight = (y - preferredHeight) / 2;
-
-        // space between each cell
-        this.gridXSpace = this.preferredWidth / this.numberOfColumns;
-        this.gridYSpace = this.preferredHeight / this.numberOfRows;
-
-        this.gc.setLineWidth(2);
-
-        // generate rows
-        // Note: rowCell is base 0 not 1, so row 1 is actually 0, 2 is 1, etc
-        for (double yi = this.halfPaddingHeight; yi <= (y - this.halfPaddingHeight); yi = yi + this.gridYSpace) {
-            //gc.strokeLine(halfPaddingWidth, yi, x - halfPaddingWidth, yi);
-            this.rowCell.add(yi);
-        }
-
-        // generate columns
-        // Note: columnCell is base 0 not 1, so column 1 is actually 0, 2 is 1, etc
-        for (double xi = this.halfPaddingWidth; xi <= (x - this.halfPaddingWidth); xi = xi + this.gridXSpace) {
-            //gc.strokeLine(xi, halfPaddingHeight, xi, y - halfPaddingHeight);
-            this.columnCell.add(xi);
-        }
+        this.graphicsManager.generateMap(this.numberOfRows, this.numberOfColumns, this.map);
 
         // String log message
         String msgMapDrawnLog;
 
         if (!this.isOpeningAMap) {
-            // Fill grid tiles with neutral color
-            for (int count_row = 0; count_row < this.numberOfRows; count_row++) {
-                for (int count_column = 0; count_column < this.numberOfColumns; count_column++) {
-                    this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
-                            GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
-                            GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
-                            count_column, count_row);
-                }
-            }
+            // Calls graphics manager to draw new map
+            this.graphicsManager.drawNewMap();
 
             // Prepare log message
             msgMapDrawnLog = GlobalSettings.LOG_NEW_MAP + this.numberOfColumns
                     + " columns & " + this.numberOfRows + " rows";
         } else {
-            // Fill grid tiles from the save map data file
-            for (int count_row = 0; count_row < this.numberOfRows; count_row++) {
-                for (int count_column = 0; count_column < this.numberOfColumns; count_column++) {
-                    this.paintTile(this.extractPositionColor(count_column, count_row, 1),
-                            this.extractPositionColor(count_column, count_row, 2),
-                            this.extractPositionColor(count_column, count_row, 3),
-                            count_column, count_row);
-                }
-            }
+            // Calls graphics manager to draw opened map
+            this.graphicsManager.drawOpenMap();
 
             // Paint tile for player 1 start position
-            this.paintPlayerStart(1,
+            this.graphicsManager.paintPlayerStart(1,
                     this.map.getListOfPlayer1StartPosition()[0],
                     this.map.getListOfPlayer1StartPosition()[1]);
 
             // Paint tile for player 2 start position
-            this.paintPlayerStart(2,
+            this.graphicsManager.paintPlayerStart(2,
                     this.map.getListOfPlayer2StartPosition()[0],
                     this.map.getListOfPlayer2StartPosition()[1]);
 
@@ -446,59 +375,6 @@ public class ViewController implements Initializable {
         // Alternatively the condition (this.map != null) can also be used)
         // But a more verbose variable name is better suited
         this.isThereAMapVisible = true;
-    }
-
-    /**
-     * Extracts the tile color of a tile when generating a new map.
-     *
-     * @param column The column position (with 0 as base, instead of 1)
-     * @param row The row position (with 0 as base, instead of 1)
-     * @param type The color type. 1 is for the light edge color, 2 is for the
-     * main body color and 3 is for shadow edge color.
-     * @return The tile color (Hex).
-     */
-    private String extractPositionColor(int column, int row, int type) {
-        String tile_color = "";
-        String tile_type = "neutral";
-
-        // If current tile is a boulder, set tile_type to boulder
-        for (Integer[] pos : this.map.getListOfBoulders()) {
-            if (pos[0] == column + 1 && pos[1] == row + 1) {
-                tile_type = "boulder";
-                break;
-            }
-        }
-
-        switch (tile_type) {
-            case "boulder":
-                switch (type) {
-                    case 1:
-                        tile_color = GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR;
-                        break;
-                    case 2:
-                        tile_color = GlobalSettings.TILE_BOULDER_MAIN_COLOR;
-                        break;
-                    case 3:
-                        tile_color = GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR;
-                        break;
-                }
-                break;
-            case "neutral":
-                switch (type) {
-                    case 1:
-                        tile_color = GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR;
-                        break;
-                    case 2:
-                        tile_color = GlobalSettings.TILE_NEUTRAL_MAIN_COLOR;
-                        break;
-                    case 3:
-                        tile_color = GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR;
-                        break;
-                }
-                break;
-        }
-
-        return tile_color;
     }
 
     /**
@@ -528,105 +404,6 @@ public class ViewController implements Initializable {
 
         // Toggle flag for detecting unsave map data
         this.isCurrentMapSave = false;
-    }
-
-    private void paintTile(String light_edge_color, String main_color, String shadow_edge_color,
-            int count_column, int count_row) {
-        // Coloring the light top and left edges respectively
-        this.gc.setFill(Color.web(light_edge_color));
-        this.gc.fillRect(this.columnCell.get(count_column), this.rowCell.get(count_row), this.gridXSpace, this.tileEdgeEffect);
-        this.gc.fillRect(this.columnCell.get(count_column), this.rowCell.get(count_row), this.tileEdgeEffect, this.gridYSpace);
-
-        // Coloring main tile body
-        this.gc.setFill(Color.web(main_color));
-        this.gc.fillRect(this.columnCell.get(count_column) + this.tileEdgeEffect, this.rowCell.get(count_row) + this.tileEdgeEffect, this.gridXSpace - this.tileEdgeEffect, this.gridYSpace - this.tileEdgeEffect);
-
-        // Coloring tile's shadow for bottom and right edges respectively
-        this.gc.setFill(Color.web(shadow_edge_color));
-        this.gc.fillRect(this.columnCell.get(count_column) + this.tileEdgeEffect, this.rowCell.get(count_row) + this.gridYSpace - this.tileEdgeEffect, this.gridXSpace - this.tileEdgeEffect, this.tileEdgeEffect);
-        this.gc.fillRect(this.columnCell.get(count_column) + this.gridXSpace - this.tileEdgeEffect, this.rowCell.get(count_row) + this.tileEdgeEffect, this.tileEdgeEffect, this.gridYSpace - this.tileEdgeEffect);
-    }
-
-    private void paintPlayerStart(int playerNumber, int x, int y) {
-        double smallestSide = Math.min(this.gridXSpace, this.gridYSpace);
-
-        double padding;
-        double widthRing, heightRing;
-        double xAllowance, yAllowance;
-
-        // For drawing the ring
-        // Calculate necessary adjustments
-        // Padding is set to 10% of the smallest side
-        padding = 0.1 * smallestSide;
-
-        // Drawing line width is set to 5% of the smallest side
-        this.gc.setLineWidth(0.05 * smallestSide);
-
-        // Calculate the diameter of the ring
-        widthRing = smallestSide - (padding * 2);
-        heightRing = widthRing;
-
-        // Calculate extra x,y allowance to position the ring
-        xAllowance = (this.gridXSpace - widthRing) / 2;
-        yAllowance = (this.gridYSpace - heightRing) / 2;
-
-        // Draw the ring
-        this.gc.strokeOval(this.columnCell.get(x - 1) + xAllowance,
-                this.rowCell.get(y - 1) + yAllowance,
-                widthRing, heightRing);
-
-        // For text draw
-        int smallestSidePos = Math.min(this.numberOfColumns,
-                this.numberOfRows);
-
-        /* 
-         * this calculation is based on these definitions:
-         * with smallest side (row or column) 5, font size is 40
-         * with 6, size is 38
-         * with 7, size is 36
-         * until 20, size is 10
-         */
-        int fontSize = 45 - smallestSidePos - (smallestSidePos - 5);
-
-        // Text padding
-        double xPaddingPercentage;
-        double yPaddingPercentage;
-
-        if (smallestSidePos > 4 && smallestSidePos < 7) {
-            xPaddingPercentage = 0.33;
-            yPaddingPercentage = 0.65;
-        } else if (smallestSidePos > 6 && smallestSidePos < 10) {
-            xPaddingPercentage = 0.31;
-            yPaddingPercentage = 0.7;
-        } else if (smallestSidePos > 9 && smallestSidePos < 13) {
-            xPaddingPercentage = 0.29;
-            yPaddingPercentage = 0.75;
-        } else if (smallestSidePos > 12 && smallestSidePos < 16) {
-            xPaddingPercentage = 0.28;
-            yPaddingPercentage = 0.75;
-        } else if (smallestSidePos > 15 && smallestSidePos < 18) {
-            xPaddingPercentage = 0.32;
-            yPaddingPercentage = 0.7;
-        } else {
-            xPaddingPercentage = 0.35;
-            yPaddingPercentage = 0.7;
-        }
-
-        // Get a reference to the current font, to be retained later 
-        Font oldFont = this.gc.getFont();
-        // Set a new font
-        this.gc.setFont(Font.font("Verdana", fontSize));
-
-        // Draw the player number as text
-        this.gc.strokeText(Integer.toString(playerNumber),
-                this.columnCell.get(x - 1) + xAllowance
-                + (widthRing * xPaddingPercentage),
-                this.rowCell.get(y - 1) + yAllowance
-                + (widthRing * yPaddingPercentage));
-
-        // Return back to its original width and font
-        this.gc.setLineWidth(1.0);
-        this.gc.setFont(oldFont);
     }
 
     /**
@@ -705,9 +482,10 @@ public class ViewController implements Initializable {
     @FXML
     private void canvasOnClick(MouseEvent event) {
         // Check first if the mouseclick event is inside the grip map
-        if (this.isInsideTheGrid(event.getX(), event.getY())) {
+        if (this.graphicsManager.isInsideTheGrid(event.getX(), event.getY())) {
             // Extract tile position from mouseclick coordinates
-            int[] tilePos = this.getTilePosition(event.getX(), event.getY());
+            int[] tilePos = this.graphicsManager.getTilePosition(
+                    event.getX(), event.getY());
 
             // Check if any tile button (boulder/neutral/player) is activated
             if (this.isEditMapOn) {
@@ -764,7 +542,7 @@ public class ViewController implements Initializable {
                             this.listOfBoulders.add(new Integer[]{tilePos[0], tilePos[1]});
 
                             // Paint tile to boulder
-                            this.paintBoulderTile(tilePos[0], tilePos[1]);
+                            this.graphicsManager.paintBoulderTile(tilePos[0], tilePos[1]);
 
                             // Toggle flag for detecting unsave map
                             this.isCurrentMapSave = false;
@@ -805,7 +583,7 @@ public class ViewController implements Initializable {
                         // This is necessary to avoid overpainting previous neutral tile
                         if (isBoulder || isPlayer1Start || isPlayer2Start) {
                             // Paint tile to neutral
-                            this.paintNeutralTile(tilePos[0], tilePos[1]);
+                            this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
                             // Toggle flag for detecting unsave map
                             this.isCurrentMapSave = false;
@@ -828,7 +606,7 @@ public class ViewController implements Initializable {
                             this.listOfBoulders.remove(boulderReference);
 
                             // Revert it to neutral tile
-                            this.paintNeutralTile(tilePos[0], tilePos[1]);
+                            this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
                             this.addNewLogMessage(GlobalSettings.LOG_WARNING
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
@@ -843,13 +621,13 @@ public class ViewController implements Initializable {
                             this.map.setListOfPlayer2StartPosition(null);
 
                             // Revert it to neutral tile
-                            this.paintNeutralTile(tilePos[0], tilePos[1]);
+                            this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
                             this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 2 start position is overwritten!");
                         }
 
                         // Paint tile to player 1 start
-                        this.paintPlayerStart(1, tilePos[0], tilePos[1]);
+                        this.graphicsManager.paintPlayerStart(1, tilePos[0], tilePos[1]);
 
                         // Toggle flag for detecting unsave map
                         this.isCurrentMapSave = false;
@@ -879,7 +657,7 @@ public class ViewController implements Initializable {
                             this.listOfBoulders.remove(boulderReference);
 
                             // Revert it to neutral tile
-                            this.paintNeutralTile(tilePos[0], tilePos[1]);
+                            this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
                             this.addNewLogMessage(GlobalSettings.LOG_WARNING
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
@@ -894,13 +672,13 @@ public class ViewController implements Initializable {
                             this.map.setListOfPlayer1StartPosition(null);
 
                             // Revert it to neutral tile
-                            this.paintNeutralTile(tilePos[0], tilePos[1]);
+                            this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
                             this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 1 start position is overwritten!");
                         }
 
                         // Paint tile to player 2 start
-                        this.paintPlayerStart(2, tilePos[0], tilePos[1]);
+                        this.graphicsManager.paintPlayerStart(2, tilePos[0], tilePos[1]);
 
                         // Toggle flag for detecting unsave map
                         this.isCurrentMapSave = false;
@@ -937,84 +715,6 @@ public class ViewController implements Initializable {
                     + "is outside the grid map!";
             this.addNewLogMessage(msg);
         }
-    }
-
-    private void paintNeutralTile(int x, int y) {
-        this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
-                GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
-                GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
-                x - 1, y - 1);
-    }
-
-    private void paintBoulderTile(int x, int y) {
-        this.paintTile(GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR,
-                GlobalSettings.TILE_BOULDER_MAIN_COLOR,
-                GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR,
-                x - 1, y - 1);
-    }
-
-    private boolean isInsideTheGrid(double x_pos, double y_pos) {
-        return (x_pos >= this.halfPaddingWidth && x_pos <= (this.canvas.getWidth() - this.halfPaddingWidth))
-                && (y_pos >= this.halfPaddingHeight && y_pos <= (this.canvas.getWidth() - this.halfPaddingHeight));
-    }
-
-    /**
-     * Extracts grid position from mouseclick coordinates. Uses a simple binary
-     * search.
-     *
-     * @param x_pos Mouseclick x coordinate
-     * @param y_pos Mouseclick y coordinate
-     * @return Returns tile position [column,row]
-     */
-    private int[] getTilePosition(double x_pos, double y_pos) {
-        int tile_x, tile_y;
-
-        // For locating column position
-        int highX = this.columnCell.size() - 1;
-        int lowX = 0;
-        int midX;
-
-        while (lowX <= highX) {
-            midX = lowX + (highX - lowX) / 2;
-
-            if (x_pos < this.columnCell.get(midX)) {
-                highX = midX;
-            } else if (x_pos > this.columnCell.get(midX)) {
-                lowX = midX;
-            } else {
-                break;
-            }
-
-            if (lowX + 1 == highX) {
-                break;
-            }
-        }
-
-        // For locating row position
-        tile_x = lowX + 1;
-
-        int highY = this.rowCell.size() - 1;
-        int lowY = 0;
-        int midY;
-
-        while (lowY <= highY) {
-            midY = lowY + (highY - lowY) / 2;
-
-            if (y_pos < this.rowCell.get(midY)) {
-                highY = midY;
-            } else if (y_pos > this.rowCell.get(midY)) {
-                lowY = midY;
-            } else {
-                break;
-            }
-
-            if (lowY + 1 == highY) {
-                break;
-            }
-        }
-        tile_y = lowY + 1;
-
-        return new int[]{tile_x, tile_y};
     }
 
     /**

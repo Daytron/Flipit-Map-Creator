@@ -93,6 +93,7 @@ public class MainAppTest extends FxRobotImpl {
      * Test for generate button.
      */
     @Test
+    @Ignore
     public void clickGenerateButtonAtStartTest() throws Exception {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -112,6 +113,7 @@ public class MainAppTest extends FxRobotImpl {
      * Test of comboboxes and generate button.
      */
     @Test
+    @Ignore
     public void clickComboBoxesAndGenerateTest() {
         clickOn("#column_combo").clickOn("5");
         
@@ -140,6 +142,7 @@ public class MainAppTest extends FxRobotImpl {
      * Test of generate button and title field.
      */
     @Test
+    @Ignore
     public void clickGenerateAndEnterTitleTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -169,6 +172,7 @@ public class MainAppTest extends FxRobotImpl {
      * Test of generate button and player 1 start button. 
      */
     @Test
+    @Ignore
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -215,6 +219,7 @@ public class MainAppTest extends FxRobotImpl {
      * Test of generate button and player 1 start button. 
      */
     @Test
+    @Ignore
     public void clickGenerateThenBoulderAndOverwrittenByNeutralTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
