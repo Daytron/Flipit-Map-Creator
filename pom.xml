@@ -12,6 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>com.github.daytron.flipit.map.creator.MainApp</mainClass>
+        <netbeans.hint.license>mit</netbeans.hint.license>
     </properties>
 
     <organization>
