@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.daytron.flipit.map.creator;
+package com.github.daytron.flipit.map.creator.utilities;
 
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -30,7 +30,7 @@ import javafx.collections.FXCollections;
  * A static class that holds all of application's constants and settings
  * @author Ryan Gilera
  */
-public class GlobalSettings {
+public final class GlobalSettings {
 
     // COMBOXES
     /** The default value for the Column Combobox */

@@ -23,6 +23,7 @@
  */
 package com.github.daytron.flipit.map.creator;
 
+import com.github.daytron.flipit.map.creator.controller.ViewController;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;

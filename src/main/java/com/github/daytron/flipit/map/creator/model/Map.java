@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.daytron.flipit.map.creator;
+package com.github.daytron.flipit.map.creator.model;
 
 import java.util.List;
 

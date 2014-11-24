@@ -23,6 +23,7 @@
  */
 package com.github.daytron.flipit.map.creator;
 
+import com.github.daytron.flipit.map.creator.utilities.GlobalSettings;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;

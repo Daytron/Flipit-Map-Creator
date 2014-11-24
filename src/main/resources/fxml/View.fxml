@@ -33,7 +33,7 @@ THE SOFTWARE.
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.daytron.flipit.map.creator.ViewController">
+<VBox stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.daytron.flipit.map.creator.controller.ViewController">
   <children>
     <MenuBar fx:id="menubar" VBox.vgrow="NEVER">
       <menus>

@@ -21,8 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.daytron.flipit.map.creator;
+package com.github.daytron.flipit.map.creator.controller;
 
+import com.github.daytron.flipit.map.creator.MainApp;
+import com.github.daytron.flipit.map.creator.utilities.GlobalSettings;
+import com.github.daytron.flipit.map.creator.model.Map;
+import com.github.daytron.flipit.map.creator.utilities.DialogManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
@@ -507,9 +511,10 @@ public class ViewController implements Initializable {
         // Confirmation dialog before proceeding
         // Checks for any unsave previous map
         if (!isCurrentMapSave) {
-            if (showConfirmDialog(
+            if (DialogManager.showConfirmDialog(
                     GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE)
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE,
+                    this.app)
                     == Dialog.ACTION_CANCEL) {
                 // Cancel opening file if user press cancel
                 return;
@@ -1057,7 +1062,7 @@ public class ViewController implements Initializable {
                                 + msgHead + ". " + msgBody;
                         this.addNewLogMessage(invalidMsg);
 
-                        this.showErrorDialog(msgHead, msgBody);
+                        DialogManager.showErrorDialog(msgHead, msgBody, this.app);
                     }
                 }
             } else {
@@ -1182,7 +1187,7 @@ public class ViewController implements Initializable {
                             + msgHead + ". " + msgBody;
 
                     this.addNewLogMessage(invalidPatterName);
-                    this.showErrorDialog(msgHead, msgBody);
+                    DialogManager.showErrorDialog(msgHead, msgBody, this.app);
                 }
             } else {
                 String msgHead = "Invalid Extension";
@@ -1192,7 +1197,7 @@ public class ViewController implements Initializable {
                         + msgHead + ". " + msgBody;
 
                 this.addNewLogMessage(invalidExtension);
-                this.showErrorDialog(msgHead, msgBody);
+                DialogManager.showErrorDialog(msgHead, msgBody, this.app);
             }
         } else {
             String msgHead = "No File Detected";
@@ -1201,7 +1206,7 @@ public class ViewController implements Initializable {
                     + msgHead + ". " + msgBody;
 
             this.addNewLogMessage(invalidFile);
-            this.showErrorDialog(msgHead, msgBody);
+            DialogManager.showErrorDialog(msgHead, msgBody, this.app);
         }
 
     }
@@ -1214,15 +1219,16 @@ public class ViewController implements Initializable {
     public void openMapFile(File file) {
         // Confirmation dialog
         if (!isCurrentMapSave) {
-            if (showConfirmDialog(
+            if (DialogManager.showConfirmDialog(
                     GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE)
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE,
+                    this.app)
                     == Dialog.ACTION_CANCEL) {
                 // Cancel opening file if user press cancel
                 return;
             }
         }
-        
+
         Gson gson = new Gson();
 
         try {
@@ -1257,7 +1263,7 @@ public class ViewController implements Initializable {
             // Set to current file map
             // Use to compare for recent map menu item
             this.currentFileOpened = file;
-            
+
             // Add to list of current opened files
             if (!this.listOfRecentFiles.contains(file)) {
                 this.listOfRecentFiles.add(file);
@@ -1281,12 +1287,12 @@ public class ViewController implements Initializable {
                         @Override
                         public void handle(ActionEvent event) {
                             // Get back the reference from the menuitem object
-                            MenuItem anObject = (MenuItem)event.getSource();
-                            
+                            MenuItem anObject = (MenuItem) event.getSource();
+
                             // only opens a map if it is not "open" currently
                             if (!currentFileOpened.getPath().equals(anObject.getText())) {
                                 openMapFile(new File(anObject.getText()));
-                            } else  {
+                            } else {
                                 String itsAlreadyOpenLogMessage = GlobalSettings.LOG_NOTE
                                         + "Map is already open.";
                                 addNewLogMessage(itsAlreadyOpenLogMessage);
@@ -1301,13 +1307,12 @@ public class ViewController implements Initializable {
                     + "IOEXCEPTION! Error loading map (invalid json map file). ";
             this.addNewLogMessage(errorMsg);
 
-            this.showExceptionDialog(e);
+            DialogManager.showExceptionDialog(e, this.app);
 
             e.printStackTrace();
         }
     }
 
-    
     public class RecentMapEventHandler implements EventHandler<ActionEvent> {
 
         private File openedFile;
@@ -1321,8 +1326,6 @@ public class ViewController implements Initializable {
             System.out.println("it's clicked");
             openMapFile(openedFile);
         }
-        
-        
 
     }
 
@@ -1338,9 +1341,10 @@ public class ViewController implements Initializable {
             String emptyMapMsg = GlobalSettings.LOG_ERROR
                     + "No map opened or generated.";
             this.addNewLogMessage(emptyMapMsg);
-            this.showWarningDialog(
+            DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyMapMsg);
+                    emptyMapMsg,
+                    this.app);
             return;
         }
 
@@ -1348,9 +1352,10 @@ public class ViewController implements Initializable {
             String emptyP1StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 1 start position is not set!";
             this.addNewLogMessage(emptyP1StartMsg);
-            this.showWarningDialog(
+            DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyP1StartMsg);
+                    emptyP1StartMsg,
+                    this.app);
             return;
         }
 
@@ -1358,9 +1363,10 @@ public class ViewController implements Initializable {
             String emptyP2StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 2 start position is not set!";
             this.addNewLogMessage(emptyP2StartMsg);
-            this.showWarningDialog(
+            DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyP2StartMsg);
+                    emptyP2StartMsg,
+                    this.app);
             return;
         }
 
@@ -1368,17 +1374,19 @@ public class ViewController implements Initializable {
             String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
             this.addNewLogMessage(emptyTitleMsg);
-            this.showWarningDialog(
+            DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyTitleMsg);
+                    emptyTitleMsg,
+                    this.app);
             return;
         } else if (this.map.getName().isEmpty()) {
             String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
             this.addNewLogMessage(emptyTitleMsg);
-            this.showWarningDialog(
+            DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyTitleMsg);
+                    emptyTitleMsg,
+                    this.app);
             return;
         }
 
@@ -1420,7 +1428,7 @@ public class ViewController implements Initializable {
                     + GlobalSettings.LOG_OS_NOT_SUPPORTED;
             this.addNewLogMessage(noOSsupportMsg);
 
-            this.showErrorDialog("OS Not Supported", GlobalSettings.LOG_OS_NOT_SUPPORTED);
+            DialogManager.showErrorDialog("OS Not Supported", GlobalSettings.LOG_OS_NOT_SUPPORTED, this.app);
             return;
         }
 
@@ -1434,9 +1442,10 @@ public class ViewController implements Initializable {
             this.addNewLogMessage(wrongFormatNameMsg);
 
             // Show a warning dialog
-            this.showWarningDialog(
+            DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_SAVE_NAME_SPACE_HEAD_MSG,
-                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_BODY_MSG);
+                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_BODY_MSG,
+                    this.app);
             return;
         }
 
@@ -1447,7 +1456,7 @@ public class ViewController implements Initializable {
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + msgHead + ". " + msgBody;
             this.addNewLogMessage(wrongFormatNameMsg);
-            this.showErrorDialog(msgHead, msgBody);
+            DialogManager.showErrorDialog(msgHead, msgBody, this.app);
 
             return;
         }
@@ -1469,9 +1478,10 @@ public class ViewController implements Initializable {
             this.addNewLogMessage(invalidExtMsg);
 
             // Show error dialog
-            this.showErrorDialog(
+            DialogManager.showErrorDialog(
                     GlobalSettings.DIALOG_INVALID_EXTENSION_HEAD_MSG,
-                    GlobalSettings.DIALOG_INVALID_EXTENSION_BODY_MSG);
+                    GlobalSettings.DIALOG_INVALID_EXTENSION_BODY_MSG,
+                    this.app);
         }
 
     }
@@ -1566,7 +1576,7 @@ public class ViewController implements Initializable {
                 ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null),
                         "png", fileImage);
             } catch (Exception s) {
-                this.showExceptionDialog(s);
+                DialogManager.showExceptionDialog(s, this.app);
             }
 
         } catch (IOException e) {
@@ -1576,7 +1586,7 @@ public class ViewController implements Initializable {
             this.addNewLogMessage(errorMsg);
 
             // Show exception dialog
-            this.showExceptionDialog(e);
+            DialogManager.showExceptionDialog(e, this.app);
 
             e.printStackTrace();
         }
@@ -1618,8 +1628,8 @@ public class ViewController implements Initializable {
                     msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG_NOT_SAVE;
                 }
 
-                if (showConfirmDialog(msgHead,
-                        msgBody) == Dialog.ACTION_CANCEL) {
+                if (DialogManager.showConfirmDialog(msgHead,
+                        msgBody, app) == Dialog.ACTION_CANCEL) {
                     // event consume halts any further action (shutting down)
                     // WARNING: Do not mess with else condition with
                     // event.consume() or user won't be able to close the app!!
@@ -1649,78 +1659,13 @@ public class ViewController implements Initializable {
             msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG_NOT_SAVE;
         }
 
-        if (this.showConfirmDialog(msgHead,
-                msgBody) == Dialog.ACTION_OK) {
+        if (DialogManager.showConfirmDialog(msgHead,
+                msgBody, this.app) == Dialog.ACTION_OK) {
             // This is a preferred exit solution for any JavaFX application
             // instead of System.exit(0)
             Platform.exit();
         }
 
-    }
-
-    /**
-     * Creates and shows a warning dialog.
-     *
-     * @param msgHead The masthead message for the dialog.
-     * @param msgBody The message body for the dialog.
-     */
-    private void showWarningDialog(String msgHead, String msgBody) {
-        Dialogs.create()
-                .owner(this.app.getStage())
-                .title("Warning")
-                .masthead(msgHead)
-                .message(msgBody)
-                .showWarning();
-    }
-
-    /**
-     * Creates and shows an error dialog.
-     *
-     * @param msgHead The masthead message for the dialog.
-     * @param msgBody The message body for the dialog.
-     */
-    private void showErrorDialog(String msgHead, String msgBody) {
-        Dialogs.create()
-                .owner(this.app.getStage())
-                .title("Error")
-                .masthead(msgHead)
-                .message(msgBody)
-                .showError();
-    }
-
-    /**
-     * Creates and shows an exception dialog.
-     *
-     * @param e The exception to show.
-     */
-    private void showExceptionDialog(Exception e) {
-        Dialogs.create()
-                .owner(this.app.getStage())
-                .title("Exception")
-                .masthead(e.toString())
-                .message(e.getMessage())
-                .showException(e);
-    }
-
-    /**
-     * Creates and shows a confirmation dialog, with available actions, OK and
-     * CANCEL
-     *
-     * @param msgHead The masthead message for the dialog
-     * @param msgBody The message body for the dialog
-     * @return returns an Action object as the response from the confirmation
-     * dialog created
-     */
-    private Action showConfirmDialog(String msgHead, String msgBody) {
-        Action response = Dialogs.create()
-                .owner(this.app.getStage())
-                .title("Confirmation")
-                .masthead(msgHead)
-                .message(msgBody)
-                .actions(Dialog.ACTION_OK, Dialog.ACTION_CANCEL)
-                .showConfirm();
-
-        return response;
     }
 
     /**
@@ -1755,7 +1700,7 @@ public class ViewController implements Initializable {
             aboutDialog.show();
         } catch (IOException ex) {
             Logger.getLogger(ViewController.class.getName()).log(Level.SEVERE, null, ex);
-            this.showExceptionDialog(ex);
+            DialogManager.showExceptionDialog(ex, this.app);
         }
     }
 
