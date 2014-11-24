@@ -612,6 +612,32 @@ public class ViewController implements Initializable {
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
                         }
 
+                        // If there is a previous player 1 start tile
+                        if (this.map.getListOfPlayer1StartPosition() != null) {
+                            // Check if the selected tile is on the same start position
+                            // No need to repaint it again
+                            if (tilePos[0] == this.map.getListOfPlayer1StartPosition()[0]
+                                    && tilePos[1] == this.map.getListOfPlayer1StartPosition()[1]) {
+                                this.addNewLogMessage(GlobalSettings.LOG_ERROR
+                                        + "You already have selected this tile.");
+
+                                // Reset isEditOn
+                                this.isEditMapOn = false;
+                                
+                                // Break early
+                                break;
+                            } else {
+                                // If not, remove previous start tile 
+                                // and repaint it to neutral
+                                this.graphicsManager.paintNeutralTile(
+                                        this.map.getListOfPlayer1StartPosition()[0], 
+                                        this.map.getListOfPlayer1StartPosition()[1]);
+                                
+                                // Just in case, to be safe, set it back to null
+                                this.map.setListOfPlayer1StartPosition(null);
+                            }
+                        }
+
                         // Check if it is previously a player 2 start tile
                         // If this is already a player 2 position, it resets the
                         // player 2 start position to null. Null because it's easy to
@@ -663,6 +689,32 @@ public class ViewController implements Initializable {
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
                         }
 
+                        // If there is a previous player 2 start tile
+                        if (this.map.getListOfPlayer2StartPosition() != null) {
+                            // Check if the selected tile is on the same start position
+                            // No need to repaint it again
+                            if (tilePos[0] == this.map.getListOfPlayer2StartPosition()[0]
+                                    && tilePos[1] == this.map.getListOfPlayer2StartPosition()[1]) {
+                                this.addNewLogMessage(GlobalSettings.LOG_ERROR
+                                        + "You already have selected this tile.");
+
+                                // Reset isEditOn
+                                this.isEditMapOn = false;
+                                
+                                // Break early
+                                break;
+                            } else {
+                                // If not, remove previous start tile 
+                                // and repaint it to neutral
+                                this.graphicsManager.paintNeutralTile(
+                                        this.map.getListOfPlayer2StartPosition()[0], 
+                                        this.map.getListOfPlayer2StartPosition()[1]);
+                                
+                                // Just in case, to be safe, set it back to null
+                                this.map.setListOfPlayer2StartPosition(null);
+                            }
+                        }
+                        
                         // Check if it is previously a player 1 start tile
                         // If this is already a player 1 position, it resets the
                         // player 1 start position to null. Null because it's easy to
