@@ -78,7 +78,7 @@ public class MainAppTest extends FxRobotImpl {
             this.app = (MainApp) FxLifecycle.setupApplication(MainApp.class);
             
             // Wait for the primary Stage to be shown by start().
-            RunWaitUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
+            RunWaitUtils.waitFor(20, TimeUnit.SECONDS, primaryStage.showingProperty());
         } catch (TimeoutException ex) {
             Logger.getLogger(MainAppTest.class.getName()).log(Level.SEVERE, null, ex);
         }
