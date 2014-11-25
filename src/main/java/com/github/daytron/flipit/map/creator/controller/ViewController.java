@@ -29,17 +29,12 @@ import com.github.daytron.flipit.map.creator.model.Map;
 import com.github.daytron.flipit.map.creator.model.DialogManager;
 import com.github.daytron.flipit.map.creator.model.GraphicsManager;
 import com.github.daytron.flipit.map.creator.model.LogManager;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import java.io.BufferedReader;
+import com.github.daytron.flipit.map.creator.model.MapManager;
+import com.github.daytron.flipit.map.creator.utility.StringUtils;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -48,7 +43,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -63,7 +57,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -71,7 +64,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
-import javax.imageio.ImageIO;
 import org.controlsfx.dialog.Dialog;
 
 /**
@@ -142,9 +134,6 @@ public class ViewController implements Initializable {
     // Tile  variables
     private List<Integer[]> listOfBoulders;
 
-    // User OS
-    private String userOS = GlobalSettings.USER_OS;
-
     // Flag to differentiate from open and new map
     private boolean isOpeningAMap = false;
 
@@ -176,7 +165,7 @@ public class ViewController implements Initializable {
         // Get the only instance of GraphicsManager
         this.graphicsManager = GraphicsManager.getInstance();
         this.graphicsManager.init(this.canvas, this.map);
-        
+
         // Get the only instance of LogManager
         this.logManager = LogManager.getInstance();
         this.logManager.init(this.logArea);
@@ -488,7 +477,7 @@ public class ViewController implements Initializable {
                                 // Remove player 1 start reference
                                 this.map.setListOfPlayer1StartPosition(null);
                                 this.logManager.addNewLogMessage(
-                                        GlobalSettings.LOG_WARNING 
+                                        GlobalSettings.LOG_WARNING
                                         + "Player 1 start position is overwritten!");
                             }
 
@@ -497,7 +486,7 @@ public class ViewController implements Initializable {
                                 // Remove player 2 start reference
                                 this.map.setListOfPlayer2StartPosition(null);
                                 this.logManager.addNewLogMessage(
-                                        GlobalSettings.LOG_WARNING 
+                                        GlobalSettings.LOG_WARNING
                                         + "Player 2 start position is overwritten!");
                             }
 
@@ -536,7 +525,7 @@ public class ViewController implements Initializable {
                             // Remove player 1 start reference
                             this.map.setListOfPlayer1StartPosition(null);
                             this.logManager.addNewLogMessage(
-                                    GlobalSettings.LOG_WARNING 
+                                    GlobalSettings.LOG_WARNING
                                     + "Player 1 start position is overwritten!");
                         }
 
@@ -545,7 +534,7 @@ public class ViewController implements Initializable {
                             // Remove player 2 start reference
                             this.map.setListOfPlayer2StartPosition(null);
                             this.logManager.addNewLogMessage(
-                                    GlobalSettings.LOG_WARNING 
+                                    GlobalSettings.LOG_WARNING
                                     + "Player 2 start position is overwritten!");
                         }
 
@@ -595,16 +584,16 @@ public class ViewController implements Initializable {
 
                                 // Reset isEditOn
                                 this.isEditMapOn = false;
-                                
+
                                 // Break early
                                 break;
                             } else {
                                 // If not, remove previous start tile 
                                 // and repaint it to neutral
                                 this.graphicsManager.paintNeutralTile(
-                                        this.map.getListOfPlayer1StartPosition()[0], 
+                                        this.map.getListOfPlayer1StartPosition()[0],
                                         this.map.getListOfPlayer1StartPosition()[1]);
-                                
+
                                 // Just in case, to be safe, set it back to null
                                 this.map.setListOfPlayer1StartPosition(null);
                             }
@@ -622,7 +611,7 @@ public class ViewController implements Initializable {
                             this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
                             this.logManager.addNewLogMessage(
-                                    GlobalSettings.LOG_WARNING 
+                                    GlobalSettings.LOG_WARNING
                                     + "Player 2 start position is overwritten!");
                         }
 
@@ -676,21 +665,21 @@ public class ViewController implements Initializable {
 
                                 // Reset isEditOn
                                 this.isEditMapOn = false;
-                                
+
                                 // Break early
                                 break;
                             } else {
                                 // If not, remove previous start tile 
                                 // and repaint it to neutral
                                 this.graphicsManager.paintNeutralTile(
-                                        this.map.getListOfPlayer2StartPosition()[0], 
+                                        this.map.getListOfPlayer2StartPosition()[0],
                                         this.map.getListOfPlayer2StartPosition()[1]);
-                                
+
                                 // Just in case, to be safe, set it back to null
                                 this.map.setListOfPlayer2StartPosition(null);
                             }
                         }
-                        
+
                         // Check if it is previously a player 1 start tile
                         // If this is already a player 1 position, it resets the
                         // player 1 start position to null. Null because it's easy to
@@ -703,7 +692,7 @@ public class ViewController implements Initializable {
                             this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
                             this.logManager.addNewLogMessage(
-                                    GlobalSettings.LOG_WARNING 
+                                    GlobalSettings.LOG_WARNING
                                     + "Player 1 start position is overwritten!");
                         }
 
@@ -792,7 +781,7 @@ public class ViewController implements Initializable {
                                 + msgHead + ". " + msgBody;
                         this.logManager.addNewLogMessage(invalidMsg);
 
-                        DialogManager.showErrorDialog(msgHead, msgBody, 
+                        DialogManager.showErrorDialog(msgHead, msgBody,
                                 this.app);
                     }
                 }
@@ -806,36 +795,6 @@ public class ViewController implements Initializable {
     }
 
     /**
-     * Capitalize the first letter of a word.
-     *
-     * @param word The word to be capitilized
-     * @return Returns the formatted word
-     */
-    private String captilizeFirstLetter(String word) {
-        // Removes any unnecessary leading and trailing space
-        word = word.trim();
-
-        // Shifts all letters to lowercase
-        word = word.toLowerCase();
-
-        // Convert the first letter to uppercase
-        String firstLetterCapitalTitle = word.substring(0, 1).toUpperCase()
-                + word.substring(1);
-
-        // Converts all first letter of words separated by space to uppercase
-        for (int i = 0; i < word.length(); i++) {
-            if (word.charAt(i) == ' ') {
-                firstLetterCapitalTitle = firstLetterCapitalTitle.substring(0, i + 1)
-                        + firstLetterCapitalTitle.substring(i + 1, i + 2).toUpperCase()
-                        + firstLetterCapitalTitle.substring(i + 2);
-            }
-        }
-
-        // Get back the output string reference
-        return firstLetterCapitalTitle;
-    }
-
-    /**
      * Formats the title of the map.
      *
      * @param title The map's title
@@ -844,7 +803,8 @@ public class ViewController implements Initializable {
     private String titleFormatter(String title) {
         // Capitilize all first letter of a word 
         // separated by space
-        title = this.captilizeFirstLetter(title);
+        title = title.toLowerCase();
+        title = StringUtils.capitalizeFirstLetterEachWord(title);
 
         // Update title field
         this.title_field.setText(title);
@@ -880,168 +840,95 @@ public class ViewController implements Initializable {
         // Launch filechooser and get open file
         File file = fileChooser.showOpenDialog(this.app.getStage());
 
-        // Possible action if user press cancel button on open file dialog
-        // Skip all remaining lines
-        if (file == null) {
-            return;
+        if (this.verifyFileToOpen(file)) {
+            this.openMap(file);
         }
-
-        // Extract extension name
-        String ext = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
-
-        // Extract filename
-        String filename = "";
-        if (this.userOS.startsWith(GlobalSettings.OS_LINUX)
-                || this.userOS.startsWith(GlobalSettings.OS_MAC)) {
-            filename = file.getPath().substring(file.getPath().lastIndexOf("/") + 1);
-        } else if (this.userOS.startsWith(GlobalSettings.OS_WINDOWS)) {
-            filename = file.getPath().substring(file.getPath().lastIndexOf("\\") + 1);
-        } else {
-            String noOSsupportMsg = GlobalSettings.LOG_ERROR
-                    + GlobalSettings.LOG_OS_NOT_SUPPORTED;
-            this.logManager.addNewLogMessage(noOSsupportMsg);
-            return;
-        }
-
-        // Get the first 3 letters for inspection
-        String firstWord = filename.substring(0, 3);
-
-        if (file.isFile()) {
-            if ("json".equals(ext)) {
-                if (firstWord.equals("Map")) {
-                    this.openMapFile(file);
-                } else {
-                    String msgHead = "Invalid Filename";
-                    String msgBody = "Map files must "
-                            + "start at \"Map\" followed by a number";
-                    String invalidPatterName = GlobalSettings.LOG_ERROR
-                            + msgHead + ". " + msgBody;
-
-                    this.logManager.addNewLogMessage(invalidPatterName);
-                    DialogManager.showErrorDialog(msgHead, msgBody, this.app);
-                }
-            } else {
-                String msgHead = "Invalid Extension";
-                String msgBody = "Map files are "
-                        + ".json files";
-                String invalidExtension = GlobalSettings.LOG_ERROR
-                        + msgHead + ". " + msgBody;
-
-                this.logManager.addNewLogMessage(invalidExtension);
-                DialogManager.showErrorDialog(msgHead, msgBody, this.app);
-            }
-        } else {
-            String msgHead = "No File Detected";
-            String msgBody = "Not a proper file.";
-            String invalidFile = GlobalSettings.LOG_ERROR
-                    + msgHead + ". " + msgBody;
-
-            this.logManager.addNewLogMessage(invalidFile);
-            DialogManager.showErrorDialog(msgHead, msgBody, this.app);
-        }
-
     }
 
+    public boolean verifyFileToOpen(File file) {
+        return MapManager.verifyFileToOpen(file, this.app);
+    }
+    
     /**
      * Opens the map json file and set it to the map instance variable.
      *
      * @param file The map json file
      */
-    public void openMapFile(File file) {
-        // Confirmation dialog
-        if (!isCurrentMapSave) {
-            if (DialogManager.showConfirmDialog(
-                    GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE,
-                    this.app)
-                    == Dialog.ACTION_CANCEL) {
-                // Cancel opening file if user press cancel
-                return;
-            }
+    public void openMap(File file) {
+
+        Map tempMapHolder = MapManager.openFile(file, 
+                this.isCurrentMapSave, this.app);
+        
+        if (tempMapHolder != null) {
+            this.map = tempMapHolder;
+        } else {
+            return;
         }
+        
+        // Toggle flag that the map is an open map file
+        this.isOpeningAMap = true;
 
-        Gson gson = new Gson();
+        // Extract columns and rows
+        this.numberOfColumns = this.map.getSize()[0];
+        this.numberOfRows = this.map.getSize()[1];
 
-        try {
-            BufferedReader br = new BufferedReader(
-                    new FileReader(file));
+        // Set comboboxes
+        this.column_combo.setValue(this.numberOfColumns);
+        this.row_combo.setValue(this.numberOfRows);
 
-            //convert the json string back to object
-            this.map = gson.fromJson(br, Map.class);
+        // Set title
+        String rawTitle = this.map.getName();
+        String title = rawTitle.substring(0, rawTitle.lastIndexOf(" "));
+        this.title_field.setText(title);
 
-            // Toggle flag that the map is an open map file
-            this.isOpeningAMap = true;
+        // Set list of boulders
+        this.listOfBoulders = this.map.getListOfBoulders();
 
-            // Extract columns and rows
-            this.numberOfColumns = this.map.getSize()[0];
-            this.numberOfRows = this.map.getSize()[1];
-
-            // Set comboboxes
-            this.column_combo.setValue(this.numberOfColumns);
-            this.row_combo.setValue(this.numberOfRows);
-
-            // Set title
-            String rawTitle = this.map.getName();
-            String title = rawTitle.substring(0, rawTitle.lastIndexOf(" "));
-            this.title_field.setText(title);
-
-            // Set list of boulders
-            this.listOfBoulders = this.map.getListOfBoulders();
-
-            // Generate map
-            this.generateMap(file.getPath());
+        // Generate map
+        this.generateMap(file.getPath());
 
             // Set to current file map
-            // Use to compare for recent map menu item
-            this.currentFileOpened = file;
+        // Use to compare for recent map menu item
+        this.currentFileOpened = file;
 
-            // Add to list of current opened files
-            if (!this.listOfRecentFiles.contains(file)) {
-                this.listOfRecentFiles.add(file);
-            }
-
-            // Update recent files menu items and add listeners
-            if (!this.listOfRecentFiles.isEmpty()) {
-                // Resets menu items
-                this.menuFileRecent.getItems().clear();
-
-                for (File aFile : this.listOfRecentFiles) {
-                    // Create new menu item
-                    MenuItem aMenuItem = new MenuItem(aFile.getPath());
-
-                    // Add menu item to the recent open menu
-                    this.menuFileRecent.getItems().add(aMenuItem);
-
-                    // Set handler
-                    aMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-
-                        @Override
-                        public void handle(ActionEvent event) {
-                            // Get back the reference from the menuitem object
-                            MenuItem anObject = (MenuItem) event.getSource();
-
-                            // only opens a map if it is not "open" currently
-                            if (!currentFileOpened.getPath().equals(anObject.getText())) {
-                                openMapFile(new File(anObject.getText()));
-                            } else {
-                                String itsAlreadyOpenLogMessage = GlobalSettings.LOG_NOTE
-                                        + "Map is already open.";
-                                logManager.addNewLogMessage(itsAlreadyOpenLogMessage);
-                            }
-                        }
-                    });
-                }
-            }
-
-        } catch (IOException e) {
-            String errorMsg = GlobalSettings.LOG_ERROR
-                    + "IOEXCEPTION! Error loading map (invalid json map file). ";
-            this.logManager.addNewLogMessage(errorMsg);
-
-            DialogManager.showExceptionDialog(e, this.app);
-
-            e.printStackTrace();
+        // Add to list of current opened files
+        if (!this.listOfRecentFiles.contains(file)) {
+            this.listOfRecentFiles.add(file);
         }
+
+        // Update recent files menu items and add listeners
+        if (!this.listOfRecentFiles.isEmpty()) {
+            // Resets menu items
+            this.menuFileRecent.getItems().clear();
+
+            for (File aFile : this.listOfRecentFiles) {
+                // Create new menu item
+                MenuItem aMenuItem = new MenuItem(aFile.getPath());
+
+                // Add menu item to the recent open menu
+                this.menuFileRecent.getItems().add(aMenuItem);
+
+                // Set handler
+                aMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent event) {
+                        // Get back the reference from the menuitem object
+                        MenuItem anObject = (MenuItem) event.getSource();
+
+                        // only opens a map if it is not "open" currently
+                        if (!currentFileOpened.getPath().equals(anObject.getText())) {
+                            openMap(new File(anObject.getText()));
+                        } else {
+                            String itsAlreadyOpenLogMessage = GlobalSettings.LOG_NOTE
+                                    + "Map is already open.";
+                            logManager.addNewLogMessage(itsAlreadyOpenLogMessage);
+                        }
+                    }
+                });
+            }
+        }
+
     }
 
     public class RecentMapEventHandler implements EventHandler<ActionEvent> {
@@ -1055,7 +942,7 @@ public class ViewController implements Initializable {
         @Override
         public void handle(ActionEvent event) {
             System.out.println("it's clicked");
-            openMapFile(openedFile);
+            openMap(openedFile);
         }
 
     }
@@ -1140,187 +1027,20 @@ public class ViewController implements Initializable {
         // Launch filechooser and get open file
         File file = fileChooser.showSaveDialog(this.app.getStage());
 
-        // Possible action if user press cancel button on save file dialog
-        // Skip all remaining lines
-        if (file == null) {
-            return;
+        if (verifyFileToSave(file)) {
+            this.saveMap(file);
         }
-
-        String ext = file.getPath().substring(file.getPath().lastIndexOf(".") + 1);
-
-        String filename = "";
-        if (this.userOS.startsWith(GlobalSettings.OS_LINUX)
-                || this.userOS.startsWith(GlobalSettings.OS_MAC)) {
-            filename = file.getPath().substring(file.getPath().lastIndexOf("/") + 1);
-        } else if (this.userOS.startsWith(GlobalSettings.OS_WINDOWS)) {
-            filename = file.getPath().substring(file.getPath().lastIndexOf("\\") + 1);
-        } else {
-            String noOSsupportMsg = GlobalSettings.LOG_ERROR
-                    + GlobalSettings.LOG_OS_NOT_SUPPORTED;
-            this.logManager.addNewLogMessage(noOSsupportMsg);
-
-            DialogManager.showErrorDialog("OS Not Supported", GlobalSettings.LOG_OS_NOT_SUPPORTED, this.app);
-            return;
-        }
-
-        String firstWord = filename.substring(0, filename.lastIndexOf("."));
-
-        // Prevents user from using a space character on Title
-        if (filename.contains(" ")) {
-            // Add new log
-            String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
-                    + "Filename shouldn't contain space character";
-            this.logManager.addNewLogMessage(wrongFormatNameMsg);
-
-            // Show a warning dialog
-            DialogManager.showWarningDialog(
-                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_HEAD_MSG,
-                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_BODY_MSG,
-                    this.app);
-            return;
-        }
-
-        if (!this.isValidFileName(firstWord)) {
-            String msgHead = "Invalid Filename Format";
-            String msgBody = "Should be [\"Map\"] + [3 digit number].json."
-                    + "Example: Map004.json";
-            String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
-                    + msgHead + ". " + msgBody;
-            this.logManager.addNewLogMessage(wrongFormatNameMsg);
-            DialogManager.showErrorDialog(msgHead, msgBody, this.app);
-
-            return;
-        }
-
-        if ("json".equalsIgnoreCase(ext)) {
-            // Formay the mapId to proper accepted format
-            // E.g. Map002
-            firstWord = this.formatMapID(firstWord);
-
-            // Apply data to map file
-            this.map.setMapID(firstWord);
-            this.map.setSize(new int[]{this.numberOfColumns, this.numberOfRows});
-
-            this.saveFile(file);
-        } else {
-            // Update log
-            String invalidExtMsg = GlobalSettings.LOG_ERROR
-                    + "Invalid extension file!";
-            this.logManager.addNewLogMessage(invalidExtMsg);
-
-            // Show error dialog
-            DialogManager.showErrorDialog(
-                    GlobalSettings.DIALOG_INVALID_EXTENSION_HEAD_MSG,
-                    GlobalSettings.DIALOG_INVALID_EXTENSION_BODY_MSG,
-                    this.app);
-        }
-
     }
-
-    /**
-     * Verifies if the filename follows the name convention: "Map" + [3 digit
-     * number].
-     *
-     * @param filename The filename to inspect.
-     * @return Returns true if filename is valid, otherwise false.
-     */
-    private boolean isValidFileName(String filename) {
-        if (!filename.startsWith("Map")) {
-            return false;
-        }
-
-        if (filename.length() != 6) {
-            return false;
-        }
-
-        if (!(Character.isDigit(filename.charAt(3))
-                || Character.isDigit(filename.charAt(4))
-                || Character.isDigit(filename.charAt(5)))) {
-            return false;
-        }
-
-        return true;
+    
+    public boolean verifyFileToSave(File file) {
+        return MapManager.verifyFileToSave(file, this.logManager,
+                this.app, this.map, this.numberOfColumns,
+                this.numberOfRows);
     }
-
-    /**
-     * Formats the map's ID.
-     *
-     * @param id The ID to be formatted.
-     * @return Returns the formatted ID.
-     */
-    private String formatMapID(String id) {
-        return this.captilizeFirstLetter(id);
-    }
-
-    /**
-     * Saves the map object as a json file.
-     *
-     * @param file The map file to save.
-     */
-    private void saveFile(File file) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        // convert java object to JSON format,
-        // and returned as JSON formatted string
-        String json = gson.toJson(this.map);
-
-        try {
-            //write converted json data to a file 
-            FileWriter writer = new FileWriter(file);
-            writer.write(json);
-            writer.close();
-
-            // Add new log
-            String successSaveMsg = GlobalSettings.LOG_SAVE_MAP
-                    + "File is successfully saved at " + file.getPath();
-            this.logManager.addNewLogMessage(successSaveMsg);
-
-            // Toggle flag for detecting unsave map
-            this.isCurrentMapSave = true;
-
-            // Prepares for taking snapshot of the canvas
-            WritableImage writableImage = new WritableImage(
-                    (int) this.canvas.getWidth(),
-                    (int) this.canvas.getHeight());
-
-            this.canvas.snapshot(null, writableImage);
-
-            // Get the last filepath to use for saving image file
-            String filePath;
-
-            if (this.userOS.startsWith(GlobalSettings.OS_LINUX)
-                    || this.userOS.startsWith(GlobalSettings.OS_MAC)) {
-                filePath = file.getPath().substring(0, file.getPath().lastIndexOf("/") + 1);
-            } else {
-                // Other OS is already filtered above, so this is definitely Windows
-                filePath = file.getPath().substring(0, file.getPath().lastIndexOf("\\") + 1);
-            }
-
-            // Build full path 
-            String imageFilePath = filePath + this.map.getMapID() + ".png";
-
-            // Create file
-            File fileImage = new File(imageFilePath);
-
-            // Try saving it as a PNG image file
-            try {
-                ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null),
-                        "png", fileImage);
-            } catch (Exception s) {
-                DialogManager.showExceptionDialog(s, this.app);
-            }
-
-        } catch (IOException e) {
-            // Add new log
-            String errorMsg = GlobalSettings.LOG_ERROR
-                    + "IOEXCEPTION! Unable to save file.";
-            this.logManager.addNewLogMessage(errorMsg);
-
-            // Show exception dialog
-            DialogManager.showExceptionDialog(e, this.app);
-
-            e.printStackTrace();
-        }
+    
+    public void saveMap(File file) {
+        this.isCurrentMapSave = MapManager.saveFile(file,
+                    this.map, this.canvas, this.app);
     }
 
     /**
