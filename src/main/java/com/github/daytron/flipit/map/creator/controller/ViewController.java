@@ -28,6 +28,7 @@ import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import com.github.daytron.flipit.map.creator.model.Map;
 import com.github.daytron.flipit.map.creator.model.DialogManager;
 import com.github.daytron.flipit.map.creator.model.GraphicsManager;
+import com.github.daytron.flipit.map.creator.model.LogManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
@@ -130,13 +131,6 @@ public class ViewController implements Initializable {
     // apply necessary tile modification when user click the canvas
     private String tileToEdit;
 
-    // Log notes
-    private StringBuilder logMessage;
-    private boolean preventNewLineAtFirst;
-
-    // Time formatter
-    private SimpleDateFormat dateFormatter;
-
     // Map
     private Map map;
     private File currentFileOpened;
@@ -164,6 +158,7 @@ public class ViewController implements Initializable {
     private List<File> listOfRecentFiles;
 
     private GraphicsManager graphicsManager;
+    private LogManager logManager;
 
     /**
      * An override method implemented from Initializable interface. Initialize
@@ -178,18 +173,13 @@ public class ViewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         // ################## INIT #################//
-        // Extract GraphicsContext from canvas
+        // Get the only instance of GraphicsManager
         this.graphicsManager = GraphicsManager.getInstance();
         this.graphicsManager.init(this.canvas, this.map);
-
-        this.dateFormatter = new SimpleDateFormat("hh:mm");
-        // Init logArea
-        this.logMessage = new StringBuilder();
-        this.preventNewLineAtFirst = true;
-
-        this.logArea.setText("");
-        this.logArea.setEditable(false);
-        this.logArea.setWrapText(true);
+        
+        // Get the only instance of LogManager
+        this.logManager = LogManager.getInstance();
+        this.logManager.init(this.logArea);
 
         // Resets the flag for detecting button pressed from objects
         this.isEditMapOn = false;
@@ -200,7 +190,7 @@ public class ViewController implements Initializable {
             public void changed(ObservableValue<?> observable, Object oldValue,
                     Object newValue) {
                 logArea.setScrollTop(Double.MAX_VALUE); //this will scroll to the bottom
-                //use Double.MIN_VALUE to scroll to the top 
+                // Can use Double.MIN_VALUE to scroll to the top 
             }
         });
 
@@ -266,37 +256,6 @@ public class ViewController implements Initializable {
             }
         });
 
-    }
-
-    /**
-     * Adds and process a new log message from the received String argument.
-     *
-     * @param message The full text message of the log event
-     */
-    private void addNewLogMessage(String message) {
-        Date date = new Date();
-        String timeFormat = this.dateFormatter.format(date);
-
-        String separator = GlobalSettings.LOG_SEPARATOR;
-
-        // Prevents to create new line on first log
-        if (this.preventNewLineAtFirst) {
-            this.preventNewLineAtFirst = false;
-        } else {
-            this.logMessage.append("\n");
-        }
-
-        this.logMessage.append(separator)
-                .append("[")
-                .append(timeFormat)
-                .append("] ")
-                .append(message);
-
-        this.logArea.setText(this.logMessage.toString());
-
-        // This is necessary to trigger listener for 
-        // textarea to autoscroll to bottom
-        this.logArea.appendText("");
     }
 
     /**
@@ -367,7 +326,7 @@ public class ViewController implements Initializable {
         }
 
         // Notify user in log area
-        this.addNewLogMessage(msgMapDrawnLog);
+        this.logManager.addNewLogMessage(msgMapDrawnLog);
 
         // Toggles a flag to know a map is now visible from the canvas.
         // This is use for preventing the object buttons (player, boulderm 
@@ -416,11 +375,11 @@ public class ViewController implements Initializable {
         if (this.isThereAMapVisible) {
             this.isEditMapOn = true;
             this.tileToEdit = GlobalSettings.TILE_PLAYER1;
-            this.addNewLogMessage(GlobalSettings.LOG_PLAYER1_ON);
+            this.logManager.addNewLogMessage(GlobalSettings.LOG_PLAYER1_ON);
         } else {
             String noMapMsg = GlobalSettings.LOG_WARNING
                     + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
-            this.addNewLogMessage(noMapMsg);
+            this.logManager.addNewLogMessage(noMapMsg);
         }
 
     }
@@ -430,11 +389,11 @@ public class ViewController implements Initializable {
         if (this.isThereAMapVisible) {
             this.isEditMapOn = true;
             this.tileToEdit = GlobalSettings.TILE_PLAYER2;
-            this.addNewLogMessage(GlobalSettings.LOG_PLAYER2_ON);
+            this.logManager.addNewLogMessage(GlobalSettings.LOG_PLAYER2_ON);
         } else {
             String noMapMsg = GlobalSettings.LOG_WARNING
                     + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
-            this.addNewLogMessage(noMapMsg);
+            this.logManager.addNewLogMessage(noMapMsg);
         }
     }
 
@@ -448,11 +407,11 @@ public class ViewController implements Initializable {
         if (this.isThereAMapVisible) {
             this.isEditMapOn = true;
             this.tileToEdit = GlobalSettings.TILE_BOULDER;
-            this.addNewLogMessage(GlobalSettings.LOG_BOULDER_ON);
+            this.logManager.addNewLogMessage(GlobalSettings.LOG_BOULDER_ON);
         } else {
             String noMapMsg = GlobalSettings.LOG_WARNING
                     + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
-            this.addNewLogMessage(noMapMsg);
+            this.logManager.addNewLogMessage(noMapMsg);
         }
     }
 
@@ -466,11 +425,11 @@ public class ViewController implements Initializable {
         if (this.isThereAMapVisible) {
             this.isEditMapOn = true;
             this.tileToEdit = GlobalSettings.TILE_NEUTRAL;
-            this.addNewLogMessage(GlobalSettings.LOG_NEUTRAL_ON);
+            this.logManager.addNewLogMessage(GlobalSettings.LOG_NEUTRAL_ON);
         } else {
             String noMapMsg = GlobalSettings.LOG_WARNING
                     + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
-            this.addNewLogMessage(noMapMsg);
+            this.logManager.addNewLogMessage(noMapMsg);
         }
     }
 
@@ -528,14 +487,18 @@ public class ViewController implements Initializable {
                             if (isPlayer1Start) {
                                 // Remove player 1 start reference
                                 this.map.setListOfPlayer1StartPosition(null);
-                                this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 1 start position is overwritten!");
+                                this.logManager.addNewLogMessage(
+                                        GlobalSettings.LOG_WARNING 
+                                        + "Player 1 start position is overwritten!");
                             }
 
                             // Check if it is previously a player 2 start tile
                             if (isPlayer2Start) {
                                 // Remove player 2 start reference
                                 this.map.setListOfPlayer2StartPosition(null);
-                                this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 2 start position is overwritten!");
+                                this.logManager.addNewLogMessage(
+                                        GlobalSettings.LOG_WARNING 
+                                        + "Player 2 start position is overwritten!");
                             }
 
                             // Add tile to list of boulders
@@ -550,9 +513,10 @@ public class ViewController implements Initializable {
                             String msgBoulderSet = GlobalSettings.LOG_TILE_SET
                                     + "Boulder tile is set to "
                                     + "[" + tilePos[0] + "," + tilePos[1] + "]";
-                            this.addNewLogMessage(msgBoulderSet);
+                            this.logManager.addNewLogMessage(msgBoulderSet);
                         } else {
-                            this.addNewLogMessage(GlobalSettings.LOG_NOTE
+                            this.logManager.addNewLogMessage(
+                                    GlobalSettings.LOG_NOTE
                                     + "It's already a boulder tile.");
                         }
 
@@ -562,7 +526,8 @@ public class ViewController implements Initializable {
                         if (isBoulder) {
                             // Remove from boulder list
                             this.listOfBoulders.remove(boulderReference);
-                            this.addNewLogMessage(GlobalSettings.LOG_WARNING
+                            this.logManager.addNewLogMessage(
+                                    GlobalSettings.LOG_WARNING
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
                         }
 
@@ -570,14 +535,18 @@ public class ViewController implements Initializable {
                         if (isPlayer1Start) {
                             // Remove player 1 start reference
                             this.map.setListOfPlayer1StartPosition(null);
-                            this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 1 start position is overwritten!");
+                            this.logManager.addNewLogMessage(
+                                    GlobalSettings.LOG_WARNING 
+                                    + "Player 1 start position is overwritten!");
                         }
 
                         // Check if it is previously a player 2 start tile
                         if (isPlayer2Start) {
                             // Remove player 2 start reference
                             this.map.setListOfPlayer2StartPosition(null);
-                            this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 2 start position is overwritten!");
+                            this.logManager.addNewLogMessage(
+                                    GlobalSettings.LOG_WARNING 
+                                    + "Player 2 start position is overwritten!");
                         }
 
                         // This is necessary to avoid overpainting previous neutral tile
@@ -591,10 +560,11 @@ public class ViewController implements Initializable {
                             String msgNeutralSet = GlobalSettings.LOG_TILE_SET
                                     + "Neutral tile is set to "
                                     + "[" + tilePos[0] + "," + tilePos[1] + "]";
-                            this.addNewLogMessage(msgNeutralSet);
+                            this.logManager.addNewLogMessage(msgNeutralSet);
 
                         } else {
-                            this.addNewLogMessage(GlobalSettings.LOG_NOTE
+                            this.logManager.addNewLogMessage(
+                                    GlobalSettings.LOG_NOTE
                                     + "It's already a neutral tile.");
                         }
 
@@ -608,7 +578,8 @@ public class ViewController implements Initializable {
                             // Revert it to neutral tile
                             this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
-                            this.addNewLogMessage(GlobalSettings.LOG_WARNING
+                            this.logManager.addNewLogMessage(
+                                    GlobalSettings.LOG_WARNING
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
                         }
 
@@ -618,7 +589,8 @@ public class ViewController implements Initializable {
                             // No need to repaint it again
                             if (tilePos[0] == this.map.getListOfPlayer1StartPosition()[0]
                                     && tilePos[1] == this.map.getListOfPlayer1StartPosition()[1]) {
-                                this.addNewLogMessage(GlobalSettings.LOG_ERROR
+                                this.logManager.addNewLogMessage(
+                                        GlobalSettings.LOG_ERROR
                                         + "You already have selected this tile.");
 
                                 // Reset isEditOn
@@ -649,7 +621,9 @@ public class ViewController implements Initializable {
                             // Revert it to neutral tile
                             this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
-                            this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 2 start position is overwritten!");
+                            this.logManager.addNewLogMessage(
+                                    GlobalSettings.LOG_WARNING 
+                                    + "Player 2 start position is overwritten!");
                         }
 
                         // Paint tile to player 1 start
@@ -670,7 +644,7 @@ public class ViewController implements Initializable {
                         }
                         msgPlayer1Log += "Player 1 start position is now set to "
                                 + "[" + tilePos[0] + "," + tilePos[1] + "]";
-                        this.addNewLogMessage(msgPlayer1Log);
+                        this.logManager.addNewLogMessage(msgPlayer1Log);
 
                         // Reset isEditOn
                         this.isEditMapOn = false;
@@ -685,7 +659,8 @@ public class ViewController implements Initializable {
                             // Revert it to neutral tile
                             this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
-                            this.addNewLogMessage(GlobalSettings.LOG_WARNING
+                            this.logManager.addNewLogMessage(
+                                    GlobalSettings.LOG_WARNING
                                     + GlobalSettings.LOG_BOULDER_OVERWRITTEN);
                         }
 
@@ -695,7 +670,8 @@ public class ViewController implements Initializable {
                             // No need to repaint it again
                             if (tilePos[0] == this.map.getListOfPlayer2StartPosition()[0]
                                     && tilePos[1] == this.map.getListOfPlayer2StartPosition()[1]) {
-                                this.addNewLogMessage(GlobalSettings.LOG_ERROR
+                                this.logManager.addNewLogMessage(
+                                        GlobalSettings.LOG_ERROR
                                         + "You already have selected this tile.");
 
                                 // Reset isEditOn
@@ -726,7 +702,9 @@ public class ViewController implements Initializable {
                             // Revert it to neutral tile
                             this.graphicsManager.paintNeutralTile(tilePos[0], tilePos[1]);
 
-                            this.addNewLogMessage(GlobalSettings.LOG_WARNING + "Player 1 start position is overwritten!");
+                            this.logManager.addNewLogMessage(
+                                    GlobalSettings.LOG_WARNING 
+                                    + "Player 1 start position is overwritten!");
                         }
 
                         // Paint tile to player 2 start
@@ -747,7 +725,7 @@ public class ViewController implements Initializable {
                         }
                         msgPlayer2Log += "Player 2 start position is now set to "
                                 + "[" + tilePos[0] + "," + tilePos[1] + "]";
-                        this.addNewLogMessage(msgPlayer2Log);
+                        this.logManager.addNewLogMessage(msgPlayer2Log);
 
                         // Reset isEditOn
                         this.isEditMapOn = false;
@@ -759,13 +737,13 @@ public class ViewController implements Initializable {
             } else {
                 String msgNoObjectSelected = GlobalSettings.LOG_NOTE + "Nothing selected. "
                         + "[" + tilePos[0] + "," + tilePos[1] + "]";
-                this.addNewLogMessage(msgNoObjectSelected);
+                this.logManager.addNewLogMessage(msgNoObjectSelected);
             }
         } else {
             String msg = GlobalSettings.LOG_WARNING + "Mouse clicked "
                     + "[" + event.getX() + "," + event.getY() + "] "
                     + "is outside the grid map!";
-            this.addNewLogMessage(msg);
+            this.logManager.addNewLogMessage(msg);
         }
     }
 
@@ -786,7 +764,7 @@ public class ViewController implements Initializable {
                 if (title.isEmpty()) {
                     String warningMsg1 = GlobalSettings.LOG_WARNING
                             + "Title field is empty!";
-                    this.addNewLogMessage(warningMsg1);
+                    this.logManager.addNewLogMessage(warningMsg1);
 
                     // Better be safe than sorry
                     return;
@@ -805,22 +783,23 @@ public class ViewController implements Initializable {
 
                         String successMsg = GlobalSettings.LOG_TITLE_SET
                                 + "Title: " + title + " is set.";
-                        this.addNewLogMessage(successMsg);
+                        this.logManager.addNewLogMessage(successMsg);
                     } else {
                         String msgHead = "Invalid Title";
                         String msgBody = "Only use alphanumeric and space characters. No leading space.";
 
                         String invalidMsg = GlobalSettings.LOG_ERROR
                                 + msgHead + ". " + msgBody;
-                        this.addNewLogMessage(invalidMsg);
+                        this.logManager.addNewLogMessage(invalidMsg);
 
-                        DialogManager.showErrorDialog(msgHead, msgBody, this.app);
+                        DialogManager.showErrorDialog(msgHead, msgBody, 
+                                this.app);
                     }
                 }
             } else {
                 String noMapMsg = GlobalSettings.LOG_WARNING
                         + GlobalSettings.LOG_GENERATE_OPEN_MAP_FIRST;
-                this.addNewLogMessage(noMapMsg);
+                this.logManager.addNewLogMessage(noMapMsg);
             }
 
         }
@@ -920,7 +899,7 @@ public class ViewController implements Initializable {
         } else {
             String noOSsupportMsg = GlobalSettings.LOG_ERROR
                     + GlobalSettings.LOG_OS_NOT_SUPPORTED;
-            this.addNewLogMessage(noOSsupportMsg);
+            this.logManager.addNewLogMessage(noOSsupportMsg);
             return;
         }
 
@@ -938,7 +917,7 @@ public class ViewController implements Initializable {
                     String invalidPatterName = GlobalSettings.LOG_ERROR
                             + msgHead + ". " + msgBody;
 
-                    this.addNewLogMessage(invalidPatterName);
+                    this.logManager.addNewLogMessage(invalidPatterName);
                     DialogManager.showErrorDialog(msgHead, msgBody, this.app);
                 }
             } else {
@@ -948,7 +927,7 @@ public class ViewController implements Initializable {
                 String invalidExtension = GlobalSettings.LOG_ERROR
                         + msgHead + ". " + msgBody;
 
-                this.addNewLogMessage(invalidExtension);
+                this.logManager.addNewLogMessage(invalidExtension);
                 DialogManager.showErrorDialog(msgHead, msgBody, this.app);
             }
         } else {
@@ -957,7 +936,7 @@ public class ViewController implements Initializable {
             String invalidFile = GlobalSettings.LOG_ERROR
                     + msgHead + ". " + msgBody;
 
-            this.addNewLogMessage(invalidFile);
+            this.logManager.addNewLogMessage(invalidFile);
             DialogManager.showErrorDialog(msgHead, msgBody, this.app);
         }
 
@@ -1047,7 +1026,7 @@ public class ViewController implements Initializable {
                             } else {
                                 String itsAlreadyOpenLogMessage = GlobalSettings.LOG_NOTE
                                         + "Map is already open.";
-                                addNewLogMessage(itsAlreadyOpenLogMessage);
+                                logManager.addNewLogMessage(itsAlreadyOpenLogMessage);
                             }
                         }
                     });
@@ -1057,7 +1036,7 @@ public class ViewController implements Initializable {
         } catch (IOException e) {
             String errorMsg = GlobalSettings.LOG_ERROR
                     + "IOEXCEPTION! Error loading map (invalid json map file). ";
-            this.addNewLogMessage(errorMsg);
+            this.logManager.addNewLogMessage(errorMsg);
 
             DialogManager.showExceptionDialog(e, this.app);
 
@@ -1092,7 +1071,7 @@ public class ViewController implements Initializable {
         if (this.map == null) {
             String emptyMapMsg = GlobalSettings.LOG_ERROR
                     + "No map opened or generated.";
-            this.addNewLogMessage(emptyMapMsg);
+            this.logManager.addNewLogMessage(emptyMapMsg);
             DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyMapMsg,
@@ -1103,7 +1082,7 @@ public class ViewController implements Initializable {
         if (this.map.getListOfPlayer1StartPosition() == null) {
             String emptyP1StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 1 start position is not set!";
-            this.addNewLogMessage(emptyP1StartMsg);
+            this.logManager.addNewLogMessage(emptyP1StartMsg);
             DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyP1StartMsg,
@@ -1114,7 +1093,7 @@ public class ViewController implements Initializable {
         if (this.map.getListOfPlayer2StartPosition() == null) {
             String emptyP2StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 2 start position is not set!";
-            this.addNewLogMessage(emptyP2StartMsg);
+            this.logManager.addNewLogMessage(emptyP2StartMsg);
             DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyP2StartMsg,
@@ -1125,7 +1104,7 @@ public class ViewController implements Initializable {
         if (this.map.getName() == null) {
             String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
-            this.addNewLogMessage(emptyTitleMsg);
+            this.logManager.addNewLogMessage(emptyTitleMsg);
             DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyTitleMsg,
@@ -1134,7 +1113,7 @@ public class ViewController implements Initializable {
         } else if (this.map.getName().isEmpty()) {
             String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
-            this.addNewLogMessage(emptyTitleMsg);
+            this.logManager.addNewLogMessage(emptyTitleMsg);
             DialogManager.showWarningDialog(
                     GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
                     emptyTitleMsg,
@@ -1178,7 +1157,7 @@ public class ViewController implements Initializable {
         } else {
             String noOSsupportMsg = GlobalSettings.LOG_ERROR
                     + GlobalSettings.LOG_OS_NOT_SUPPORTED;
-            this.addNewLogMessage(noOSsupportMsg);
+            this.logManager.addNewLogMessage(noOSsupportMsg);
 
             DialogManager.showErrorDialog("OS Not Supported", GlobalSettings.LOG_OS_NOT_SUPPORTED, this.app);
             return;
@@ -1191,7 +1170,7 @@ public class ViewController implements Initializable {
             // Add new log
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + "Filename shouldn't contain space character";
-            this.addNewLogMessage(wrongFormatNameMsg);
+            this.logManager.addNewLogMessage(wrongFormatNameMsg);
 
             // Show a warning dialog
             DialogManager.showWarningDialog(
@@ -1207,7 +1186,7 @@ public class ViewController implements Initializable {
                     + "Example: Map004.json";
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + msgHead + ". " + msgBody;
-            this.addNewLogMessage(wrongFormatNameMsg);
+            this.logManager.addNewLogMessage(wrongFormatNameMsg);
             DialogManager.showErrorDialog(msgHead, msgBody, this.app);
 
             return;
@@ -1227,7 +1206,7 @@ public class ViewController implements Initializable {
             // Update log
             String invalidExtMsg = GlobalSettings.LOG_ERROR
                     + "Invalid extension file!";
-            this.addNewLogMessage(invalidExtMsg);
+            this.logManager.addNewLogMessage(invalidExtMsg);
 
             // Show error dialog
             DialogManager.showErrorDialog(
@@ -1294,7 +1273,7 @@ public class ViewController implements Initializable {
             // Add new log
             String successSaveMsg = GlobalSettings.LOG_SAVE_MAP
                     + "File is successfully saved at " + file.getPath();
-            this.addNewLogMessage(successSaveMsg);
+            this.logManager.addNewLogMessage(successSaveMsg);
 
             // Toggle flag for detecting unsave map
             this.isCurrentMapSave = true;
@@ -1335,7 +1314,7 @@ public class ViewController implements Initializable {
             // Add new log
             String errorMsg = GlobalSettings.LOG_ERROR
                     + "IOEXCEPTION! Unable to save file.";
-            this.addNewLogMessage(errorMsg);
+            this.logManager.addNewLogMessage(errorMsg);
 
             // Show exception dialog
             DialogManager.showExceptionDialog(e, this.app);
@@ -1427,9 +1406,7 @@ public class ViewController implements Initializable {
      */
     @FXML
     private void meuLogClearLogOnClick(ActionEvent event) {
-        this.logMessage = new StringBuilder();
-        this.preventNewLineAtFirst = true;
-        this.logArea.setText("");
+        this.logManager.reset();
     }
 
     /**
