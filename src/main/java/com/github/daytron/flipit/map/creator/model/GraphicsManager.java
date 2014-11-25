@@ -24,7 +24,7 @@
 package com.github.daytron.flipit.map.creator.model;
 
 import com.github.daytron.flipit.map.creator.model.Map;
-import com.github.daytron.flipit.map.creator.utilities.GlobalSettings;
+import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.fxml.FXML;

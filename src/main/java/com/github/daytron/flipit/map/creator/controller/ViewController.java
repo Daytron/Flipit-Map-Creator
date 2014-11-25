@@ -24,7 +24,7 @@
 package com.github.daytron.flipit.map.creator.controller;
 
 import com.github.daytron.flipit.map.creator.MainApp;
-import com.github.daytron.flipit.map.creator.utilities.GlobalSettings;
+import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import com.github.daytron.flipit.map.creator.model.Map;
 import com.github.daytron.flipit.map.creator.model.DialogManager;
 import com.github.daytron.flipit.map.creator.model.GraphicsManager;

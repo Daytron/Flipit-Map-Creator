@@ -23,7 +23,7 @@
  */
 package com.github.daytron.flipit.map.creator;
 
-import com.github.daytron.flipit.map.creator.utilities.GlobalSettings;
+import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -50,12 +50,12 @@ import org.testfx.api.FxLifecycle;
  *
  * @author Ryan Gilera
  */
-public class MainAppTest extends FxRobotImpl {
+public class UITest extends FxRobotImpl {
 
     private MainApp app;
     public static Stage primaryStage;
 
-    public MainAppTest() {
+    public UITest() {
     }
 
     @BeforeClass
@@ -64,7 +64,7 @@ public class MainAppTest extends FxRobotImpl {
             // Start the Toolkit and block until the primary Stage was retrieved.
             primaryStage = FxLifecycle.registerPrimaryStage();
         } catch (TimeoutException ex) {
-            Logger.getLogger(MainAppTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UITest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -81,7 +81,7 @@ public class MainAppTest extends FxRobotImpl {
             // Wait for the primary Stage to be shown by start().
             RunWaitUtils.waitFor(20, TimeUnit.SECONDS, primaryStage.showingProperty());
         } catch (TimeoutException ex) {
-            Logger.getLogger(MainAppTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UITest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
