@@ -556,21 +556,21 @@ public class UITest extends FxRobotImpl {
         KeyCodeCombination ctrlS = new KeyCodeCombination(
                 KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
         push(ctrlS);
-        sleep(1, SECONDS);
+        sleep(3, SECONDS);
 
         write(mapFile).push(KeyCode.ENTER);
         Date date7 = new Date();
-        sleep(2, SECONDS);
+        sleep(4, SECONDS);
 
         // Open current map
         KeyCodeCombination ctrlO = new KeyCodeCombination(
                 KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
         push(ctrlO);
-        sleep(1, SECONDS);
+        sleep(3, SECONDS);
 
         write(mapFile).push(KeyCode.ENTER);
         Date date8 = new Date();
-        sleep(2, SECONDS);
+        sleep(4, SECONDS);
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat = df.format(date);
