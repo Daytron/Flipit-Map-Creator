@@ -47,7 +47,8 @@ import org.controlsfx.dialog.Dialog;
  * @author Ryan Gilera ryangilera@gmail.com
  */
 public final class MapManager {
-
+    private static File imageFile;
+    
     private MapManager() {
     }
 
@@ -75,7 +76,7 @@ public final class MapManager {
 
             // Add new log
             String successSaveMsg = GlobalSettings.LOG_SAVE_MAP
-                    + "File is successfully saved at " + file.getPath();
+                    + "Map is successfully saved.";
             logManager.addNewLogMessage(successSaveMsg);
 
             // Prepares for taking snapshot of the canvas
@@ -106,10 +107,12 @@ public final class MapManager {
             try {
                 ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null),
                         "png", fileImage);
+                
+                imageFile = fileImage;
             } catch (Exception s) {
                 DialogManager.showExceptionDialog(s, app);
                 return false;
-            }
+            } 
 
         } catch (IOException e) {
             // Add new log
@@ -361,5 +364,8 @@ public final class MapManager {
         return StringUtils.capitalizeFirstLetterWord(id);
     }
     
+    public static File getImageMapFile() {
+        return imageFile;
+    }
     
 }

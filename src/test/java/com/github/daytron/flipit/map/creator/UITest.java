@@ -32,13 +32,13 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.loadui.testfx.Assertions;
 import org.loadui.testfx.controls.Commons;
@@ -79,7 +79,8 @@ public class UITest extends FxRobotImpl {
             this.app = (MainApp) FxLifecycle.setupApplication(MainApp.class);
 
             // Wait for the primary Stage to be shown by start().
-            RunWaitUtils.waitFor(20, TimeUnit.SECONDS, primaryStage.showingProperty());
+            RunWaitUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
+
         } catch (TimeoutException ex) {
             Logger.getLogger(UITest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -91,7 +92,9 @@ public class UITest extends FxRobotImpl {
 
     /**
      * Test event:
-     * 1. click generate button
+     * <ul>
+     * <li> 1. click generate button
+     * </ul>
      */
     @Test
     public void clickGenerateButtonAtStartTest() throws Exception {
@@ -111,11 +114,13 @@ public class UITest extends FxRobotImpl {
 
     /**
      * Test events:
-     * 1. click column combo box
-     * 2. select and click number 5
-     * 3. click row combo box
-     * 4. select and click number 6
-     * 5. click generate button
+     * <ul>
+     * <li> 1. click column combo box
+     * <li> 2. select and click number 5
+     * <li> 3.click row combo box
+     * <li> 4. select and click number 6
+     * <li> 5. click generate button
+     * </ul>
      */
     @Test
     public void clickComboBoxesAndGenerateTest() {
@@ -144,19 +149,23 @@ public class UITest extends FxRobotImpl {
 
     /**
      * Test events:
-     * 1. click generate button
-     * 2. click on title field
-     * 3. type "eye of the world" in the field
-     * 4. press ENTER key
+     * <ul>
+     * <li> 1. click generate button
+     * <li> 2. click on title field
+     * <li> 3. write "eye of the world" in the field
+     * <li> 4. press ENTER key
+     * </ul>
      */
     @Test
     public void clickGenerateAndEnterTitleTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
-
         sleep(1, SECONDS);
-        clickOn("#title_field").write("eye of the world").push(KeyCode.ENTER);
+
+        clickOn("#title_field");
+        write("eye of the world").push(KeyCode.ENTER);
         Date date2 = new Date();
+        sleep(2, SECONDS);
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat = df.format(date);
@@ -176,11 +185,13 @@ public class UITest extends FxRobotImpl {
 
     /**
      * Test events:
-     * 1. click generate button
-     * 2. click player 1 start button
-     * 3. click tile 8,4
-     * 4. click player 2 start button
-     * 5. click tile 9,3
+     * <ul>
+     * <li> 1. click generate button
+     * <li> 2. click player 1 start button
+     * <li> 3. click tile 8,4
+     * <li> 4. click player 2 start button
+     * <li> 5. click tile 9,3
+     * </ul>
      */
     @Test
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTest() {
@@ -199,6 +210,7 @@ public class UITest extends FxRobotImpl {
 
         moveBy(-300.00, -300.00).clickOn();
         Date date5 = new Date();
+        sleep(2, SECONDS);
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat = df.format(date);
@@ -227,22 +239,24 @@ public class UITest extends FxRobotImpl {
 
     /**
      * Test events:
-     * 1. click generate button
-     * 2. click player 1 start button
-     * 3. click on tile 8,4
-     * 4. click on tile 3,4
-     * 5. click player 1 start button
-     * 6. click on tile 8,8
-     * 7. click player 1 start button
-     * 8. click on tile 8,8 (click again on the same tile)
-     * 9. click player 2 start button
-     * 10. click tile 9,3
-     * 11. click player 2 start button
-     * 12. click tile 9,3 (click again on the same tile)
-     * 13. click player 2 start button
-     * 14. click tile 8,1
-     * 15. click player 2 start button (overwrite p1 start tile )
-     * 16. click tile 8,8
+     * <ul>
+     * <li> 1. click generate button
+     * <li> 2. click player 1 start button
+     * <li> 3. click on tile 8,4
+     * <li> 4. click on tile 3,4
+     * <li> 5. click player 1 start button
+     * <li> 6. click on tile 8,8
+     * <li> 7. click player 1 start button
+     * <li> 8. click on tile 8,8 (click again on the same tile)
+     * <li> 9. click player 2 start button
+     * <li> 10. click tile 9,3
+     * <li> 11. click player 2 start button
+     * <li> 12. click tile 9,3 (click again on the same tile)
+     * <li> 13. click player 2 start button
+     * <li> 14. click tile 8,1
+     * <li> 15. click player 2 start button (overwrite p1 start tile )
+     * <li> 16. click tile 8,8
+     * </ul>
      */
     @Test
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTwiceTest() {
@@ -264,7 +278,7 @@ public class UITest extends FxRobotImpl {
 
         moveBy(-400.00, 0.0).clickOn();
         Date date6 = new Date();
-        
+
         clickOn("#p1_start_btn");
         Date date7 = new Date();
 
@@ -276,24 +290,26 @@ public class UITest extends FxRobotImpl {
 
         moveBy(-300.00, -300.00).clickOn();
         Date date10 = new Date();
-        
+
         clickOn("#p2_start_btn");
         Date date11 = new Date();
-        
+
         moveBy(-300.00, -300.00).clickOn();
         Date date12 = new Date();
-        
+
         clickOn("#p2_start_btn");
         Date date13 = new Date();
-        
+
         moveBy(-350.00, -400.00).clickOn();
         Date date14 = new Date();
-        
+
         clickOn("#p2_start_btn");
         Date date15 = new Date();
-        
+
         moveBy(-400.00, 0.0).clickOn();
         Date date16 = new Date();
+
+        sleep(2, SECONDS);
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat = df.format(date);
@@ -320,84 +336,84 @@ public class UITest extends FxRobotImpl {
         outputLog.append("[").append(timeFormat).append("] ");
         outputLog.append(GlobalSettings.LOG_NEW_MAP);
         outputLog.append("10 columns & 10 rows");
-        
+
         // clickOn("#p1_start_btn");
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat2).append("] ");
         outputLog.append(GlobalSettings.LOG_PLAYER1_ON);
-        
+
         // moveBy(-400.00, -200.00).clickOn();
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat3).append("] ");
         outputLog.append(GlobalSettings.LOG_TILE_SET);
         outputLog.append("Player 1 start position is now set to [8,4]");
-        
+
         // moveBy(-400.00, 0.0).clickOn();
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat4).append("] ");
         outputLog.append(GlobalSettings.LOG_NOTE);
         outputLog.append("Nothing selected. [3,4]");
-        
+
         // clickOn("#p1_start_btn");
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat5).append("] ");
         outputLog.append(GlobalSettings.LOG_PLAYER1_ON);
-        
+
         // moveBy(-400.00, 0.0).clickOn();
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat6).append("] ");
         outputLog.append(GlobalSettings.LOG_TILE_SET);
         outputLog.append("Player 1 start position is now set to [8,8]");
-        
+
         // clickOn("#p1_start_btn");
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat7).append("] ");
         outputLog.append(GlobalSettings.LOG_PLAYER1_ON);
-        
+
         // moveBy(-400.00, 0.0).clickOn();
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat8).append("] ");
         outputLog.append(GlobalSettings.LOG_ERROR);
         outputLog.append("You already have selected this tile.");
-        
+
         // clickOn("#p2_start_btn");
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat9).append("] ");
         outputLog.append(GlobalSettings.LOG_PLAYER2_ON);
-        
+
         // moveBy(-300.00, -300.00).clickOn();
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat10).append("] ");
         outputLog.append(GlobalSettings.LOG_TILE_SET);
         outputLog.append("Player 2 start position is now set to [9,3]");
-        
+
         // clickOn("#p2_start_btn");
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat11).append("] ");
         outputLog.append(GlobalSettings.LOG_PLAYER2_ON);
-        
+
         // moveBy(-300.00, -300.00).clickOn();
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat12).append("] ");
         outputLog.append(GlobalSettings.LOG_ERROR);
         outputLog.append("You already have selected this tile.");
-        
+
         // clickOn("#p2_start_btn");
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat13).append("] ");
         outputLog.append(GlobalSettings.LOG_PLAYER2_ON);
-        
+
         // moveBy(-350.00, -400.00).clickOn();
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat14).append("] ");
         outputLog.append(GlobalSettings.LOG_TILE_SET);
         outputLog.append("Player 2 start position is now set to [8,1]");
-        
+
         // clickOn("#p2_start_btn");
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat15).append("] ");
         outputLog.append(GlobalSettings.LOG_PLAYER2_ON);
-        
+
         // moveBy(-400.00, 0.0).clickOn();
         outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
         outputLog.append("[").append(timeFormat16).append("] ");
@@ -408,24 +424,27 @@ public class UITest extends FxRobotImpl {
         outputLog.append(GlobalSettings.LOG_TILE_OVERWRITTEN);
         outputLog.append("Player 2 start position is now set to [8,8]");
 
-        Assertions.verifyThat("#logArea", Commons.hasText(outputLog.toString()));
+        Assertions.verifyThat("#logArea",
+                Commons.hasText(outputLog.toString()));
         assertTrue(this.app.getView().isThereAMapVisible());
     }
 
     /**
      * Test events:
-     * 1. click generate button
-     * 2, click boulder button
-     * 3. click on tile 8,6
-     * 4. click neutral button (overwrites boulder button)
-     * 5. click on tile 8,6
+     * <ul>
+     * <li> 1. click generate button
+     * <li> 2, click boulder button
+     * <li> 3. click on tile 8,6
+     * <li> 4. click neutral button (overwrites boulder button)
+     * <li> 5. click on tile 8,6
+     * </ul>
      */
     @Test
     public void clickGenerateThenBoulderAndOverwrittenByNeutralTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
-
         sleep(1, SECONDS);
+
         clickOn("#boulder_btn");
         Date date2 = new Date();
 
@@ -438,6 +457,8 @@ public class UITest extends FxRobotImpl {
         moveBy(-400.00, -250.00).clickOn();
         Date date5 = new Date();
 
+        sleep(2, SECONDS);
+
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat = df.format(date);
         String timeFormat2 = df.format(date2);
@@ -445,26 +466,195 @@ public class UITest extends FxRobotImpl {
         String timeFormat4 = df.format(date4);
         String timeFormat5 = df.format(date5);
 
-        String outputLog = GlobalSettings.LOG_SEPARATOR
-                + "[" + timeFormat + "] " + GlobalSettings.LOG_NEW_MAP
-                + "10 columns & 10 rows"
-                + "\n" + GlobalSettings.LOG_SEPARATOR
-                + "[" + timeFormat2 + "] " + GlobalSettings.LOG_BOULDER_ON
-                + "\n" + GlobalSettings.LOG_SEPARATOR
-                + "[" + timeFormat3 + "] " + GlobalSettings.LOG_TILE_SET
-                + "Boulder tile is set to [8,6]"
-                + "\n" + GlobalSettings.LOG_SEPARATOR
-                + "[" + timeFormat4 + "] " + GlobalSettings.LOG_NEUTRAL_ON
-                + "\n" + GlobalSettings.LOG_SEPARATOR
-                + "[" + timeFormat5 + "] " + GlobalSettings.LOG_WARNING
-                + GlobalSettings.LOG_BOULDER_OVERWRITTEN
-                + "\n" + GlobalSettings.LOG_SEPARATOR
-                + "[" + timeFormat5 + "] " + GlobalSettings.LOG_TILE_SET
-                + "Neutral tile is set to [8,6]";
+        StringBuilder outputLog = new StringBuilder();
 
-        Assertions.verifyThat("#logArea", Commons.hasText(outputLog));
+        // clickOn("#generate_map_btn");
+        outputLog.append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat).append("] ");
+        outputLog.append(GlobalSettings.LOG_NEW_MAP);
+        outputLog.append("10 columns & 10 rows");
+
+        // clickOn("#boulder_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat2).append("] ");
+        outputLog.append(GlobalSettings.LOG_BOULDER_ON);
+
+        // moveBy(-400.00, -200.00).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat3).append("] ");
+        outputLog.append(GlobalSettings.LOG_TILE_SET);
+        outputLog.append("Boulder tile is set to [8,6]");
+
+        // clickOn("#neutral_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat4).append("] ");
+        outputLog.append(GlobalSettings.LOG_NEUTRAL_ON);
+
+        // moveBy(-400.00, -250.00).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat5).append("] ");
+        outputLog.append(GlobalSettings.LOG_WARNING);
+        outputLog.append(GlobalSettings.LOG_BOULDER_OVERWRITTEN);
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat5).append("] ");
+        outputLog.append(GlobalSettings.LOG_TILE_SET);
+        outputLog.append("Neutral tile is set to [8,6]");
+
+        Assertions.verifyThat("#logArea",
+                Commons.hasText(outputLog.toString()));
         assertTrue(this.app.getView().isThereAMapVisible());
         assertTrue(this.app.getView().isEditMapOn());
+    }
+
+    /**
+     * Test events:
+     * <ul>
+     * <li> 1. click generate button
+     * <li> 2. click on title field
+     * <li> 3. type "eye of the world" in the field
+     * <li> 4. press ENTER key
+     * <li> 5. click player 1 button
+     * <li> 6. click on tile 8,4
+     * <li> 7. click player 2 button
+     * <li> 8. click on tile 8,1
+     * <li> 9. press control + S to launch save map
+     * <li> 10. write filename with extension to save
+     * <li> 11. press ENTER key
+     * <li> 12. press control + O to launch open map
+     * <li> 13. write filename with extension to open
+     * <li> 14. press ENTER key
+     * </ul>
+     */
+    @Test
+    public void generateMapThenSaveThenOpenTest() {
+        String mapFile = "Map010.json";
+
+        clickOn("#generate_map_btn");
+        Date date = new Date();
+        sleep(1, SECONDS);
+
+        clickOn("#title_field");
+        write("eye of the world").push(KeyCode.ENTER);
+        Date date2 = new Date();
+
+        clickOn("#p1_start_btn");
+        Date date3 = new Date();
+
+        moveBy(-400.00, -200.00).clickOn();
+        Date date4 = new Date();
+
+        clickOn("#p2_start_btn");
+        Date date5 = new Date();
+
+        moveBy(-350.00, -400.00).clickOn();
+        Date date6 = new Date();
+
+        // Save the current map
+        KeyCodeCombination ctrlS = new KeyCodeCombination(
+                KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
+        push(ctrlS);
+        sleep(1, SECONDS);
+
+        write(mapFile).push(KeyCode.ENTER);
+        Date date7 = new Date();
+        sleep(2, SECONDS);
+
+        // Open current map
+        KeyCodeCombination ctrlO = new KeyCodeCombination(
+                KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
+        push(ctrlO);
+        sleep(1, SECONDS);
+
+        write(mapFile).push(KeyCode.ENTER);
+        Date date8 = new Date();
+        sleep(2, SECONDS);
+
+        SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+        String timeFormat = df.format(date);
+        String timeFormat2 = df.format(date2);
+        String timeFormat3 = df.format(date3);
+        String timeFormat4 = df.format(date4);
+        String timeFormat5 = df.format(date5);
+        String timeFormat6 = df.format(date6);
+        String timeFormat7 = df.format(date7);
+        String timeFormat8 = df.format(date8);
+
+        StringBuilder outputLog = new StringBuilder();
+
+        // clickOn("#generate_map_btn");
+        outputLog.append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat).append("] ");
+        outputLog.append(GlobalSettings.LOG_NEW_MAP);
+        outputLog.append("10 columns & 10 rows");
+
+        // clickOn("#title_field").write("eye of the world").push(KeyCode.ENTER);
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat2).append("] ");
+        outputLog.append(GlobalSettings.LOG_TITLE_SET);
+        outputLog.append("Title: Eye Of The World 10x10 is set.");
+
+        // clickOn("#p1_start_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat3).append("] ");
+        outputLog.append(GlobalSettings.LOG_PLAYER1_ON);
+
+        // moveBy(-400.00, -200.00).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat4).append("] ");
+        outputLog.append(GlobalSettings.LOG_TILE_SET);
+        outputLog.append("Player 1 start position is now set to [8,4]");
+
+        // clickOn("#p2_start_btn");
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat5).append("] ");
+        outputLog.append(GlobalSettings.LOG_PLAYER2_ON);
+
+        // moveBy(-350.00, -400.00).clickOn();
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat6).append("] ");
+        outputLog.append(GlobalSettings.LOG_TILE_SET);
+        outputLog.append("Player 2 start position is now set to [8,1]");
+
+        // Save the map
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat7).append("] ");
+        outputLog.append(GlobalSettings.LOG_SAVE_MAP);
+        outputLog.append("Map is successfully saved.");
+
+        // Open the map
+        outputLog.append("\n").append(GlobalSettings.LOG_SEPARATOR);
+        outputLog.append("[").append(timeFormat8).append("] ");
+        outputLog.append(GlobalSettings.LOG_OPEN_MAP);
+        outputLog.append("10 columns & 10 rows\nMap file opened: ");
+        outputLog.append(this.app.getView().getMapFile().getPath());
+
+        // Delete temp map file and its image file afterwards
+        this.app.getView().getMapFile().delete();
+        this.app.getView().getImageMapFile().delete();
+
+        Assertions.verifyThat("#logArea",
+                Commons.hasText(outputLog.toString()));
+        Assertions.verifyThat("#title_field",
+                Commons.hasText("Eye Of The World"));
+    }
+
+    /**
+     * Test events:
+     * <ul>
+     * <li> 1. click help menu
+     * <li> 2. click about menu item
+     * <li> 3. click OK button (on the About App dialog window)
+     * </ul>
+     */
+    @Test
+    public void testAboutAppDialog() {
+        KeyCodeCombination altA = new KeyCodeCombination(
+                KeyCode.A, KeyCodeCombination.ALT_DOWN);
+
+        push(altA);
+        sleep(2, SECONDS);
+
+        clickOn("OK");
     }
 
 }

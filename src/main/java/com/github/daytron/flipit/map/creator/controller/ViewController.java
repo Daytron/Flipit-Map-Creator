@@ -149,6 +149,9 @@ public class ViewController implements Initializable {
     private GraphicsManager graphicsManager;
     private LogManager logManager;
 
+    // For testing purposes only
+    private File file;
+
     /**
      * An override method implemented from Initializable interface. Initialize
      * all necessary configurations in launching the application's view.
@@ -311,7 +314,7 @@ public class ViewController implements Initializable {
             // Prepare log message
             msgMapDrawnLog = GlobalSettings.LOG_OPEN_MAP + this.numberOfColumns
                     + " columns & " + this.numberOfRows + " rows"
-                    + "\n Map file opened: " + path;
+                    + "\nMap file opened: " + path;
         }
 
         // Notify user in log area
@@ -848,23 +851,25 @@ public class ViewController implements Initializable {
     public boolean verifyFileToOpen(File file) {
         return MapManager.verifyFileToOpen(file, this.app);
     }
-    
+
     /**
      * Opens the map json file and set it to the map instance variable.
      *
      * @param file The map json file
+     * @return <code>true</code> if a file is successfully opened, otherwise,
+     * <code>false</code>.
      */
-    public void openMap(File file) {
+    public boolean openMap(File file) {
 
-        Map tempMapHolder = MapManager.openFile(file, 
+        Map tempMapHolder = MapManager.openFile(file,
                 this.isCurrentMapSave, this.app);
-        
+
         if (tempMapHolder != null) {
             this.map = tempMapHolder;
         } else {
-            return;
+            return false;
         }
-        
+
         // Toggle flag that the map is an open map file
         this.isOpeningAMap = true;
 
@@ -886,8 +891,11 @@ public class ViewController implements Initializable {
 
         // Generate map
         this.generateMap(file.getPath());
+        
+        // For JUnit and TestFX tests
+        this.file = file;
 
-            // Set to current file map
+        // Set to current file map
         // Use to compare for recent map menu item
         this.currentFileOpened = file;
 
@@ -929,6 +937,12 @@ public class ViewController implements Initializable {
             }
         }
 
+        return true;
+
+    }
+
+    @FXML
+    private void menuFileRecentOnClick(ActionEvent event) {
     }
 
     public class RecentMapEventHandler implements EventHandler<ActionEvent> {
@@ -1031,16 +1045,17 @@ public class ViewController implements Initializable {
             this.saveMap(file);
         }
     }
-    
+
     public boolean verifyFileToSave(File file) {
         return MapManager.verifyFileToSave(file, this.logManager,
                 this.app, this.map, this.numberOfColumns,
                 this.numberOfRows);
     }
-    
-    public void saveMap(File file) {
+
+    public boolean saveMap(File file) {
         this.isCurrentMapSave = MapManager.saveFile(file,
-                    this.map, this.canvas, this.app);
+                this.map, this.canvas, this.app);
+        return this.isCurrentMapSave;
     }
 
     /**
@@ -1138,14 +1153,18 @@ public class ViewController implements Initializable {
     @FXML
     private void menuAboutOnClick(ActionEvent event) {
         try {
-            Dialog aboutDialog = new Dialog(this.app.getStage(), "About");
+            Dialog aboutDialog = new Dialog(null, "About");
 
-            Node viewNode = FXMLLoader.load(getClass().getResource("/fxml/AboutAppView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AboutAppView.fxml"));
+            Node viewNode = loader.load();
+            //AboutAppViewController aboutView = (AboutAppViewController)loader.getController();
+
             aboutDialog.setIconifiable(false);
             aboutDialog.setResizable(false);
 
             aboutDialog.setContent(viewNode);
 
+            aboutDialog.getActions().add(Dialog.ACTION_OK);
             aboutDialog.show();
         } catch (IOException ex) {
             Logger.getLogger(ViewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -1168,9 +1187,11 @@ public class ViewController implements Initializable {
         return isEditMapOn;
     }
 
-    @FXML
-    private void menuFileRecentOnClick(ActionEvent event) {
-
+    public File getMapFile() {
+        return file;
     }
 
+    public File getImageMapFile() {
+        return MapManager.getImageMapFile();
+    }
 }
