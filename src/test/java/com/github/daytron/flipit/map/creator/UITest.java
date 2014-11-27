@@ -100,7 +100,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateButtonAtStartTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -127,7 +126,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickComboBoxesAndGenerateTest() {
         clickOn("#column_combo").clickOn("5");
 
@@ -162,7 +160,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateAndEnterTitleTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -200,7 +197,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -266,7 +262,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTwiceTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -448,7 +443,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateThenBoulderAndOverwrittenByNeutralTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -674,7 +668,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void testAboutAppDialog() {
         KeyCodeCombination altA = new KeyCodeCombination(
                 KeyCode.A, KeyCodeCombination.ALT_DOWN);
