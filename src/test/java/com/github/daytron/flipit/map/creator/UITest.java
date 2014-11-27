@@ -668,6 +668,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void testAboutAppDialog() {
         KeyCodeCombination altA = new KeyCodeCombination(
                 KeyCode.A, KeyCodeCombination.ALT_DOWN);

@@ -7,9 +7,12 @@ before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 
+script:
+  - mvn test -e -B
+
 notifications:
   email:
     - ryangilera@gmail.com
 
 after_success:
-  - mvn -e clean cobertura:cobertura coveralls:report
+  - mvn -e clean test jacoco:report coveralls:report
