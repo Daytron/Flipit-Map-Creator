@@ -555,8 +555,8 @@ public class UITest extends FxRobotImpl {
         Date date6 = new Date();
         
         // Save the current map
-        KeyCodeCombination ctrlS = new KeyCodeCombination(
-                KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
+        //KeyCodeCombination ctrlS = new KeyCodeCombination(
+        //        KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
         
         //push(ctrlS);
         clickOn("#file");
@@ -569,8 +569,8 @@ public class UITest extends FxRobotImpl {
         sleep(4, SECONDS);
 
         // Open current map
-        KeyCodeCombination ctrlO = new KeyCodeCombination(
-                KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
+        //KeyCodeCombination ctrlO = new KeyCodeCombination(
+        //        KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
         //push(ctrlO);
         clickOn("#file");
         sleep(2, SECONDS);
@@ -642,6 +642,7 @@ public class UITest extends FxRobotImpl {
         //File fileDirectory = new File(System.getProperty("user.home"));
         //File[] list = fileDirectory.listFiles();
 
+        // Retrieves map file and its image preview
         File mapJson;
         File mapImage;
         if (GlobalSettings.USER_OS.contains(GlobalSettings.OS_WINDOWS)) {

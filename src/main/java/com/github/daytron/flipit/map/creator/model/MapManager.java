@@ -44,11 +44,11 @@ import org.controlsfx.dialog.Dialog;
 
 /**
  * A static class for map file management.
+ *
  * @author Ryan Gilera ryangilera@gmail.com
  */
 public final class MapManager {
-    private static File imageFile;
-    
+
     private MapManager() {
     }
 
@@ -107,12 +107,10 @@ public final class MapManager {
             try {
                 ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null),
                         "png", fileImage);
-                
-                imageFile = fileImage;
             } catch (Exception s) {
                 DialogManager.showExceptionDialog(s, app);
                 return false;
-            } 
+            }
 
         } catch (IOException e) {
             // Add new log
@@ -130,11 +128,11 @@ public final class MapManager {
 
         return true;
     }
-    
+
     public static Map openFile(File file, boolean isCurrentMapSave,
             MainApp app) {
         LogManager logManager = LogManager.getInstance();
-        
+
         // Confirmation dialog
         if (!isCurrentMapSave) {
             if (DialogManager.showConfirmDialog(
@@ -146,38 +144,37 @@ public final class MapManager {
                 return null;
             }
         }
-        
+
         Gson gson = new Gson();
-        
+
         BufferedReader br;
         try {
             br = new BufferedReader(
                     new FileReader(file));
-            
+
             //convert the json string back to object
             Map map = gson.fromJson(br, Map.class);
-            
+
             return map;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(MapManager.class.getName()).log(Level.SEVERE, null, ex);
-             String errorMsg = GlobalSettings.LOG_ERROR
+            String errorMsg = GlobalSettings.LOG_ERROR
                     + "IOEXCEPTION! Error loading map (invalid json map file). ";
             logManager.addNewLogMessage(errorMsg);
-            
+
             DialogManager.showExceptionDialog(ex, app);
-            
+
             return null;
         }
 
-            
     }
-    
+
     public static boolean verifyFileToOpen(File file,
             MainApp app) {
         LogManager logManager = LogManager.getInstance();
         String userOS = GlobalSettings.USER_OS;
-        
-         // Possible action if user press cancel button on open file dialog
+
+        // Possible action if user press cancel button on open file dialog
         // Skip all remaining lines
         if (file == null) {
             return false;
@@ -216,7 +213,7 @@ public final class MapManager {
 
                     logManager.addNewLogMessage(invalidPatterName);
                     DialogManager.showErrorDialog(msgHead, msgBody, app);
-                    
+
                     return false;
                 }
             } else {
@@ -228,7 +225,7 @@ public final class MapManager {
 
                 logManager.addNewLogMessage(invalidExtension);
                 DialogManager.showErrorDialog(msgHead, msgBody, app);
-                
+
                 return false;
             }
         } else {
@@ -247,8 +244,8 @@ public final class MapManager {
     public static boolean verifyFileToSave(File file,
             LogManager logManager, MainApp app,
             Map map, int numberOfColumns, int numberOfRows) {
-         String userOS = GlobalSettings.USER_OS;
-        
+        String userOS = GlobalSettings.USER_OS;
+
         // Possible action if user press cancel button on save file dialog
         // Skip all remaining lines
         if (file == null) {
@@ -268,7 +265,7 @@ public final class MapManager {
                     + GlobalSettings.LOG_OS_NOT_SUPPORTED;
             logManager.addNewLogMessage(noOSsupportMsg);
 
-            DialogManager.showErrorDialog("OS Not Supported", 
+            DialogManager.showErrorDialog("OS Not Supported",
                     GlobalSettings.LOG_OS_NOT_SUPPORTED, app);
             return false;
         }
@@ -323,12 +320,12 @@ public final class MapManager {
                     GlobalSettings.DIALOG_INVALID_EXTENSION_HEAD_MSG,
                     GlobalSettings.DIALOG_INVALID_EXTENSION_BODY_MSG,
                     app);
-            
+
             return false;
         }
     }
-    
-     /**
+
+    /**
      * Verifies if the filename follows the name convention: "Map" + [3 digit
      * number].
      *
@@ -352,7 +349,7 @@ public final class MapManager {
 
         return true;
     }
-    
+
     /**
      * Formats the map's ID.
      *
@@ -363,9 +360,5 @@ public final class MapManager {
         id = id.toLowerCase();
         return StringUtils.capitalizeFirstLetterWord(id);
     }
-    
-    public static File getImageMapFile() {
-        return imageFile;
-    }
-    
+
 }

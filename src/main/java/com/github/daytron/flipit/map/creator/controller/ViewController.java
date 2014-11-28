@@ -149,9 +149,6 @@ public class ViewController implements Initializable {
     private GraphicsManager graphicsManager;
     private LogManager logManager;
 
-    // For testing purposes only
-    private File file;
-
     /**
      * An override method implemented from Initializable interface. Initialize
      * all necessary configurations in launching the application's view.
@@ -891,9 +888,6 @@ public class ViewController implements Initializable {
 
         // Generate map
         this.generateMap(file.getPath());
-        
-        // For JUnit and TestFX tests
-        this.file = file;
 
         // Set to current file map
         // Use to compare for recent map menu item
@@ -1187,11 +1181,4 @@ public class ViewController implements Initializable {
         return isEditMapOn;
     }
 
-    public File getMapFile() {
-        return file;
-    }
-
-    public File getImageMapFile() {
-        return MapManager.getImageMapFile();
-    }
 }
