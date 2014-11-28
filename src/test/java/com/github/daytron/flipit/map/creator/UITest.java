@@ -104,7 +104,7 @@ public class UITest extends FxRobotImpl {
     public void clickGenerateButtonAtStartTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
-        sleep(1, SECONDS);
+        sleep(3, SECONDS);
 
         SimpleDateFormat df = new SimpleDateFormat("hh:mm");
         String timeFormat = df.format(date);
@@ -200,7 +200,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
