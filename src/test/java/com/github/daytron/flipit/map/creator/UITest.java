@@ -33,6 +33,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.KeyCode;
+import static javafx.scene.input.KeyCode.ENTER;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
 import org.junit.After;
@@ -46,6 +47,7 @@ import org.junit.Test;
 import org.loadui.testfx.Assertions;
 import org.loadui.testfx.controls.Commons;
 import org.loadui.testfx.framework.robot.impl.FxRobotImpl;
+import org.loadui.testfx.robots.impl.KeyboardRobotImpl;
 import org.loadui.testfx.utils.RunWaitUtils;
 import org.testfx.api.FxLifecycle;
 
@@ -100,6 +102,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void clickGenerateButtonAtStartTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -126,6 +129,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void clickComboBoxesAndGenerateTest() {
         clickOn("#column_combo").clickOn("5");
 
@@ -160,6 +164,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void clickGenerateAndEnterTitleTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -197,6 +202,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -262,6 +268,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTwiceTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -443,6 +450,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void clickGenerateThenBoulderAndOverwrittenByNeutralTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -529,16 +537,16 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void generateMapThenSaveThenOpenTest() {
         String mapFile = "Map010.json";
 
         clickOn("#generate_map_btn");
         Date date = new Date();
-        sleep(1, SECONDS);
+        sleep(2, SECONDS);
 
         clickOn("#title_field");
-        write("eye of the world").push(KeyCode.ENTER);
+        write("eye of the world").push(ENTER);
+        
         Date date2 = new Date();
 
         clickOn("#p1_start_btn");
@@ -556,20 +564,23 @@ public class UITest extends FxRobotImpl {
         // Save the current map
         KeyCodeCombination ctrlS = new KeyCodeCombination(
                 KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
-        push(ctrlS);
+        
+        //push(ctrlS);
+        clickOn("#file").clickOn("#save");
         sleep(3, SECONDS);
-
-        write(mapFile).push(KeyCode.ENTER);
+        
+        write(mapFile).push(ENTER);
         Date date7 = new Date();
         sleep(4, SECONDS);
 
         // Open current map
         KeyCodeCombination ctrlO = new KeyCodeCombination(
                 KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
-        push(ctrlO);
+        //push(ctrlO);
+        clickOn("#file").clickOn("#open");
         sleep(3, SECONDS);
 
-        write(mapFile).push(KeyCode.ENTER);
+        write(mapFile).type(KeyCode.ENTER);
         Date date8 = new Date();
         sleep(4, SECONDS);
 
@@ -669,6 +680,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void testAboutAppDialog() {
         KeyCodeCombination altA = new KeyCodeCombination(
                 KeyCode.A, KeyCodeCombination.ALT_DOWN);
