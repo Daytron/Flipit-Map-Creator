@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.ENTER;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -560,13 +561,15 @@ public class UITest extends FxRobotImpl {
 
         moveBy(-350.00, -400.00).clickOn();
         Date date6 = new Date();
-
+        
         // Save the current map
         KeyCodeCombination ctrlS = new KeyCodeCombination(
                 KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
         
         //push(ctrlS);
-        clickOn("#file").clickOn("#save");
+        clickOn("#file");
+        sleep(2, SECONDS);
+        clickOn("#save");
         sleep(3, SECONDS);
         
         write(mapFile).push(ENTER);
@@ -577,10 +580,12 @@ public class UITest extends FxRobotImpl {
         KeyCodeCombination ctrlO = new KeyCodeCombination(
                 KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
         //push(ctrlO);
-        clickOn("#file").clickOn("#open");
+        clickOn("#file");
+        sleep(2, SECONDS);
+        clickOn("#open");
         sleep(3, SECONDS);
 
-        write(mapFile).type(KeyCode.ENTER);
+        write(mapFile).push(ENTER);
         Date date8 = new Date();
         sleep(4, SECONDS);
 
