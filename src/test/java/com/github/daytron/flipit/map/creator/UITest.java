@@ -100,7 +100,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateButtonAtStartTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -127,7 +126,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickComboBoxesAndGenerateTest() {
         clickOn("#column_combo").clickOn("5");
 
@@ -162,7 +160,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateAndEnterTitleTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -203,7 +200,7 @@ public class UITest extends FxRobotImpl {
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
-        sleep(1, SECONDS);
+        sleep(3, SECONDS);
 
         clickOn("#p1_start_btn");
         Date date2 = new Date();
@@ -265,7 +262,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateThenPlayer1ThenPlayer2AndCanvasTwiceTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -450,7 +446,7 @@ public class UITest extends FxRobotImpl {
     public void clickGenerateThenBoulderAndOverwrittenByNeutralTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
-        sleep(1, SECONDS);
+        sleep(3, SECONDS);
 
         clickOn("#boulder_btn");
         Date date2 = new Date();
@@ -533,6 +529,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void generateMapThenSaveThenOpenTest() {
         String mapFile = "Map010.json";
 
@@ -672,7 +669,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void testAboutAppDialog() {
         KeyCodeCombination altA = new KeyCodeCombination(
                 KeyCode.A, KeyCodeCombination.ALT_DOWN);
