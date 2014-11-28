@@ -448,7 +448,6 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
-    @Ignore
     public void clickGenerateThenBoulderAndOverwrittenByNeutralTest() {
         clickOn("#generate_map_btn");
         Date date = new Date();
@@ -535,6 +534,7 @@ public class UITest extends FxRobotImpl {
      * </ul>
      */
     @Test
+    @Ignore
     public void generateMapThenSaveThenOpenTest() {
         String mapFile = "Map010.json";
 
