@@ -1,1 +1,4 @@
 com.github.daytron.flipit.map.creator
+com.github.daytron.flipit.map.creator.controller
+com.github.daytron.flipit.map.creator.model
+com.github.daytron.flipit.map.creator.utility
