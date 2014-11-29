@@ -150,11 +150,15 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <includes>
+                        <include>com.github.daytron.flipit.map.creator.TestSuite.class</include>
+                    </includes>
                     <!-- Sets the VM argument line used when unit tests are run. -->
                     <argLine>-Dfile.encoding=${project.build.sourceEncoding} ${argLine}</argLine>
                     <additionalClasspathElements>
                         <additionalClasspathElement>${java.home}/lib/jfxrt.jar</additionalClasspathElement>
                     </additionalClasspathElements>
+                    
                 </configuration>
             </plugin>
             <plugin>

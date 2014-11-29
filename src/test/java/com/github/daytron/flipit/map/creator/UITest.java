@@ -43,6 +43,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.loadui.testfx.Assertions;
 import org.loadui.testfx.controls.Commons;
 import org.loadui.testfx.framework.robot.impl.FxRobotImpl;
@@ -53,6 +54,7 @@ import org.testfx.api.FxLifecycle;
  *
  * @author Ryan Gilera
  */
+@Category({AllTest.class})
 public class UITest extends FxRobotImpl {
 
     private MainApp app;
