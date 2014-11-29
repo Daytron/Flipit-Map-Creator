@@ -25,58 +25,61 @@ package com.github.daytron.flipit.map.creator.utility;
 
 /**
  * String utility class for formatting Strings.
+ *
  * @author Ryan Gilera ryangilera@gmail.com
  */
 public final class StringUtils {
 
     private StringUtils() {
     }
-    
+
     /**
      * Capitalize only the first letter of a given string.
+     *
      * @param word The string text to capitalize.
-     * @return A formatted <code>String</code> with the first letter capitalise.
+     * @return a formatted <code>String</code> with the first letter capitalized.
      */
     public static String capitalizeFirstLetterWord(String word) {
         if (word == null) {
             return null;
         }
-        
+
         if (word.isEmpty()) {
             return word;
         }
-        
+
         if (word.length() == 1) {
             return word.toUpperCase();
         }
-        
+
         String newWord = word.trim();
-        
+
         return newWord.substring(0, 1).toUpperCase() + newWord.substring(1);
     }
-    
-     /**
-     * Capitalize the first letter of each word in a series of words 
-     * separated by a space character.
+
+    /**
+     * Capitalize the first letter of each word in a series of words separated
+     * by a space character.
+     *
      * @param sentence The text to capitalize.
-     * @return A formatted <code>String</code> object with each first 
-     * letter of each word is capitalized.
+     * @return a formatted <code>String</code> object with each first letter of
+     * each word is capitalized.
      */
     public static String capitalizeFirstLetterEachWord(String sentence) {
         if (sentence == null) {
             return null;
         }
-        
+
         if (sentence.isEmpty()) {
             return sentence;
         }
-        
+
         sentence = sentence.trim();
-        
+
         if (sentence.length() == 1) {
             return sentence.toUpperCase();
         }
-        
+
         // Capitalize first word first
         String firstLetterWordFormatted = capitalizeFirstLetterWord(sentence);
 

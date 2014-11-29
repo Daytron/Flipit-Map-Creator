@@ -53,7 +53,7 @@ public final class MapManager {
     }
 
     /**
-     * Saves the map object as a json file.
+     * Saves the map object as a JSON file.
      *
      * @param file The map file to save.
      */
@@ -129,6 +129,16 @@ public final class MapManager {
         return true;
     }
 
+    /**
+     * Opens the JSON map file
+     *
+     * @param file The file object that holds the map data
+     * @param isCurrentMapSave A boolean flag that tracks if the current map
+     * generated is saved or not
+     * @param app The MainApp object for retrieving the stage object
+     * @return the Map object if successfully opened, otherwise
+     * <code>null</code>
+     */
     public static Map openFile(File file, boolean isCurrentMapSave,
             MainApp app) {
         LogManager logManager = LogManager.getInstance();
@@ -169,6 +179,14 @@ public final class MapManager {
 
     }
 
+    /**
+     * Verifies if the File object is a valid map file for opening the file.
+     *
+     * @param file The file object that holds the map data
+     * @param app The MainApp object for retrieving the stage object
+     * @return <code>true</code> if the file is valid, otherwise
+     * <code>false</code>
+     */
     public static boolean verifyFileToOpen(File file,
             MainApp app) {
         LogManager logManager = LogManager.getInstance();
@@ -241,6 +259,17 @@ public final class MapManager {
 
     }
 
+    /**
+     *
+     * @param file The file object that holds the map data
+     * @param logManager The LogManager that handles log events
+     * @param app The MainApp object for retrieving the stage object
+     * @param map The Map object that holds the map data
+     * @param numberOfColumns The number of columns
+     * @param numberOfRows The number of rows
+     * @return <code>true</code> if the file is valid, otherwise
+     * <code>false</code>
+     */
     public static boolean verifyFileToSave(File file,
             LogManager logManager, MainApp app,
             Map map, int numberOfColumns, int numberOfRows) {
@@ -330,7 +359,8 @@ public final class MapManager {
      * number].
      *
      * @param filename The filename to inspect.
-     * @return Returns true if filename is valid, otherwise false.
+     * @return <code>true</code> if the filename is valid, otherwise
+     * <code>false</code>.
      */
     private static boolean isValidFileName(String filename) {
         if (!filename.startsWith("Map")) {
@@ -351,7 +381,8 @@ public final class MapManager {
     }
 
     /**
-     * Formats the map's ID.
+     * Formats the map's ID for capital first letter and lowercase on preceding
+     * characters.
      *
      * @param id The ID to be formatted.
      * @return Returns the formatted ID.

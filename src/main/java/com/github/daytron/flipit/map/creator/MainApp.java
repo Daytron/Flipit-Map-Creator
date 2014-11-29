@@ -60,12 +60,12 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
         this.stage = stage;
-        
+
         this.loadScene();
         stage.getIcons().add(
                 new Image(MainApp.class.getResourceAsStream(
                                 GlobalSettings.ICON_PATH)));
-        
+
         stage.show();
     }
 

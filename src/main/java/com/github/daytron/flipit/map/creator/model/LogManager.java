@@ -29,45 +29,62 @@ import java.util.Date;
 import javafx.scene.control.TextArea;
 
 /**
+ * Manages all log displays.
  *
  * @author Ryan Gilera ryangilera@gmail.com
  */
 public class LogManager {
+
     private StringBuilder logMessage;
-    
+
     // The TextArea reference from the View.fxml
     private TextArea logArea;
-    
+
     private boolean preventNewLineAtFirst;
-    
+
     private LogManager() {
     }
-    
+
+    /**
+     * A static method that returns the LogManager instance.
+     *
+     * @return
+     */
     public static LogManager getInstance() {
         return LogManagerHolder.INSTANCE;
     }
-    
+
+    /**
+     * The static class that holds the LogManager instance.
+     */
     private static class LogManagerHolder {
+
         private static final LogManager INSTANCE = new LogManager();
     }
-    
+
+    /**
+     * Initialises the LogManager object
+     *
+     * @param textArea
+     */
     public void init(TextArea textArea) {
         this.logArea = textArea;
         this.logArea.setText("");
         this.logArea.setEditable(false);
         this.logArea.setWrapText(true);
-        
         this.logMessage = new StringBuilder();
-        
         this.preventNewLineAtFirst = true;
     }
-    
+
+    /**
+     * Resets the log display.
+     */
     public void reset() {
         this.logMessage = new StringBuilder();
         this.logArea.setText("");
         this.preventNewLineAtFirst = true;
     }
-    
+
     /**
      * Adds and process a new log message from the received String argument.
      *
@@ -100,5 +117,4 @@ public class LogManager {
         this.logArea.appendText("");
     }
 
-    
 }

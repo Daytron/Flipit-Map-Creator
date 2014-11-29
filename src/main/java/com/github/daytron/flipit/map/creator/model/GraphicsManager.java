@@ -23,17 +23,16 @@
  */
 package com.github.daytron.flipit.map.creator.model;
 
-import com.github.daytron.flipit.map.creator.model.Map;
 import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
+ * The class responsible for the graphics display of tiles on the canvas.
  *
  * @author Ryan Gilera ryangilera@gmail.com
  */
@@ -60,7 +59,6 @@ public class GraphicsManager {
     private int numberOfColumns;
 
     private GraphicsContext gc;
-    
     private Canvas canvas;
     private Map map;
     private int tileEdgeEffect;
@@ -68,15 +66,29 @@ public class GraphicsManager {
     private GraphicsManager() {
     }
 
+    /**
+     * The method that returns the single instance of this class.
+     *
+     * @return the singleton instance of GraphicsManager
+     */
     public static GraphicsManager getInstance() {
         return SingletonContainer.INSTANCE;
     }
 
+    /**
+     * The static class that holds the single instance of GraphicsManager
+     */
     private static class SingletonContainer {
 
         private static final GraphicsManager INSTANCE = new GraphicsManager();
     }
 
+    /**
+     * Initializes the GraphicsManager.
+     *
+     * @param canvas
+     * @param map
+     */
     public void init(Canvas canvas, Map map) {
         this.canvas = canvas;
         this.gc = canvas.getGraphicsContext2D();
@@ -84,22 +96,30 @@ public class GraphicsManager {
         this.tileEdgeEffect = GlobalSettings.TILE_EDGE_WIDTH;
     }
 
+    /**
+     * The method that generates and calculates the parameters for the map to be
+     * drawn.
+     *
+     * @param numberOfRows The number of rows of the map
+     * @param numberOfColumns The number of columns of the map
+     * @param map The map object to be generated
+     */
     public void generateMap(int numberOfRows,
             int numberOfColumns, Map map) {
         // Resets map
         this.map = map;
-        
+
         // Resets columns and rows
         this.numberOfColumns = numberOfColumns;
         this.numberOfRows = numberOfRows;
-        
+
         // Resets new columnCell and rowCell
         this.rowCell = new ArrayList<>();
         this.columnCell = new ArrayList<>();
-        
+
         // Clears any previous drawings
         this.gc.clearRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
-        
+
         double x = this.canvas.getWidth();
         double y = this.canvas.getHeight();
 
@@ -132,6 +152,9 @@ public class GraphicsManager {
         }
     }
 
+    /**
+     * Draws a brand new map
+     */
     public void drawNewMap() {
         // Fill grid tiles with neutral color
         for (int count_row = 0; count_row < this.numberOfRows; count_row++) {
@@ -144,6 +167,9 @@ public class GraphicsManager {
         }
     }
 
+    /**
+     * Draws the opened map
+     */
     public void drawOpenMap() {
         // Fill grid tiles from the save map data file
         for (int count_row = 0; count_row < this.numberOfRows; count_row++) {
@@ -209,6 +235,17 @@ public class GraphicsManager {
         return tile_color;
     }
 
+    /**
+     * Draws a tile that accepts colors for certain tile types.
+     *
+     * @param light_edge_color The web color for the top and left edge of the
+     * tile
+     * @param main_color The web color for the body of the tile
+     * @param shadow_edge_color The web color for the bottom and right edge of
+     * the tile
+     * @param count_column The map's column position (base 0)
+     * @param count_row The map's row position (base 0)
+     */
     private void paintTile(String light_edge_color, String main_color, String shadow_edge_color,
             int count_column, int count_row) {
         // Coloring the light top and left edges respectively
@@ -225,7 +262,14 @@ public class GraphicsManager {
         this.gc.fillRect(this.columnCell.get(count_column) + this.tileEdgeEffect, this.rowCell.get(count_row) + this.gridYSpace - this.tileEdgeEffect, this.gridXSpace - this.tileEdgeEffect, this.tileEdgeEffect);
         this.gc.fillRect(this.columnCell.get(count_column) + this.gridXSpace - this.tileEdgeEffect, this.rowCell.get(count_row) + this.tileEdgeEffect, this.tileEdgeEffect, this.gridYSpace - this.tileEdgeEffect);
     }
-    
+
+    /**
+     * Draws the player start tile.
+     *
+     * @param playerNumber The player number
+     * @param x The row position
+     * @param y The column position
+     */
     public void paintPlayerStart(int playerNumber, int x, int y) {
         double smallestSide = Math.min(this.gridXSpace, this.gridYSpace);
 
@@ -308,25 +352,45 @@ public class GraphicsManager {
         this.gc.setFont(oldFont);
     }
 
+    /**
+     * Draws a neutral tile
+     *
+     * @param x The column position (base 0)
+     * @param y The row position (base 0)
+     */
     public void paintNeutralTile(int x, int y) {
         this.paintTile(GlobalSettings.TILE_NEUTRAL_LIGHT_EDGE_COLOR,
                 GlobalSettings.TILE_NEUTRAL_MAIN_COLOR,
                 GlobalSettings.TILE_NEUTRAL_SHADOW_EDGE_COLOR,
                 x - 1, y - 1);
     }
-    
+
+    /**
+     * Draws a boulder tile
+     *
+     * @param x The column position (base 0)
+     * @param y The row position (base 0)
+     */
     public void paintBoulderTile(int x, int y) {
         this.paintTile(GlobalSettings.TILE_BOULDER_LIGHT_EDGE_COLOR,
                 GlobalSettings.TILE_BOULDER_MAIN_COLOR,
                 GlobalSettings.TILE_BOULDER_SHADOW_EDGE_COLOR,
                 x - 1, y - 1);
     }
-    
+
+    /**
+     * Checks whether the mouse click event is inside the map grid.
+     *
+     * @param x_pos The x mouse clicked coordinate
+     * @param y_pos The y mouse clicked coordinate
+     * @return <code>true</code> if the position is inside the map, otherwise
+     * <code>false</code>
+     */
     public boolean isInsideTheGrid(double x_pos, double y_pos) {
         return (x_pos >= this.halfPaddingWidth && x_pos <= (this.canvas.getWidth() - this.halfPaddingWidth))
                 && (y_pos >= this.halfPaddingHeight && y_pos <= (this.canvas.getWidth() - this.halfPaddingHeight));
     }
-    
+
     /**
      * Extracts grid position from mouseclick coordinates. Uses a simple binary
      * search.
@@ -386,10 +450,13 @@ public class GraphicsManager {
         return new int[]{tile_x, tile_y};
     }
 
-    
+    /**
+     * Apply tile edge width
+     *
+     * @param tileEdgeEffect The tile edge width
+     */
     public void setTileEdgeEffect(int tileEdgeEffect) {
         this.tileEdgeEffect = tileEdgeEffect;
     }
-    
-    
+
 }
