@@ -40,7 +40,8 @@ import org.junit.runners.Suite;
 @IncludeCategory(AllTest.class)
 @Suite.SuiteClasses({
     FileMapTest.class,
-    UITest.class 
+    UITest.class,
+    StringUtilsTest.class
     })
 public class TestSuite {
 

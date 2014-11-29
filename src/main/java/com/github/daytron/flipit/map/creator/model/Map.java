@@ -26,10 +26,12 @@ package com.github.daytron.flipit.map.creator.model;
 import java.util.List;
 
 /**
- * A plain old Java object (POJO) class as the template for Map json file. 
+ * A plain old Java object (POJO) class as the template for Map json file.
+ *
  * @author Ryan Gilera
  */
 public class Map {
+
     private String mapID;
     private String name;
     private int[] size;
@@ -37,8 +39,6 @@ public class Map {
 
     private int[] listOfPlayer1StartPosition;
     private int[] listOfPlayer2StartPosition;
-    private int[] listOfPlayer3StartPosition;
-    private int[] listOfPlayer4StartPosition;
     private List<Integer[]> listOfBoulders;
 
     /**
@@ -112,7 +112,8 @@ public class Map {
     }
 
     /**
-     * @param listOfPlayer1StartPosition Sets the map's Player 1 start tile position
+     * @param listOfPlayer1StartPosition Sets the map's Player 1 start tile
+     * position
      */
     public void setListOfPlayer1StartPosition(int[] listOfPlayer1StartPosition) {
         this.listOfPlayer1StartPosition = listOfPlayer1StartPosition;
@@ -128,7 +129,8 @@ public class Map {
 
     /**
      *
-     * @param listOfPlayer2StartPosition Sets the map's Player 2 start tile position
+     * @param listOfPlayer2StartPosition Sets the map's Player 2 start tile
+     * position
      */
     public void setListOfPlayer2StartPosition(int[] listOfPlayer2StartPosition) {
         this.listOfPlayer2StartPosition = listOfPlayer2StartPosition;
@@ -141,32 +143,4 @@ public class Map {
         return listOfPlayer2StartPosition;
     }
 
-    /**
-     * @param listOfPlayer3StartPosition Sets the map's Player 3 start tile position
-     */
-    public void setListOfPlayer3StartPosition(int[] listOfPlayer3StartPosition) {
-        this.listOfPlayer3StartPosition = listOfPlayer3StartPosition;
-    }
-
-    /**
-     *
-     * @return Returns the map's Player 3 start tile position
-     */
-    public int[] getListOfPlayer3StartPosition() {
-        return listOfPlayer3StartPosition;
-    }
-
-    /**
-     * @param listOfPlayer4StartPosition Sets the map's Player 4 start tile position
-     */
-    public void setListOfPlayer4StartPosition(int[] listOfPlayer4StartPosition) {
-        this.listOfPlayer4StartPosition = listOfPlayer4StartPosition;
-    }
-
-    /**
-     * @return Returns the map's Player 4 start tile position
-     */
-    public int[] getListOfPlayer4StartPosition() {
-        return listOfPlayer4StartPosition;
-    }
 }

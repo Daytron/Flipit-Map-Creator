@@ -15,4 +15,4 @@ notifications:
     - ryangilera@gmail.com
 
 after_success:
-  - mvn -e clean test -Dtest=TestSuite jacoco:report coveralls:report
+  - mvn -e clean test -Dtest=TestSuite -B jacoco:report coveralls:report
