@@ -122,4 +122,4 @@ MIT
 [TestFX 3.1.2]:https://github.com/TestFX/TestFX
 [JUnit 4.11]:http://junit.org/
 [Javadoc source]:https://daytron.github.io/Flipit-Map-Creator/apidocs/
-[app icon]:https://raw.githubusercontent.com/Daytron/Flipit-Map-Creator/master/src/main/resources/images/icon32x32.png
+[app icon]:https://raw.githubusercontent.com/Daytron/Flipit-Map-Creator/master/src/main/resources/images/icon42x42.png
