@@ -138,21 +138,27 @@ public class FileMapTest extends FxRobotImpl {
         Date date6 = new Date();
         
         // Save the current map
-        KeyCodeCombination ctrlS = new KeyCodeCombination(
-                KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
+        //KeyCodeCombination ctrlS = new KeyCodeCombination(
+        //        KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
         
-        push(ctrlS);
+        //push(ctrlS);
+        clickOn("#file");
         sleep(2, SECONDS);
+        clickOn("#save");
+        sleep(3, SECONDS);
         
         write(mapFile).push(ENTER);
         Date date7 = new Date();
         sleep(4, SECONDS);
 
         // Open current map
-        KeyCodeCombination ctrlO = new KeyCodeCombination(
-                KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
-        push(ctrlO);
+        //KeyCodeCombination ctrlO = new KeyCodeCombination(
+        //        KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
+        //push(ctrlO);
+        clickOn("#file");
         sleep(2, SECONDS);
+        clickOn("#open");
+        sleep(3, SECONDS);
         
         write(mapFile).push(ENTER);
         Date date8 = new Date();
@@ -226,12 +232,12 @@ public class FileMapTest extends FxRobotImpl {
             mapJson = new File(System.getProperty("user.home") 
                     + "\\" + mapFile);
             mapImage = new File(System.getProperty("user.home") 
-                    + "\\" + "Map010.png");
+                    + "\\" + mapFile);
         } else {
             mapJson = new File(System.getProperty("user.home") 
                     + "/" + mapFile);
             mapImage = new File(System.getProperty("user.home") 
-                    + "/" + "Map010.png");
+                    + "/" + mapFile);
         }
 
         outputLog.append(mapJson.getPath());

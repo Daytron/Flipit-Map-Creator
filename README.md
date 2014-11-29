@@ -1,4 +1,4 @@
-# ![app icon] &nbsp; Flipit Map Creator   
+# ![app icon] Flipit Map Creator   
 [![Build Status](https://travis-ci.org/Daytron/Flipit-Map-Creator.svg?branch=master)](https://travis-ci.org/Daytron/Flipit-Map-Creator) [![Dependency Status](https://www.versioneye.com/user/projects/546a1a2395082530790000bf/badge.svg?style=flat)](https://www.versioneye.com/user/projects/546a1a2395082530790000bf) [![License](http://img.shields.io/:license-mit-blue.svg)](https://raw.githubusercontent.com/Daytron/Flipit-Map-Creator/master/LICENSES/LICENSE)
 
 Flipit Map Creator is a companion JavaFX application for the upcoming game called Flipit. Allows to create, modify and save Flipit map json files. This application is still in working progress but the barebone functionalities are in placed.
