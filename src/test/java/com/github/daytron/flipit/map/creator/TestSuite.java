@@ -39,8 +39,9 @@ import org.junit.runners.Suite;
 @RunWith(Categories.class)
 @IncludeCategory(AllTest.class)
 @Suite.SuiteClasses({
-    UITest.class, 
-    FileMapTest.class})
+    FileMapTest.class,
+    UITest.class 
+    })
 public class TestSuite {
 
     @BeforeClass

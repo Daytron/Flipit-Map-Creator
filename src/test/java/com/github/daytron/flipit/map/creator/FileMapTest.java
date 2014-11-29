@@ -138,13 +138,13 @@ public class FileMapTest extends FxRobotImpl {
         Date date6 = new Date();
         
         // Save the current map
-        //KeyCodeCombination ctrlS = new KeyCodeCombination(
-        //        KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
+        KeyCodeCombination ctrlS = new KeyCodeCombination(
+                KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
         
-        //push(ctrlS);
-        clickOn("#file");
-        sleep(2, SECONDS);
-        clickOn("#save");
+        push(ctrlS);
+        //clickOn("#file");
+        //sleep(2, SECONDS);
+        //clickOn("#save");
         sleep(3, SECONDS);
         
         write(mapFile).push(ENTER);
@@ -152,12 +152,12 @@ public class FileMapTest extends FxRobotImpl {
         sleep(4, SECONDS);
 
         // Open current map
-        //KeyCodeCombination ctrlO = new KeyCodeCombination(
-        //        KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
-        //push(ctrlO);
-        clickOn("#file");
-        sleep(2, SECONDS);
-        clickOn("#open");
+        KeyCodeCombination ctrlO = new KeyCodeCombination(
+                KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
+        push(ctrlO);
+        //clickOn("#file");
+        //sleep(2, SECONDS);
+        //clickOn("#open");
         sleep(3, SECONDS);
         
         write(mapFile).push(ENTER);
