@@ -23,8 +23,8 @@ Flipit Map Creator uses a number of open source projects to work properly:
 - Java 8
 - JavaFX
 
-### Version
-0.1 Alpha
+### Current Release
+v1.0.0
 
 ### Setup Dependencies for Maven
 Add the following dependencies to your POM file:
@@ -95,20 +95,6 @@ Change `<Version number>` with the current version number.
 ### Javadoc
 [Javadoc source]
 
-### Roadmap to version 1.0 release
-See Milestone and Issues sections for more information and updates.
-
- - Write Tests for JUnit and TestFX (For TestFX, wait for version 3.2 DeathThread bug fix)
- - Add and achieve high test coverage (Cobertura) and include Coveralls badge
- - ~~Automatic screenshot save image(PNG) in saving map for later use as preview image in the game~~
- - ~~Further validation on save filename naming convention~~
- - ~~Players start positions tile marks~~
- - ~~Create Javadoc~~
- - ~~About Menu~~
- - ~~Add open recent file menu item (no persistence for now)~~
- - ~~Add keyboard control shortcuts~~
- - Find bugs
- - Find more bugs
 
 License
 ----
