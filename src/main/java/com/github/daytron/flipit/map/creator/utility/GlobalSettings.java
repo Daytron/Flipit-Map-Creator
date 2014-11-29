@@ -37,6 +37,9 @@ public final class GlobalSettings {
      */
     private GlobalSettings() {
     }
+    
+    /** Application Icon */
+    public static final String ICON_PATH = "/images/icon.png";
 
     // COMBOXES
     /** The default value for the Column Combobox */

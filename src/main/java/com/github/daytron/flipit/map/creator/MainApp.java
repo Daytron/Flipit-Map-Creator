@@ -24,6 +24,7 @@
 package com.github.daytron.flipit.map.creator;
 
 import com.github.daytron.flipit.map.creator.controller.ViewController;
+import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -35,6 +36,7 @@ import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -58,7 +60,12 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
         this.stage = stage;
+        
         this.loadScene();
+        stage.getIcons().add(
+                new Image(MainApp.class.getResourceAsStream(
+                                GlobalSettings.ICON_PATH)));
+        
         stage.show();
     }
 
