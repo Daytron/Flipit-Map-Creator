@@ -24,7 +24,6 @@
 package com.github.daytron.flipit.map.creator;
 
 import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +32,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.KeyCode;
-import static javafx.scene.input.KeyCode.ENTER;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
 import org.junit.After;
@@ -41,17 +39,16 @@ import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.loadui.testfx.Assertions;
 import org.loadui.testfx.controls.Commons;
 import org.loadui.testfx.framework.robot.impl.FxRobotImpl;
-import org.loadui.testfx.utils.RunWaitUtils;
+import org.loadui.testfx.utils.WaitForAsyncUtils;
 import org.testfx.api.FxLifecycle;
 
 /**
- *
+ * Test class for testing the interaction with user control area
  * @author Ryan Gilera
  */
 @Category({AllTest.class})
@@ -84,7 +81,7 @@ public class UITest extends FxRobotImpl {
             this.app = (MainApp) FxLifecycle.setupApplication(MainApp.class);
 
             // Wait for the primary Stage to be shown by start().
-            RunWaitUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
+            WaitForAsyncUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
 
         } catch (TimeoutException ex) {
             Logger.getLogger(UITest.class.getName()).log(Level.SEVERE, null, ex);

@@ -45,11 +45,11 @@ import org.junit.experimental.categories.Category;
 import org.loadui.testfx.Assertions;
 import org.loadui.testfx.controls.Commons;
 import org.loadui.testfx.framework.robot.impl.FxRobotImpl;
-import org.loadui.testfx.utils.RunWaitUtils;
+import org.loadui.testfx.utils.WaitForAsyncUtils;
 import org.testfx.api.FxLifecycle;
 
 /**
- *
+ * Test class for testing map file saving and opening events.
  * @author Ryan Gilera
  */
 @Category({AllTest.class})
@@ -82,7 +82,7 @@ public class FileMapTest extends FxRobotImpl {
             this.app = (MainApp) FxLifecycle.setupApplication(MainApp.class);
 
             // Wait for the primary Stage to be shown by start().
-            RunWaitUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
+            WaitForAsyncUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
 
         } catch (TimeoutException ex) {
             Logger.getLogger(FileMapTest.class.getName()).log(Level.SEVERE, null, ex);

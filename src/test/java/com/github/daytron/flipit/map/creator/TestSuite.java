@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- *
+ * A test suite that handles test classes run sequence
  * @author Ryan Gilera ryangilera@gmail.com
  */
 @RunWith(Categories.class)

@@ -83,15 +83,21 @@ Want to contribute? Please do open up an issue for any bug reports and feedback.
 ### Build
 You can build the project through Maven by using the following command:
 ```
-mvn clean install
+mvn clean install -DskipTests=true
 ```
-
+Build the application in batch mode with `-B`, if running with headless CI server
 ### Run
 You can run the application jar with:
 ```
-java -jar Flipit-Map-Creator-<Version number>.jar
+java -jar Flipit-Map-Creator-1.0.0.jar
 ```
-Change `<Version number>` with the current version number.
+
+### Test
+To run a test, choose the test suite instead of running individual test class. Run the following command:
+```
+mvn test -Dtest=TestSuite
+```
+Again, apply batch mode with `-B`, if running with headless CI machine.
 ### Javadoc
 [Javadoc source]
 

@@ -24,7 +24,7 @@
 package com.github.daytron.flipit.map.creator;
 
 /**
- *
+ * An interface to categorize each test class
  * @author Ryan Gilera ryangilera@gmail.com
  */
 public interface AllTest {

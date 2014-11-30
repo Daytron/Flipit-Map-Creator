@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 import org.junit.experimental.categories.Category;
 
 /**
- *
+ * Test class for testing the StringUtils Class
  * @author Ryan Gilera ryangilera@gmail.com
  */
 @Category({AllTest.class})
