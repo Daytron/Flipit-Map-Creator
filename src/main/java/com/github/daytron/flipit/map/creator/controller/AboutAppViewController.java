@@ -23,10 +23,12 @@
  */
 package com.github.daytron.flipit.map.creator.controller;
 
+import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
 /**
@@ -39,6 +41,8 @@ public class AboutAppViewController implements Initializable {
 
     @FXML
     private TextArea textArea;
+    @FXML
+    private Label version_label;
 
     /**
      * Initializes the controller class. Loads the text to the text area.
@@ -50,6 +54,10 @@ public class AboutAppViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Sets the version label
+        this.version_label.setText(
+            GlobalSettings.VERSION);
+
         // Set text area to uneditable
         this.textArea.setEditable(false);
         // Set it to wrap text on every line

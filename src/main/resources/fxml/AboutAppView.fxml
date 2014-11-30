@@ -36,7 +36,7 @@ THE SOFTWARE.
             <Insets bottom="5.0" top="30.0" />
          </padding>
       </Label>
-      <Label id="title-version" maxWidth="1.7976931348623157E308" text="version 0.1">
+      <Label id="title-version" fx:id="version_label" maxWidth="1.7976931348623157E308" text="version 0.1">
          <padding>
             <Insets bottom="30.0" left="98.0" />
          </padding>
