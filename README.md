@@ -14,7 +14,7 @@ Flipit Map Creator is a companion JavaFX application for the upcoming game calle
 
 ### Dependencies
 Flipit Map Creator uses a number of open source projects to work properly:
-- [ControlsFX 8.20.8] Use for all dialog windows, Requires Java 8. Note: This library has a new fork that will soon merge with the JDK version 8u40 update in March 2015 as the official dialog for JDK. For now, the deprecated Dialogs are still in use. See announcement [here](http://fxexperience.com/2014/09/announcing-controlsfx-8-20-7/). For the license look [here](https://raw.githubusercontent.com/Daytron/Flipit-Map-Creator/master/LICENSES/CONTROLSFX_LICENSE.txt).
+- [SimpleDialogFX 2.0.0] Library for all dialog windows, Requires Java 8. Created by yours truly.
 - [Gson 2.3] For converting json files to Java objects and vice versa. See license [here](https://raw.githubusercontent.com/Daytron/Flipit-Map-Creator/master/LICENSES/GSON_LICENSE.txt).
 - [TestFX 3.1.2] A simple GUI test framework for JavaFX application.
 - [JUnit 4.11] De facto standard unit test framework for Java application.
@@ -108,7 +108,7 @@ License
 MIT
 
 
-[ControlsFX 8.20.8]:http://fxexperience.com/controlsfx/
+[SimpleDialogFX 2.0.0]:https://github.com/Daytron/SimpleDialogFX
 [Gson 2.3]:https://code.google.com/p/google-gson/
 [JavaFX]:http://www.oracle.com/technetwork/java/javase/overview/javafx-overview-2158620.html
 [TestFX 3.1.2]:https://github.com/TestFX/TestFX
