@@ -44,16 +44,16 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.loadui.testfx.Assertions;
 import org.loadui.testfx.controls.Commons;
-import org.loadui.testfx.framework.robot.impl.FxRobotImpl;
-import org.loadui.testfx.utils.WaitForAsyncUtils;
-import org.testfx.api.FxLifecycle;
+import org.testfx.util.WaitForAsyncUtils;
+import org.testfx.api.FxRobot;
+import org.testfx.api.FxToolkit;
 
 /**
  * Test class for testing map file saving and opening events.
  * @author Ryan Gilera
  */
 @Category({AllTest.class})
-public class FileMapTest extends FxRobotImpl {
+public class FileMapTest extends FxRobot {
 
     private MainApp app;
     public static Stage primaryStage;
@@ -65,7 +65,7 @@ public class FileMapTest extends FxRobotImpl {
     public static void setUpClass() {
         try {
             // Start the Toolkit and block until the primary Stage was retrieved.
-            primaryStage = FxLifecycle.registerPrimaryStage();
+            primaryStage = FxToolkit.registerPrimaryStage();
         } catch (TimeoutException ex) {
             Logger.getLogger(FileMapTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -79,7 +79,7 @@ public class FileMapTest extends FxRobotImpl {
     public void setUp() {
         try {
             // Construct the Application and call start() with the primary Stage.
-            this.app = (MainApp) FxLifecycle.setupApplication(MainApp.class);
+            this.app = (MainApp) FxToolkit.setupApplication(MainApp.class);
 
             // Wait for the primary Stage to be shown by start().
             WaitForAsyncUtils.waitFor(10, TimeUnit.SECONDS, primaryStage.showingProperty());
