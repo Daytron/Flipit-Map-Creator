@@ -35,9 +35,9 @@ Add the following dependencies to your POM file:
     <version>2.3</version>
 </dependency>
 <dependency>
-    <groupId>org.controlsfx</groupId>
-    <artifactId>controlsfx</artifactId>
-    <version>8.20.8</version>
+  <groupId>com.github.daytron</groupId>
+  <artifactId>SimpleDialogFX</artifactId>
+  <version>2.0.0</version>
 </dependency>
 ```
 ### For Test Dependencies for Maven
