@@ -26,11 +26,14 @@ package com.github.daytron.flipit.map.creator.controller;
 import com.github.daytron.flipit.map.creator.MainApp;
 import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import com.github.daytron.flipit.map.creator.model.Map;
-import com.github.daytron.flipit.map.creator.model.DialogManager;
 import com.github.daytron.flipit.map.creator.model.GraphicsManager;
 import com.github.daytron.flipit.map.creator.model.LogManager;
 import com.github.daytron.flipit.map.creator.model.MapManager;
 import com.github.daytron.flipit.map.creator.utility.StringUtils;
+import com.github.daytron.simpledialogfx.data.DialogResponse;
+import com.github.daytron.simpledialogfx.data.DialogText;
+import com.github.daytron.simpledialogfx.data.DialogType;
+import com.github.daytron.simpledialogfx.dialog.Dialog;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -64,7 +67,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
-import org.controlsfx.dialog.Dialog;
 
 /**
  * The controller class that manages and handles all of application's user
@@ -335,11 +337,10 @@ public class ViewController implements Initializable {
         // Confirmation dialog before proceeding
         // Checks for any unsave previous map
         if (!isCurrentMapSave) {
-            if (DialogManager.showConfirmDialog(
+            Dialog dialog = new Dialog(DialogType.CONFIRMATION,
                     GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE,
-                    this.app)
-                    == Dialog.ACTION_CANCEL) {
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE);
+            if (dialog.getResponse() == DialogResponse.OK) {
                 // Cancel opening file if user press cancel
                 return;
             }
@@ -781,8 +782,9 @@ public class ViewController implements Initializable {
                                 + msgHead + ". " + msgBody;
                         this.logManager.addNewLogMessage(invalidMsg);
 
-                        DialogManager.showErrorDialog(msgHead, msgBody,
-                                this.app);
+                        Dialog dialog = new Dialog(
+                                DialogType.ERROR, msgHead, msgBody);
+                        dialog.showAndWait();
                     }
                 }
             } else {
@@ -846,7 +848,7 @@ public class ViewController implements Initializable {
     }
 
     public boolean verifyFileToOpen(File file) {
-        return MapManager.verifyFileToOpen(file, this.app);
+        return MapManager.verifyFileToOpen(file);
     }
 
     /**
@@ -859,7 +861,7 @@ public class ViewController implements Initializable {
     public boolean openMap(File file) {
 
         Map tempMapHolder = MapManager.openFile(file,
-                this.isCurrentMapSave, this.app);
+                this.isCurrentMapSave);
 
         if (tempMapHolder != null) {
             this.map = tempMapHolder;
@@ -967,10 +969,13 @@ public class ViewController implements Initializable {
             String emptyMapMsg = GlobalSettings.LOG_ERROR
                     + "No map opened or generated.";
             this.logManager.addNewLogMessage(emptyMapMsg);
-            DialogManager.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyMapMsg,
-                    this.app);
+            
+            Dialog warningDialog = new Dialog(
+                    DialogType.WARNING, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyMapMsg);
+            warningDialog.showAndWait();
+            
             return;
         }
 
@@ -978,10 +983,12 @@ public class ViewController implements Initializable {
             String emptyP1StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 1 start position is not set!";
             this.logManager.addNewLogMessage(emptyP1StartMsg);
-            DialogManager.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyP1StartMsg,
-                    this.app);
+            
+            Dialog warningDialog = new Dialog(
+                    DialogType.WARNING, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyP1StartMsg);
+            warningDialog.showAndWait();
             return;
         }
 
@@ -989,10 +996,12 @@ public class ViewController implements Initializable {
             String emptyP2StartMsg = GlobalSettings.LOG_ERROR
                     + "Player 2 start position is not set!";
             this.logManager.addNewLogMessage(emptyP2StartMsg);
-            DialogManager.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyP2StartMsg,
-                    this.app);
+            
+            Dialog warningDialog = new Dialog(
+                    DialogType.WARNING, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyP2StartMsg);
+            warningDialog.showAndWait();
             return;
         }
 
@@ -1000,19 +1009,23 @@ public class ViewController implements Initializable {
             String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
             this.logManager.addNewLogMessage(emptyTitleMsg);
-            DialogManager.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyTitleMsg,
-                    this.app);
+            
+            Dialog warningDialog = new Dialog(
+                    DialogType.WARNING, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyTitleMsg);
+            warningDialog.showAndWait();
             return;
         } else if (this.map.getName().isEmpty()) {
             String emptyTitleMsg = GlobalSettings.LOG_ERROR
                     + "Map title is not set!";
             this.logManager.addNewLogMessage(emptyTitleMsg);
-            DialogManager.showWarningDialog(
-                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG,
-                    emptyTitleMsg,
-                    this.app);
+            
+            Dialog warningDialog = new Dialog(
+                    DialogType.WARNING, 
+                    GlobalSettings.DIALOG_WARNING_SAVE_HEAD_MSG, 
+                    emptyTitleMsg);
+            warningDialog.showAndWait();
             return;
         }
 
@@ -1042,13 +1055,13 @@ public class ViewController implements Initializable {
 
     public boolean verifyFileToSave(File file) {
         return MapManager.verifyFileToSave(file, this.logManager,
-                this.app, this.map, this.numberOfColumns,
+                this.map, this.numberOfColumns,
                 this.numberOfRows);
     }
 
     public boolean saveMap(File file) {
         this.isCurrentMapSave = MapManager.saveFile(file,
-                this.map, this.canvas, this.app);
+                this.map, this.canvas);
         return this.isCurrentMapSave;
     }
 
@@ -1088,8 +1101,14 @@ public class ViewController implements Initializable {
                     msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG_NOT_SAVE;
                 }
 
-                if (DialogManager.showConfirmDialog(msgHead,
-                        msgBody, app) == Dialog.ACTION_CANCEL) {
+                Dialog confirmDialog = new Dialog(
+                        DialogType.CONFIRMATION,
+                        DialogText.CONFIRMATION_HEADER.getText(), msgHead, msgBody);
+
+                confirmDialog.showAndWait();
+
+                if (confirmDialog.getResponse() == DialogResponse.NO
+                        || confirmDialog.getResponse() == DialogResponse.CLOSE) {
                     // event consume halts any further action (shutting down)
                     // WARNING: Do not mess with else condition with
                     // event.consume() or user won't be able to close the app!!
@@ -1119,8 +1138,13 @@ public class ViewController implements Initializable {
             msgBody = GlobalSettings.DIALOG_QUIT_BODY_MSG_NOT_SAVE;
         }
 
-        if (DialogManager.showConfirmDialog(msgHead,
-                msgBody, this.app) == Dialog.ACTION_OK) {
+        Dialog confirmDialog = new Dialog(
+                DialogType.CONFIRMATION,
+                DialogText.CONFIRMATION_HEADER.getText(), msgHead, msgBody);
+
+        confirmDialog.showAndWait();
+
+        if (confirmDialog.getResponse() == DialogResponse.YES) {
             // This is a preferred exit solution for any JavaFX application
             // instead of System.exit(0)
             Platform.exit();
@@ -1146,24 +1170,9 @@ public class ViewController implements Initializable {
      */
     @FXML
     private void menuAboutOnClick(ActionEvent event) {
-        try {
-            Dialog aboutDialog = new Dialog(null, "About");
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AboutAppView.fxml"));
-            Node viewNode = loader.load();
-            //AboutAppViewController aboutView = (AboutAppViewController)loader.getController();
-
-            aboutDialog.setIconifiable(false);
-            aboutDialog.setResizable(false);
-
-            aboutDialog.setContent(viewNode);
-
-            aboutDialog.getActions().add(Dialog.ACTION_OK);
-            aboutDialog.show();
-        } catch (IOException ex) {
-            Logger.getLogger(ViewController.class.getName()).log(Level.SEVERE, null, ex);
-            DialogManager.showExceptionDialog(ex, this.app);
-        }
+        AboutView aboutView = new AboutView();
+        aboutView.showAndWait();
+        
     }
 
     /**

@@ -26,6 +26,10 @@ package com.github.daytron.flipit.map.creator.model;
 import com.github.daytron.flipit.map.creator.MainApp;
 import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import com.github.daytron.flipit.map.creator.utility.StringUtils;
+import com.github.daytron.simpledialogfx.data.DialogResponse;
+import com.github.daytron.simpledialogfx.data.DialogText;
+import com.github.daytron.simpledialogfx.data.DialogType;
+import com.github.daytron.simpledialogfx.dialog.Dialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
@@ -36,11 +40,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
-import org.controlsfx.dialog.Dialog;
 
 /**
  * A static class for map file management.
@@ -58,7 +62,7 @@ public final class MapManager {
      * @param file The map file to save.
      */
     public static boolean saveFile(File file, Map map,
-            Canvas canvas, MainApp app) {
+            Canvas canvas) {
         LogManager logManager = LogManager.getInstance();
         String userOS = GlobalSettings.USER_OS;
 
@@ -108,7 +112,9 @@ public final class MapManager {
                 ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null),
                         "png", fileImage);
             } catch (Exception s) {
-                DialogManager.showExceptionDialog(s, app);
+                Dialog exceptionDialog = new Dialog(s);
+                exceptionDialog.showAndWait();
+
                 return false;
             }
 
@@ -119,7 +125,8 @@ public final class MapManager {
             logManager.addNewLogMessage(errorMsg);
 
             // Show exception dialog
-            DialogManager.showExceptionDialog(e, app);
+            Dialog exceptionDialog = new Dialog(e);
+            exceptionDialog.showAndWait();
 
             e.printStackTrace();
 
@@ -139,18 +146,22 @@ public final class MapManager {
      * @return the Map object if successfully opened, otherwise
      * <code>null</code>
      */
-    public static Map openFile(File file, boolean isCurrentMapSave,
-            MainApp app) {
+    public static Map openFile(File file, boolean isCurrentMapSave) {
         LogManager logManager = LogManager.getInstance();
 
         // Confirmation dialog
         if (!isCurrentMapSave) {
-            if (DialogManager.showConfirmDialog(
+            Dialog confirmDialog = new Dialog(
+                    DialogType.CONFIRMATION,
+                    DialogText.CONFIRMATION_HEADER.getText(),
                     GlobalSettings.DIALOG_NEW_MAP_HEAD_MSG_NOT_SAVE,
-                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE,
-                    app)
-                    == Dialog.ACTION_CANCEL) {
-                // Cancel opening file if user press cancel
+                    GlobalSettings.DIALOG_NEW_MAP_BODY_MSG_NOT_SAVE);
+
+            confirmDialog.showAndWait();
+
+            if (confirmDialog.getResponse() == DialogResponse.NO
+                    || confirmDialog.getResponse() == DialogResponse.CLOSE) {
+                // Cancel opening file if user press cancel or press close (x)
                 return null;
             }
         }
@@ -172,7 +183,8 @@ public final class MapManager {
                     + "IOEXCEPTION! Error loading map (invalid json map file). ";
             logManager.addNewLogMessage(errorMsg);
 
-            DialogManager.showExceptionDialog(ex, app);
+            Dialog exceptionDialog = new Dialog(ex);
+            exceptionDialog.showAndWait();
 
             return null;
         }
@@ -187,8 +199,7 @@ public final class MapManager {
      * @return <code>true</code> if the file is valid, otherwise
      * <code>false</code>
      */
-    public static boolean verifyFileToOpen(File file,
-            MainApp app) {
+    public static boolean verifyFileToOpen(File file) {
         LogManager logManager = LogManager.getInstance();
         String userOS = GlobalSettings.USER_OS;
 
@@ -210,7 +221,7 @@ public final class MapManager {
             filename = file.getPath().substring(file.getPath().lastIndexOf("\\") + 1);
         } else {
             String noOSsupportMsg = GlobalSettings.LOG_ERROR
-                    + GlobalSettings.LOG_OS_NOT_SUPPORTED;
+                    + GlobalSettings.LOG_OS_NOT_SUPPORTED_BODY_MSG;
             logManager.addNewLogMessage(noOSsupportMsg);
             return false;
         }
@@ -230,8 +241,10 @@ public final class MapManager {
                             + msgHead + ". " + msgBody;
 
                     logManager.addNewLogMessage(invalidPatterName);
-                    DialogManager.showErrorDialog(msgHead, msgBody, app);
 
+                    Dialog errorDialog = new Dialog(
+                            DialogType.ERROR, msgHead, msgBody);
+                    errorDialog.showAndWait();
                     return false;
                 }
             } else {
@@ -242,8 +255,10 @@ public final class MapManager {
                         + msgHead + ". " + msgBody;
 
                 logManager.addNewLogMessage(invalidExtension);
-                DialogManager.showErrorDialog(msgHead, msgBody, app);
 
+                Dialog errorDialog = new Dialog(
+                        DialogType.ERROR, msgHead, msgBody);
+                errorDialog.showAndWait();
                 return false;
             }
         } else {
@@ -253,7 +268,10 @@ public final class MapManager {
                     + msgHead + ". " + msgBody;
 
             logManager.addNewLogMessage(invalidFile);
-            DialogManager.showErrorDialog(msgHead, msgBody, app);
+
+            Dialog errorDialog = new Dialog(
+                    DialogType.ERROR, msgHead, msgBody);
+            errorDialog.showAndWait();
             return false;
         }
 
@@ -271,8 +289,8 @@ public final class MapManager {
      * <code>false</code>
      */
     public static boolean verifyFileToSave(File file,
-            LogManager logManager, MainApp app,
-            Map map, int numberOfColumns, int numberOfRows) {
+            LogManager logManager, Map map, int numberOfColumns, 
+            int numberOfRows) {
         String userOS = GlobalSettings.USER_OS;
 
         // Possible action if user press cancel button on save file dialog
@@ -291,11 +309,14 @@ public final class MapManager {
             filename = file.getPath().substring(file.getPath().lastIndexOf("\\") + 1);
         } else {
             String noOSsupportMsg = GlobalSettings.LOG_ERROR
-                    + GlobalSettings.LOG_OS_NOT_SUPPORTED;
+                    + GlobalSettings.LOG_OS_NOT_SUPPORTED_BODY_MSG;
             logManager.addNewLogMessage(noOSsupportMsg);
 
-            DialogManager.showErrorDialog("OS Not Supported",
-                    GlobalSettings.LOG_OS_NOT_SUPPORTED, app);
+            Dialog errorDialog = new Dialog(
+                    DialogType.ERROR, 
+                    GlobalSettings.LOG_OS_NOT_SUPPORTED_HEAD_MSG, 
+                    GlobalSettings.LOG_OS_NOT_SUPPORTED_BODY_MSG);
+            errorDialog.showAndWait();
             return false;
         }
 
@@ -309,10 +330,11 @@ public final class MapManager {
             logManager.addNewLogMessage(wrongFormatNameMsg);
 
             // Show a warning dialog
-            DialogManager.showWarningDialog(
-                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_HEAD_MSG,
-                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_BODY_MSG,
-                    app);
+            Dialog warningDialog = new Dialog(
+                    DialogType.WARNING, 
+                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_HEAD_MSG, 
+                    GlobalSettings.DIALOG_SAVE_NAME_SPACE_BODY_MSG);
+            warningDialog.showAndWait();
             return false;
         }
 
@@ -323,7 +345,12 @@ public final class MapManager {
             String wrongFormatNameMsg = GlobalSettings.LOG_WARNING
                     + msgHead + ". " + msgBody;
             logManager.addNewLogMessage(wrongFormatNameMsg);
-            DialogManager.showErrorDialog(msgHead, msgBody, app);
+            
+            Dialog errorDialog = new Dialog(
+                    DialogType.ERROR, 
+                    msgHead, 
+                    msgBody);
+            errorDialog.showAndWait();
 
             return false;
         }
@@ -345,11 +372,11 @@ public final class MapManager {
             logManager.addNewLogMessage(invalidExtMsg);
 
             // Show error dialog
-            DialogManager.showErrorDialog(
-                    GlobalSettings.DIALOG_INVALID_EXTENSION_HEAD_MSG,
-                    GlobalSettings.DIALOG_INVALID_EXTENSION_BODY_MSG,
-                    app);
-
+            Dialog errorDialog = new Dialog(
+                    DialogType.ERROR, 
+                    GlobalSettings.DIALOG_INVALID_EXTENSION_HEAD_MSG, 
+                    GlobalSettings.DIALOG_INVALID_EXTENSION_BODY_MSG);
+            errorDialog.showAndWait();
             return false;
         }
     }

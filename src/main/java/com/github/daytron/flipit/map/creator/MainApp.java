@@ -24,6 +24,7 @@
 package com.github.daytron.flipit.map.creator;
 
 import com.github.daytron.flipit.map.creator.controller.ViewController;
+import com.github.daytron.flipit.map.creator.data.FXMLFilePath;
 import com.github.daytron.flipit.map.creator.utility.GlobalSettings;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +49,7 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
 
     private Stage stage;
-    private final String MAIN_FXML = "View.fxml";
+    private final String MAIN_FXML = FXMLFilePath.MAIN_VIEW.getPath();
     private ViewController viewController;
 
     /**
@@ -109,9 +110,9 @@ public class MainApp extends Application {
      */
     private Initializable replaceScene(String fxml) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        InputStream in = MainApp.class.getResourceAsStream("/fxml/" + fxml);
+        InputStream in = MainApp.class.getResourceAsStream(fxml);
         loader.setBuilderFactory(new JavaFXBuilderFactory());
-        loader.setLocation(MainApp.class.getResource("/fxml/" + fxml));
+        loader.setLocation(MainApp.class.getResource(fxml));
 
         Parent pane;
         try {

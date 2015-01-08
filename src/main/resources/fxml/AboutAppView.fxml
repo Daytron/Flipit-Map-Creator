@@ -29,7 +29,7 @@ THE SOFTWARE.
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/AboutAppStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.daytron.flipit.map.creator.controller.AboutAppViewController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="600.0" stylesheets="@../styles/AboutAppStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <Label id="title" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Flipit Map Creator">
          <padding>
@@ -51,5 +51,14 @@ THE SOFTWARE.
             <Insets right="20.0" top="20.0" />
          </padding>
       </Label>
+      <HBox prefHeight="34.0" prefWidth="600.0">
+         <children>
+            <Label maxWidth="-Infinity" prefHeight="15.0" prefWidth="480.0" />
+            <Button fx:id="okButton" mnemonicParsing="false" onAction="#okButton_onClick" prefWidth="100.0" text="Ok" />
+         </children>
+         <VBox.margin>
+            <Insets top="45.0" />
+         </VBox.margin>
+      </HBox>
    </children>
 </VBox>

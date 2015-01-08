@@ -168,7 +168,8 @@ public final class GlobalSettings {
     /**
      * Log message for Operating System not supported events
      */
-    public static final String LOG_OS_NOT_SUPPORTED = "Your Operating System is not yet supported.";
+    public static final String LOG_OS_NOT_SUPPORTED_HEAD_MSG = "OS Not Supported";
+    public static final String LOG_OS_NOT_SUPPORTED_BODY_MSG = "Your Operating System is not yet supported.";
     /**
      * Log message for raising a warning to generate a map first event
      */
